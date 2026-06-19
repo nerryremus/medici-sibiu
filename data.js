@@ -72,6 +72,7 @@ const CLINICS = {
   "todan-dv": { name: "Cabinet Dr. Todan Liliana Elena (Dermato-venerologie)", address: "Str. Closca, nr. 2, ap. 16, Medias", phone: "0369420427" },
   "unimed": { name: "Unimed SRL", address: "Str. P-ta Prahovei, nr. 18, sc. A, parter, ap. 35, Sibiu", phone: "0269-234203" },
   "veres-diabet": { name: "Cabinet Veres Oana (Diabet)", address: "Str. Closca, nr. 2, Medias", phone: "0369-455289" },
+  "prosana": { name: "Clinica Prosana", address: "Str. Marasti, nr. 6, Sibiu", phone: "0269-233293 / 0787810043" },
   "costache-barb": { name: "Cabinet Dr. Costache-Barb Cristina (Diabet)", address: "Str. Ludus, nr. 5, ap. II, parter, Sibiu", phone: "0727036018" },
   "mester-ped": { name: "Cabinet Dr. Mester Elena Lavinia (Pediatrie)", address: "Str. Cindrelu, nr. 47, sc. B, ap. 9-10, Cisnadie", phone: "0745591366" },
 };
@@ -398,7 +399,7 @@ const PEOPLE = [
   { n: "Zugravu Catalina Laura", s: "Endocrinologie", g: "Specialist", c: "medica", t: "medic" },
   { n: "Batar Florina Gabriela", s: "Cardiologie", g: "Primar", c: "medica", t: "medic" },
   { n: "Dobra Maria Castilia", s: "Chirurgie Generala", g: "Specialist", c: "medica", t: "medic" },
-  { n: "Solomon Radu Crina Cristina", s: "Diabet, nutritie si boli metabolice", g: "Specialist", c: "medica", t: "medic" },
+  { n: "Solomon Radu Crina Cristina", s: "Diabet, nutritie si boli metabolice", g: "Specialist", c: "prosana", t: "medic" },
   { n: "Gafton Ana Alina", s: "Dermato-venerologie", g: "Specialist", c: "medica", t: "medic" },
   { n: "Baldovin Ioana", s: "Dermato-venerologie", g: "Primar", c: "medica", t: "medic" },
   { n: "Moldovan Elena", s: "Psihiatrie", g: "Specialist", c: "medica", t: "medic" },
