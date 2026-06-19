@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medici Sibiu CAS — director rapid</title>
+<style>
+  :root{
+    --ink:#1c2620;
+    --ink-soft:#4b5a52;
+    --paper:#f7f5f0;
+    --paper-card:#ffffff;
+    --line:#d8d4c8;
+    --accent:#2f6b4f;
+    --accent-soft:#e3ede7;
+    --accent-deep:#1d4a36;
+    --primar:#a8651f;
+    --primar-bg:#f7ecdc;
+    --specialist:#2f6b4f;
+    --specialist-bg:#e3ede7;
+    --psiholog:#5a4b8a;
+    --psiholog-bg:#ebe7f5;
+    --kineto:#3d6b8a;
+    --kineto-bg:#e3edf2;
+    --radius:10px;
+    --mono: "SF Mono", "Roboto Mono", Consolas, monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height:1.5;
+    min-height:100vh;
+  }
+
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px 60px;}
+
+  header.top{
+    border-bottom:2px solid var(--ink);
+    padding:28px 0 18px;
+    margin-bottom:24px;
+  }
+  header.top h1{
+    font-size:26px;
+    margin:0 0 4px;
+    letter-spacing:-0.01em;
+    font-weight:700;
+  }
+  header.top .meta{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--ink-soft);
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+    margin-top:8px;
+  }
+  header.top .meta span{white-space:nowrap;}
+
+  .controls{
+    position:sticky;
+    top:0;
+    background:var(--paper);
+    padding:14px 0 14px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:22px;
+    z-index:10;
+  }
+  .search-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  #search{
+    flex:1;
+    padding:13px 16px;
+    font-size:16px;
+    border:2px solid var(--ink);
+    border-radius:var(--radius);
+    background:var(--paper-card);
+    color:var(--ink);
+    font-family:inherit;
+  }
+  #search:focus{outline:none;border-color:var(--accent-deep);box-shadow:0 0 0 3px var(--accent-soft);}
+  #search::placeholder{color:#9b9588;}
+
+  .filter-row{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  select{
+    padding:9px 12px;
+    border:1.5px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--paper-card);
+    color:var(--ink);
+    font-family:inherit;
+    font-size:14px;
+    cursor:pointer;
+  }
+  select:focus{outline:none;border-color:var(--accent);}
+
+  .toggle-group{display:flex;gap:6px;flex-wrap:wrap;}
+  .toggle-btn{
+    padding:8px 14px;
+    border:1.5px solid var(--line);
+    border-radius:999px;
+    background:var(--paper-card);
+    font-size:13px;
+    font-family:inherit;
+    cursor:pointer;
+    color:var(--ink-soft);
+    transition:all .12s ease;
+  }
+  .toggle-btn.active{
+    border-color:var(--accent-deep);
+    background:var(--accent);
+    color:#fff;
+    font-weight:600;
+  }
+  .toggle-btn:hover:not(.active){border-color:var(--ink-soft);}
+
+  .reset-link{
+    margin-left:auto;
+    font-size:13px;
+    color:var(--ink-soft);
+    text-decoration:underline;
+    cursor:pointer;
+    background:none;
+    border:none;
+    font-family:inherit;
+    padding:8px 4px;
+  }
+  .reset-link:hover{color:var(--ink);}
+
+  .stats-bar{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+    padding-bottom:12px;
+    border-bottom:1px dashed var(--line);
+  }
+  .stats-bar strong{color:var(--ink);font-weight:700;}
+
+  .spec-group{margin-bottom:28px;}
+  .spec-header{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:10px;
+    padding-bottom:6px;
+    border-bottom:2px solid var(--ink);
+  }
+  .spec-header h2{
+    font-size:18px;
+    margin:0;
+    font-weight:700;
+  }
+  .spec-header .count{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+
+  .person-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+    gap:10px;
+  }
+  .person-card{
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:13px 15px;
+    position:relative;
+  }
+  .person-name{
+    font-weight:700;
+    font-size:15px;
+    margin:0 0 4px;
+    color:var(--ink);
+  }
+  .person-clinic{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin:0 0 8px;
+  }
+  .badge-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+  .badge{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:600;
+    padding:3px 9px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .badge.primar{background:var(--primar-bg);color:var(--primar);}
+  .badge.specialist{background:var(--specialist-bg);color:var(--specialist);}
+  .badge.psiholog{background:var(--psiholog-bg);color:var(--psiholog);}
+  .badge.kinetoterapeut, .badge.fizioterapeut{background:var(--kineto-bg);color:var(--kineto);}
+  .badge.cas{
+    background:var(--accent-deep);
+    color:#fff;
+  }
+
+  .clinic-detail{
+    margin-top:8px;
+    padding-top:8px;
+    border-top:1px dashed var(--line);
+    font-size:12px;
+    color:var(--ink-soft);
+    display:none;
+  }
+  .person-card.expanded .clinic-detail{display:block;}
+  .person-card{cursor:pointer;}
+  .clinic-detail .addr-line{margin-bottom:2px;}
+  .clinic-detail .phone-line a{color:var(--accent-deep);text-decoration:none;font-weight:600;}
+  .clinic-detail .phone-line a:hover{text-decoration:underline;}
+
+  .empty-state{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--ink-soft);
+  }
+  .empty-state .big{font-size:40px;margin-bottom:10px;}
+
+  footer.foot{
+    margin-top:40px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    font-size:12px;
+    color:var(--ink-soft);
+    font-family:var(--mono);
+    line-height:1.7;
+  }
+  footer.foot a{color:var(--accent-deep);}
+
+  @media (max-width:600px){
+    header.top h1{font-size:21px;}
+    .person-grid{grid-template-columns:1fr;}
+    .filter-row{gap:6px;}
+    select{font-size:13px;padding:7px 9px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Medici Sibiu &mdash; în contract CAS</h1>
+    <div class="meta">
+      <span>📋 sursă: liste oficiale CNAS / CAS Sibiu</span>
+      <span id="updatedSpan">actualizat: &mdash;</span>
+      <span>📍 jud. Sibiu (Sibiu, Mediaș, Agnita, Cisnădie, Avrig, Săliște)</span>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="search-row">
+      <input type="text" id="search" placeholder="Caută nume, specialitate sau clinică… (ex: cardiologie, Polisano, Mutu)" autocomplete="off">
+    </div>
+    <div class="filter-row">
+      <select id="filterSpec"><option value="">Toate specialitățile</option></select>
+      <select id="filterClinic"><option value="">Toate clinicile</option></select>
+      <select id="filterGrad">
+        <option value="">Primar + Specialist</option>
+        <option value="Primar">Doar Primar</option>
+        <option value="Specialist">Doar Specialist</option>
+      </select>
+      <div class="toggle-group" id="typeToggle">
+        <button class="toggle-btn active" data-type="medic">Medici</button>
+        <button class="toggle-btn active" data-type="psiholog">Psihologi</button>
+        <button class="toggle-btn active" data-type="kinetoterapeut">Kinetoterapeuți</button>
+        <button class="toggle-btn active" data-type="fizioterapeut">Fizioterapeuți</button>
+      </div>
+      <button class="reset-link" id="resetBtn">Resetează filtrele</button>
+    </div>
+  </div>
+
+  <div class="stats-bar" id="statsBar"></div>
+
+  <div id="results"></div>
+
+  <footer class="foot">
+    Date: <strong id="updatedSpan2"></strong> &middot; Sursă: documente oficiale CNAS/CAS Sibiu (lista furnizorilor de servicii medicale ambulatoriu specialități clinice + servicii conexe), încărcate manual.<br>
+    Listele CAS se schimbă periodic — verificați telefonic înainte de a trimite un pacient pentru o programare urgentă.<br>
+    Pagină statică, fără server, fără tracking. Funcționează offline după prima încărcare.
+  </footer>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function(){
+  const TYPE_LABELS = { medic:"Medici", psiholog:"Psihologi", kinetoterapeut:"Kinetoterapeuți", fizioterapeut:"Fizioterapeuți" };
+  let activeTypes = new Set(["medic","psiholog","kinetoterapeut","fizioterapeut"]);
+
+  document.getElementById("updatedSpan").textContent = "actualizat: " + DATA_UPDATED;
+  document.getElementById("updatedSpan2").textContent = DATA_UPDATED;
+
+  function populateSelects(){
+    const specs = [...new Set(PEOPLE.map(p=>p.s))].sort((a,b)=>a.localeCompare(b,'ro'));
+    const specSel = document.getElementById("filterSpec");
+    specs.forEach(s=>{
+      const o = document.createElement("option");
+      o.value = s; o.textContent = s;
+      specSel.appendChild(o);
+    });
+
+    const clinicSel = document.getElementById("filterClinic");
+    const clinicIds = [...new Set(PEOPLE.map(p=>p.c))]
+      .filter(id => CLINICS[id])
+      .sort((a,b)=>CLINICS[a].name.localeCompare(CLINICS[b].name,'ro'));
+    clinicIds.forEach(id=>{
+      const o = document.createElement("option");
+      o.value = id; o.textContent = CLINICS[id].name;
+      clinicSel.appendChild(o);
+    });
+  }
+
+  function normalize(str){
+    return (str||"").toLowerCase()
+      .replace(/ă/g,"a").replace(/â/g,"a").replace(/î/g,"i")
+      .replace(/ș/g,"s").replace(/ş/g,"s").replace(/ț/g,"t").replace(/ţ/g,"t");
+  }
+
+  function matchesSearch(p, q){
+    if(!q) return true;
+    const nq = normalize(q);
+    const clinic = CLINICS[p.c];
+    const haystack = normalize(p.n + " " + p.s + " " + (clinic ? clinic.name : "") + " " + (clinic ? clinic.address : ""));
+    return haystack.includes(nq);
+  }
+
+  function render(){
+    const q = document.getElementById("search").value.trim();
+    const specF = document.getElementById("filterSpec").value;
+    const clinicF = document.getElementById("filterClinic").value;
+    const gradF = document.getElementById("filterGrad").value;
+
+    const filtered = PEOPLE.filter(p=>{
+      if(!activeTypes.has(p.t)) return false;
+      if(specF && p.s !== specF) return false;
+      if(clinicF && p.c !== clinicF) return false;
+      if(gradF && p.g !== gradF) return false;
+      if(!matchesSearch(p, q)) return false;
+      return true;
+    });
+
+    const grouped = {};
+    filtered.forEach(p=>{
+      if(!grouped[p.s]) grouped[p.s] = [];
+      grouped[p.s].push(p);
+    });
+    const specs = Object.keys(grouped).sort((a,b)=>a.localeCompare(b,'ro'));
+
+    const clinicsCount = new Set(filtered.map(p=>p.c)).size;
+    document.getElementById("statsBar").innerHTML =
+      `<strong>${filtered.length}</strong> persoane &middot; <strong>${specs.length}</strong> specialități &middot; <strong>${clinicsCount}</strong> clinici/cabinete`;
+
+    const resultsEl = document.getElementById("results");
+    if(specs.length === 0){
+      resultsEl.innerHTML = `<div class="empty-state"><div class="big">🔍</div>Niciun rezultat. Încearcă alt termen de căutare sau resetează filtrele.</div>`;
+      return;
+    }
+
+    resultsEl.innerHTML = specs.map(spec=>{
+      const people = grouped[spec].sort((a,b)=>a.n.localeCompare(b.n,'ro'));
+      return `
+        <div class="spec-group">
+          <div class="spec-header">
+            <h2>${spec}</h2>
+            <span class="count">${people.length} ${people.length===1?'persoană':'persoane'}</span>
+          </div>
+          <div class="person-grid">
+            ${people.map(p=>renderCard(p)).join("")}
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    document.querySelectorAll(".person-card").forEach(card=>{
+      card.addEventListener("click", ()=> card.classList.toggle("expanded"));
+    });
+  }
+
+  function renderCard(p){
+    const clinic = CLINICS[p.c] || { name: "Clinică necunoscută", address: "-", phone: "-" };
+    const typeBadge = p.t !== "medic" ? `<span class="badge ${p.t}">${TYPE_LABELS[p.t]}</span>` : "";
+    const gradBadge = (p.g && p.g !== "-") ? `<span class="badge ${p.g.toLowerCase()==='primar'?'primar':'specialist'}">${p.g}</span>` : "";
+    return `
+      <div class="person-card">
+        <p class="person-name">${escapeHtml(p.n)}</p>
+        <p class="person-clinic">${escapeHtml(clinic.name)}</p>
+        <div class="badge-row">
+          ${gradBadge}
+          ${typeBadge}
+          <span class="badge cas">CAS</span>
+        </div>
+        <div class="clinic-detail">
+          <div class="addr-line">📍 ${escapeHtml(clinic.address)}</div>
+          <div class="phone-line">📞 <a href="tel:${escapeHtml(clinic.phone)}">${escapeHtml(clinic.phone)}</a></div>
+        </div>
+      </div>
+    `;
+  }
+
+  function escapeHtml(s){
+    const d = document.createElement("div");
+    d.textContent = s == null ? "" : String(s);
+    return d.innerHTML;
+  }
+
+  function resetFilters(){
+    document.getElementById("search").value = "";
+    document.getElementById("filterSpec").value = "";
+    document.getElementById("filterClinic").value = "";
+    document.getElementById("filterGrad").value = "";
+    activeTypes = new Set(["medic","psiholog","kinetoterapeut","fizioterapeut"]);
+    document.querySelectorAll(".toggle-btn").forEach(b=>b.classList.add("active"));
+    render();
+  }
+
+  document.getElementById("search").addEventListener("input", render);
+  document.getElementById("filterSpec").addEventListener("change", render);
+  document.getElementById("filterClinic").addEventListener("change", render);
+  document.getElementById("filterGrad").addEventListener("change", render);
+  document.getElementById("resetBtn").addEventListener("click", resetFilters);
+
+  document.querySelectorAll(".toggle-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const type = btn.dataset.type;
+      if(activeTypes.has(type)){
+        if(activeTypes.size > 1){ activeTypes.delete(type); btn.classList.remove("active"); }
+      } else {
+        activeTypes.add(type); btn.classList.add("active");
+      }
+      render();
+    });
+  });
+
+  populateSelects();
+  render();
+})();
+</script>
+
+</body>
+</html>
