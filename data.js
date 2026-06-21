@@ -372,9 +372,9 @@ const PEOPLE = [
   { n: "Rezi Elena Cristina", s: "Medicina Interna", g: "Primar", c: "interecomed", t: "medic" },
 
   // --- GLUCO-STAT ---
-  { n: "Costea Alexandru Georgian", s: "Cardiologie", g: "Specialist", c: "glucostat", t: "medic" },
-  { n: "Iliescu Bianca Iliana", s: "Endocrinologie", g: "Specialist", c: "glucostat", t: "medic" },
-  { n: "Draghici Ionela Diana", s: "Endocrinologie", g: "Specialist", c: "glucostat", t: "medic" },
+  { n: "Costea Alexandru Georgian", s: "Cardiologie", g: "Specialist", c: "LucasMedical", t: "medic" },
+  { n: "Iliescu Bianca Iliana", s: "Endocrinologie", g: "Specialist", c: "LucasMedical", t: "medic" },
+  { n: "Draghici Ionela Diana", s: "Endocrinologie", g: "Specialist", c: "LucasMedical", t: "medic" },
   { n: "Chicea Iulia Oana", s: "Neurologie", g: "Primar", c: "glucostat", t: "medic" },
   { n: "Lita Anca Elena", s: "Psihiatrie", g: "Specialist", c: "glucostat", t: "medic" },
   { n: "Dumitrescu Roxana Monica", s: "Diabet, nutritie si boli metabolice", g: "Primar", c: "glucostat", t: "medic" },
