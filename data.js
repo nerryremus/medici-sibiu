@@ -371,13 +371,13 @@ const PEOPLE = [
   // --- INTERECOMED ---
   { n: "Rezi Elena Cristina", s: "Medicina Interna", g: "Primar", c: "interecomed", t: "medic" },
 
-  // --- GLUCO-STAT ---
+  // --- LUCASMEDICAL ---
   { n: "Costea Alexandru Georgian", s: "Cardiologie", g: "Specialist", c: "LucasMedical", t: "medic" },
   { n: "Iliescu Bianca Iliana", s: "Endocrinologie", g: "Specialist", c: "LucasMedical", t: "medic" },
   { n: "Draghici Ionela Diana", s: "Endocrinologie", g: "Specialist", c: "LucasMedical", t: "medic" },
-  { n: "Chicea Iulia Oana", s: "Neurologie", g: "Primar", c: "glucostat", t: "medic" },
-  { n: "Lita Anca Elena", s: "Psihiatrie", g: "Specialist", c: "glucostat", t: "medic" },
-  { n: "Dumitrescu Roxana Monica", s: "Diabet, nutritie si boli metabolice", g: "Primar", c: "glucostat", t: "medic" },
+  { n: "Chicea Iulia Oana", s: "Neurologie", g: "Primar", c: "LucasMedical", t: "medic" },
+  { n: "Lita Anca Elena", s: "Psihiatrie", g: "Specialist", c: "LucasMedical", t: "medic" },
+  { n: "Dumitrescu Roxana Monica", s: "Diabet, nutritie si boli metabolice", g: "Primar", c: "LucasMedical", t: "medic" },
 
   // --- MICROFIT ---
   { n: "Chicea Lucian", s: "Neurologie", g: "Primar", c: "microfit", t: "medic" },
