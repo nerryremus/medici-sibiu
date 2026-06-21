@@ -36,9 +36,9 @@ const CLINICS = {
   "gyndia": { name: "Gyndia Nova SRL", address: "B-dul C. Coposu, nr. 10, Sibiu", phone: "0770157807" },
   "holhos": { name: "Holhos Optic Line SRL", address: "B-dul Vasile Milea, bl. 10, sc. B, ap. 17, Sibiu / Str. I. Gh. Duca, nr. 32, Medias", phone: "0735225915" },
   "mimd": { name: "MIMD Suport Medical SRL", address: "Sos. Sibiului, nr. 55, Medias", phone: "0744706944" },
-  "lucas": { name: "Lucas Medical SRL", address: "Calea Dumbravii, nr. 111, et. P, ap. SP2, Sibiu", phone: "0377702881" },
+  "lucas": { name: "Lucas Medical - Calea Dumbravii (oftalmologie)", address: "Calea Dumbravii, nr. 111, et. P, ap. SP2, Sibiu", phone: "0377702881" },
   "interecomed": { name: "Interecomed SRL", address: "Str. Tesatorilor, nr. 1, bl. 1, Cisnadie", phone: "0369-420320" },
-  "glucostat": { name: "Gluco-Stat SRL", address: "Str. Constitutiei, nr. 5, bl. 1, ap. 17, Sibiu", phone: "0763054455" },
+  "glucostat": { name: "Lucas Medical - Str. Constitutiei (cardiologie/endocrinologie)", address: "Str. Constitutiei, nr. 1, bl. 1, ap. 17, parter, Sibiu", phone: "0746255717 / 0763054455" },
   "microfit": { name: "Microfit SRL", address: "Str. Serbota, nr. 8, Sibiu", phone: "0740205405" },
   "marginean-orl": { name: "Cabinet Marginean I. Ghe. - ORL Sanomed", address: "Str. Dr. Ioan Ratiu, nr. 4, Sibiu", phone: "0722735272" },
   "marinache-ped": { name: "Cabinet Marinache Luminita (Pediatrie)", address: "Str. Closca, nr. 2, Medias", phone: "0369-449550" },
@@ -371,13 +371,13 @@ const PEOPLE = [
   // --- INTERECOMED ---
   { n: "Rezi Elena Cristina", s: "Medicina Interna", g: "Primar", c: "interecomed", t: "medic" },
 
-  // --- LUCASMEDICAL ---
-  { n: "Costea Alexandru Georgian", s: "Cardiologie", g: "Specialist", c: "LucasMedical", t: "medic" },
-  { n: "Iliescu Bianca Iliana", s: "Endocrinologie", g: "Specialist", c: "LucasMedical", t: "medic" },
-  { n: "Draghici Ionela Diana", s: "Endocrinologie", g: "Specialist", c: "LucasMedical", t: "medic" },
-  { n: "Chicea Iulia Oana", s: "Neurologie", g: "Primar", c: "LucasMedical", t: "medic" },
-  { n: "Lita Anca Elena", s: "Psihiatrie", g: "Specialist", c: "LucasMedical", t: "medic" },
-  { n: "Dumitrescu Roxana Monica", s: "Diabet, nutritie si boli metabolice", g: "Primar", c: "LucasMedical", t: "medic" },
+  // --- GLUCO-STAT ---
+  { n: "Costea Alexandru Georgian", s: "Cardiologie", g: "Specialist", c: "glucostat", t: "medic" },
+  { n: "Iliescu Bianca Iliana", s: "Endocrinologie", g: "Specialist", c: "glucostat", t: "medic" },
+  { n: "Draghici Ionela Diana", s: "Endocrinologie", g: "Specialist", c: "glucostat", t: "medic" },
+  { n: "Chicea Iulia Oana", s: "Neurologie", g: "Primar", c: "glucostat", t: "medic" },
+  { n: "Lita Anca Elena", s: "Psihiatrie", g: "Specialist", c: "glucostat", t: "medic" },
+  { n: "Dumitrescu Roxana Monica", s: "Diabet, nutritie si boli metabolice", g: "Primar", c: "glucostat", t: "medic" },
 
   // --- MICROFIT ---
   { n: "Chicea Lucian", s: "Neurologie", g: "Primar", c: "microfit", t: "medic" },
