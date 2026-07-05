@@ -229,6 +229,93 @@
   }
   .empty-state .big{font-size:40px;margin-bottom:10px;}
 
+  /* --- Selectie pentru printare --- */
+  .select-check{
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:22px;
+    height:22px;
+    border:2px solid var(--line);
+    border-radius:6px;
+    background:var(--paper-card);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    color:transparent;
+    flex-shrink:0;
+  }
+  .person-card{position:relative;padding-right:44px;}
+  .select-check.checked{
+    background:var(--accent-deep);
+    border-color:var(--accent-deep);
+    color:#fff;
+  }
+
+  .select-bar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:var(--ink);
+    color:#fff;
+    padding:12px 20px;
+    display:none;
+    align-items:center;
+    gap:14px;
+    z-index:100;
+    box-shadow:0 -4px 16px rgba(0,0,0,0.2);
+  }
+  .select-bar.visible{display:flex;}
+  .select-bar .count{
+    font-family:var(--mono);
+    font-size:14px;
+    white-space:nowrap;
+  }
+  .select-bar .spacer{flex:1;}
+  .select-bar button{
+    font-family:inherit;
+    font-size:14px;
+    padding:9px 16px;
+    border-radius:var(--radius);
+    border:none;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .select-bar .btn-print{background:var(--accent);color:#fff;}
+  .select-bar .btn-print:hover{background:var(--accent-deep);}
+  .select-bar .btn-clear{background:transparent;color:#cfd6d0;text-decoration:underline;}
+  .select-bar .btn-clear:hover{color:#fff;}
+
+  /* --- Foaia de printat (ascunsa normal, vizibila doar la print) --- */
+  #printSheet{display:none;}
+
+  @media print{
+    body *{visibility:hidden;}
+    #printSheet, #printSheet *{visibility:visible;}
+    #printSheet{
+      display:block;
+      position:absolute;
+      top:0; left:0;
+      width:100%;
+      padding:0;
+    }
+    .select-bar, .controls, header.top .meta, footer.foot{display:none !important;}
+  }
+  #printSheet h1{font-size:20px;margin:0 0 4px;}
+  #printSheet .print-sub{font-size:12px;color:#555;margin-bottom:18px;font-family:var(--mono);}
+  #printSheet .print-item{
+    border-bottom:1px solid #ccc;
+    padding:12px 0;
+  }
+  #printSheet .print-item .pname{font-size:15px;font-weight:700;margin:0 0 3px;}
+  #printSheet .print-item .pspec{font-size:13px;color:#333;margin:0 0 3px;}
+  #printSheet .print-item .pclinic{font-size:13px;margin:0 0 2px;}
+  #printSheet .print-item .paddr{font-size:12px;color:#444;}
+  #printSheet .print-footer{margin-top:24px;font-size:11px;color:#777;}
+
   footer.foot{
     margin-top:40px;
     padding-top:18px;
@@ -289,8 +376,23 @@
   <footer class="foot">
     Date: <strong id="updatedSpan2"></strong> &middot; Sursă: documente oficiale CNAS/CAS Sibiu (lista furnizorilor de servicii medicale ambulatoriu specialități clinice + servicii conexe), încărcate manual.<br>
     Listele CAS se schimbă periodic — verificați telefonic înainte de a trimite un pacient pentru o programare urgentă.<br>
-    Pagină statică, fără server, fără tracking. Funcționează offline după prima încărcare.
+    Pagină statică, fără server, fără tracking. Funcționează offline după prima încărcare.<br>
+    <span id="visitCounter"></span>
   </footer>
+</div>
+
+<div class="select-bar" id="selectBar">
+  <span class="count" id="selectCount">0 selectați</span>
+  <span class="spacer"></span>
+  <button class="btn-clear" id="clearSelection">Golește selecția</button>
+  <button class="btn-print" id="printSelection">🖨️ Printează recomandarea</button>
+</div>
+
+<div id="printSheet">
+  <h1>Recomandare medic de familie</h1>
+  <div class="print-sub" id="printSubtitle"></div>
+  <div id="printList"></div>
+  <div class="print-footer">Generat din directorul medici Sibiu (nerryremus.github.io/medici-sibiu) — verificați telefonic programarea.</div>
 </div>
 
 <script src="data.js"></script>
@@ -298,9 +400,12 @@
 (function(){
   const TYPE_LABELS = { medic:"Medici", psiholog:"Psihologi", kinetoterapeut:"Kinetoterapeuți", fizioterapeut:"Fizioterapeuți" };
   let activeTypes = new Set(["medic","psiholog","kinetoterapeut","fizioterapeut"]);
+  const selectedIds = new Set();
 
   document.getElementById("updatedSpan").textContent = "actualizat: " + DATA_UPDATED;
   document.getElementById("updatedSpan2").textContent = DATA_UPDATED;
+
+  PEOPLE.forEach((p, idx) => { p._id = idx; });
 
   function populateSelects(){
     const specs = [...new Set(PEOPLE.map(p=>p.s))].sort((a,b)=>a.localeCompare(b,'ro'));
@@ -384,16 +489,78 @@
     }).join("");
 
     document.querySelectorAll(".person-card").forEach(card=>{
-      card.addEventListener("click", ()=> card.classList.toggle("expanded"));
+      card.addEventListener("click", (e)=>{
+        if(e.target.closest(".select-check")){
+          e.stopPropagation();
+          const idx = parseInt(e.target.closest(".select-check").dataset.select, 10);
+          toggleSelect(idx, e.target.closest(".select-check"));
+          return;
+        }
+        card.classList.toggle("expanded");
+      });
     });
+  }
+
+  function toggleSelect(idx, checkEl){
+    if(selectedIds.has(idx)){
+      selectedIds.delete(idx);
+      checkEl.classList.remove("checked");
+      checkEl.textContent = "";
+    } else {
+      selectedIds.add(idx);
+      checkEl.classList.add("checked");
+      checkEl.textContent = "✓";
+    }
+    updateSelectBar();
+  }
+
+  function updateSelectBar(){
+    const bar = document.getElementById("selectBar");
+    const n = selectedIds.size;
+    if(n === 0){
+      bar.classList.remove("visible");
+      return;
+    }
+    bar.classList.add("visible");
+    document.getElementById("selectCount").textContent = `${n} ${n===1?'medic selectat':'medici selectați'}`;
+  }
+
+  function clearSelection(){
+    selectedIds.clear();
+    document.querySelectorAll(".select-check").forEach(el=>{
+      el.classList.remove("checked");
+      el.textContent = "";
+    });
+    updateSelectBar();
+  }
+
+  function printSelection(){
+    const chosen = PEOPLE.filter(p=>selectedIds.has(p._id));
+    if(chosen.length === 0) return;
+    document.getElementById("printSubtitle").textContent =
+      "Generat la " + new Date().toLocaleDateString('ro-RO') + " · " + chosen.length + " " + (chosen.length===1?"recomandare":"recomandări");
+    document.getElementById("printList").innerHTML = chosen.map(p=>{
+      const clinic = CLINICS[p.c] || { name:"-", address:"-", phone:"-" };
+      return `
+        <div class="print-item">
+          <p class="pname">${escapeHtml(p.n)} ${p.g && p.g!=='-' ? '('+escapeHtml(p.g)+')' : ''}</p>
+          <p class="pspec">${escapeHtml(p.s)}</p>
+          <p class="pclinic">${escapeHtml(clinic.name)}</p>
+          <p class="paddr">📍 ${escapeHtml(clinic.address)} &nbsp;&nbsp; 📞 ${escapeHtml(clinic.phone)}</p>
+        </div>
+      `;
+    }).join("");
+    window.print();
   }
 
   function renderCard(p){
     const clinic = CLINICS[p.c] || { name: "Clinică necunoscută", address: "-", phone: "-" };
     const typeBadge = p.t !== "medic" ? `<span class="badge ${p.t}">${TYPE_LABELS[p.t]}</span>` : "";
     const gradBadge = (p.g && p.g !== "-") ? `<span class="badge ${p.g.toLowerCase()==='primar'?'primar':'specialist'}">${p.g}</span>` : "";
+    const isChecked = selectedIds.has(p._id);
     return `
-      <div class="person-card">
+      <div class="person-card" data-idx="${p._id}">
+        <div class="select-check ${isChecked?'checked':''}" data-select="${p._id}">${isChecked?'✓':''}</div>
         <p class="person-name">${escapeHtml(p.n)}</p>
         <p class="person-clinic">${escapeHtml(clinic.name)}</p>
         <div class="badge-row">
@@ -442,6 +609,20 @@
       render();
     });
   });
+
+  document.getElementById("clearSelection").addEventListener("click", clearSelection);
+  document.getElementById("printSelection").addEventListener("click", printSelection);
+
+  // --- Contor de vizite (serviciu extern gratuit, fara cont) ---
+  fetch("https://api.counterapi.dev/v1/medici-sibiu-nerry/vizite/up")
+    .then(r => r.json())
+    .then(data => {
+      const count = data && (data.count ?? data.value);
+      if(count != null){
+        document.getElementById("visitCounter").textContent = "👁️ " + count + " vizite";
+      }
+    })
+    .catch(()=>{ /* contorul e opțional; dacă serviciul extern nu răspunde, pagina funcționează normal */ });
 
   populateSelects();
   render();
