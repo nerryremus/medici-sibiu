@@ -34,7 +34,7 @@ const CLINICS = {
   "chicea-neuro": { name: "Cabinet Dr. Chicea Iulia-Oana (Neurologie)", address: "Str. Calea Poplacii, nr. 44B, ap. 2, Sibiu", phone: "0748799224" },
   "dwderma": { name: "DW Derma SRL", address: "Str. X, nr. 41, Cristian", phone: "0769642245" },
   "fizioplus": { name: "Centrul Medical Fizio Plus SRL", address: "Str. P-ta Prahovei, nr. 16, parter, ap. 17A, Sibiu", phone: "0269-206204" },
-  "gensan": { name: "Gensan SRL", address: "Str. Grigore Alexandrescu, nr. 1, Sibiu", phone: "0269-239333" },
+  "gensan": { name: "Policlinica Astra", address: "Str. Grigore Alexandrescu, nr. 1, Sibiu", phone: "0269-239333" },
   "gyndia": { name: "Gyndia Nova SRL", address: "B-dul C. Coposu, nr. 10, Sibiu", phone: "0770157807" },
   "holhos": { name: "Holhos Optic Line SRL", address: "B-dul Vasile Milea, bl. 10, sc. B, ap. 17, Sibiu / Str. I. Gh. Duca, nr. 32, Medias", phone: "0735225915" },
   "mimd": { name: "MIMD Suport Medical SRL", address: "Sos. Sibiului, nr. 55, Medias", phone: "0744706944" },
@@ -297,7 +297,7 @@ const PEOPLE = [
   { n: "Kosc Mircea Marian", s: "Kinetoterapie", g: "-", c: "fizioplus", t: "kinetoterapeut" },
   { n: "Fagarasi Timea", s: "Kinetoterapie", g: "-", c: "fizioplus", t: "kinetoterapeut" },
 
-  // --- GENSAN ---
+  // --- POLICLINICA ASTRA (fost Gensan SRL) ---
   { n: "Mara Alina Elena", s: "Alergologie", g: "Primar", c: "gensan", t: "medic" },
   { n: "Muntean Iulia Roxana", s: "Diabet, nutritie si boli metabolice", g: "Primar", c: "gensan", t: "medic" },
   { n: "Arcomita Doina", s: "Diabet, nutritie si boli metabolice", g: "Specialist", c: "gensan", t: "medic" },
