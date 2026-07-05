@@ -593,6 +593,24 @@
     updateSelectBar();
   }
 
+  function enterPrintMode(mode){
+    const wrap = document.querySelector('.wrap');
+    // fortam si inline style, nu doar clasa CSS: unele browsere mobile (Android Chrome)
+    // fac "print preview"/"salvare PDF" dintr-un snapshot care uneori nu apuca sa preia
+    // clasa adaugata pe <body> daca nu exista un reflow fortat inainte de window.print().
+    wrap.style.display = 'none';
+    document.body.classList.add(mode);
+    // fortam un reflow sincron, apoi mai dam browserului o clipa sa redeseneze
+    // inainte sa deschidem dialogul de print (necesar mai ales pe Android).
+    void wrap.offsetHeight;
+  }
+
+  function exitPrintMode(){
+    const wrap = document.querySelector('.wrap');
+    wrap.style.display = '';
+    document.body.classList.remove('print-mode-selection', 'print-mode-all');
+  }
+
   function printSelection(){
     const chosen = PEOPLE.filter(p=>selectedIds.has(p._id));
     if(chosen.length === 0) return;
@@ -609,8 +627,8 @@
         </div>
       `;
     }).join("");
-    document.body.classList.add('print-mode-selection');
-    window.print();
+    enterPrintMode('print-mode-selection');
+    setTimeout(()=>{ window.print(); }, 120);
   }
 
   function printAllCompact(){
@@ -642,8 +660,8 @@
       `;
     }).join("");
 
-    document.body.classList.add('print-mode-all');
-    window.print();
+    enterPrintMode('print-mode-all');
+    setTimeout(()=>{ window.print(); }, 120);
   }
 
   function renderCard(p){
@@ -707,9 +725,15 @@
   document.getElementById("printSelection").addEventListener("click", printSelection);
   document.getElementById("printAllBtn").addEventListener("click", printAllCompact);
 
-  window.addEventListener("afterprint", ()=>{
-    document.body.classList.remove('print-mode-selection', 'print-mode-all');
+  window.addEventListener("afterprint", exitPrintMode);
+  // pe multe telefoane Android/iOS evenimentul 'afterprint' nu se declanseaza fiabil
+  // cand dialogul de print/salvare PDF e un ecran/activitate separata a sistemului;
+  // 'visibilitychange'/'focus' la revenirea in pagina acopera exact cazul asta.
+  document.addEventListener("visibilitychange", ()=>{
+    if(document.visibilityState === "visible") exitPrintMode();
   });
+  window.addEventListener("focus", exitPrintMode);
+  window.addEventListener("pageshow", exitPrintMode);
 
   // --- Contor de vizite (serviciu extern gratuit, fara cont) ---
   fetch("https://api.counterapi.dev/v1/medici-sibiu-nerry/vizite/up")
