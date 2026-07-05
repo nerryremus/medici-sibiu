@@ -308,20 +308,15 @@
   #printSheet, #printSheetAll{display:none;}
 
   @media print{
-    body *{visibility:hidden;}
     .select-bar, .controls, header.top .meta, footer.foot{display:none !important;}
 
-    body.print-mode-selection #printSheet,
-    body.print-mode-selection #printSheet *{visibility:visible;}
-    body.print-mode-selection #printSheet{
-      display:block; position:absolute; top:0; left:0; width:100%; padding:0;
-    }
+    /* scoatem tot continutul normal DIN FLUX (nu doar vizual) ca sa nu genereze pagini goale */
+    body.print-mode-selection .wrap,
+    body.print-mode-all .wrap{ display:none !important; }
 
-    body.print-mode-all #printSheetAll,
-    body.print-mode-all #printSheetAll *{visibility:visible;}
-    body.print-mode-all #printSheetAll{
-      display:block; position:absolute; top:0; left:0; width:100%; padding:0;
-    }
+    body.print-mode-selection #printSheet{ display:block; }
+    body.print-mode-all #printSheetAll{ display:block; }
+
     @page{ margin:10mm; }
   }
   #printSheet h1{font-size:20px;margin:0 0 4px;}
