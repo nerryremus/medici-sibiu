@@ -55,7 +55,7 @@ const CLINICS = {
   "ophta": { name: "Ophta Consult SRL", address: "Str. N. Iorga, nr. 50A, Sibiu", phone: "0369-435803" },
   "popa-vlad-oft": { name: "Cabinet Popa Paul Vlad (Oftalmologie)", address: "Str. Iacob Bologa, nr. 8, sc. B, parter, ap. SP4, Sibiu", phone: "0773706118" },
   "orastean": { name: "Cabinet Orastean Ovidiu Ioan (Psihiatrie)", address: "Str. N. Iorga, nr. 50, et. 2, ap. 18, Sibiu", phone: "0756596950" },
-  "platin": { name: "Platin Healthmed SRL", address: "Str. Aleea Rosiorilor, nr. 12, Sibiu", phone: "0269-212146" },
+  "platin": { name: "Clinica Omnis", address: "Str. Aleea Rosiorilor, nr. 12, Sibiu", phone: "0269-212146" },
   "sfmihail": { name: "Policlinica Sf. Mihail SRL", address: "Str. Mihail Kogalniceanu, nr. 1, Sibiu", phone: "0773380486" },
   "psimed": { name: "Psi Med SRL", address: "Str. Aleea Rosiorilor, nr. 2B, ap. 2, Sibiu", phone: "0741516543" },
   "psihoconcept": { name: "Psihoconcept Med SRL", address: "Str. Semaforului, nr. 24, Sibiu / Str. Closca, nr. 2, Medias / Selimbar / Ocna Sibiului", phone: "0745688523" },
@@ -433,7 +433,7 @@ const PEOPLE = [
   // --- ORASTEAN PSIHIATRIE ---
   { n: "Orastean Ovidiu Ioan", s: "Psihiatrie", g: "Primar", c: "orastean", t: "medic" },
 
-  // --- PLATIN HEALTHMED ---
+  // --- CLINICA OMNIS (fost Platin Healthmed SRL) ---
   { n: "Stanimir Natalia Elena", s: "Dermato-venerologie", g: "Specialist", c: "platin", t: "medic" },
   { n: "Comaniciu Andra", s: "Gastroenterologie", g: "Specialist", c: "platin", t: "medic" },
   { n: "Arseniu Rares", s: "Pediatrie", g: "Specialist", c: "platin", t: "medic" },
