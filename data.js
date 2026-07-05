@@ -6,7 +6,7 @@ const DATA_UPDATED = "01.05.2026 (medici) / 01.07.2025 (servicii conexe)";
 const DATA_SOURCE = "Casa de Asigurari de Sanatate Sibiu (CNAS) - documente oficiale incarcate manual";
 
 const CLINICS = {
-  "alexa-og": { name: "Cabinet Alexa Delia-Alexandra (OG)", address: "Sos. Alba Iulia, nr. 50, et. I, ap. 2, Sibiu", phone: "0741110816" },
+  "alexa-og":  { name: "Cabinet Alexa Delia-Alexandra (OG)", address: "Sos. Alba Iulia, nr. 50, et. I, ap. 2, Sibiu", phone: "0741110816" },
   "arcada": { name: "Arcada Clinic SRL", address: "Str. Barsei, bl. 8, Sibiu", phone: "0745514696" },
   "aria": { name: "Aria Clinic SRL", address: "Sos. Alba Iulia, nr. 100, Sibiu", phone: "0269-227773" },
   "ban-psih": { name: "Cabinet Ban Cosmina (Psihiatrie)", address: "Str. Closca, nr. 2, ap. 19, Medias", phone: "0744492379" },
