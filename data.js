@@ -898,7 +898,6 @@ const PEOPLE = [
   { n: "Veres Oana", s: "Diabet, nutritie si boli metabolice", g: "Primar", c: "veres-diabet", t: "medic" },
 
   // --- SPITALUL CLINIC DE PEDIATRIE SIBIU (servicii conexe) ---
-  { n: "Giurgiu Mircea Andrei", s: "Diabet zaharat, Neurologie pediatrica", g: "-", c: "spital-pediatrie", t: "psiholog" },
 
   // --- DR. COSTACHE-BARB CRISTINA (Diabet) ---
   { n: "Costache-Barb Cristina", s: "Diabet, nutritie si boli metabolice", g: "Specialist", c: "costache-barb", t: "medic" },

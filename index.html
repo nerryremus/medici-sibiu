@@ -298,11 +298,10 @@
        altfel grid-ul de sute de carduri ramane "prezent" ca inaltime si genereaza
        zeci de pagini goale in spatele recomandarii. */
     .wrap, .select-bar, .controls, header.top, footer.foot{ display:none !important; }
-    #printSheet{
-      display:block;
-      width:100%;
-      padding:0;
-    }
+    /* implicit ascundem ambele foi; JS afiseaza doar pe cea ceruta prin clasa pe body */
+    #printSheet, #printSheetAll{ display:none !important; }
+    body.print-mode-selection #printSheet{ display:block !important; width:100%; padding:0; }
+    body.print-mode-all #printSheetAll{ display:block !important; width:100%; padding:0; }
     @page{ margin:12mm; }
   }
   #printSheet h1{font-size:20px;margin:0 0 4px;}
@@ -316,6 +315,51 @@
   #printSheet .print-item .pclinic{font-size:13px;margin:0 0 2px;}
   #printSheet .print-item .paddr{font-size:12px;color:#444;}
   #printSheet .print-footer{margin-top:24px;font-size:11px;color:#777;}
+
+  /* --- Buton "Printeaza lista completa" --- */
+  .print-all-btn{
+    font-size:13px;
+    font-weight:600;
+    font-family:inherit;
+    padding:8px 14px;
+    border:1.5px solid var(--accent-deep);
+    border-radius:999px;
+    background:var(--accent-soft, #eaf1ff);
+    color:var(--accent-deep);
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .print-all-btn:hover{background:var(--accent);color:#fff;}
+
+  /* --- Foaia compacta (lista completa pe specialitati) --- */
+  #printSheetAll{display:none;}
+  #printSheetAll h1{font-size:16px;margin:0 0 2px;}
+  #printSheetAll .pa-sub{font-size:10px;color:#555;margin-bottom:8px;font-family:var(--mono);}
+  #printSheetAll .pa-list{
+    column-count:3;
+    column-gap:14px;
+    font-size:8.4pt;
+    line-height:1.3;
+  }
+  #printSheetAll .pa-group{ break-inside:avoid-column; margin-bottom:7px; }
+  #printSheetAll .pa-group h3{
+    font-size:9pt;
+    text-transform:uppercase;
+    letter-spacing:.02em;
+    margin:0 0 2px;
+    padding-bottom:1px;
+    border-bottom:1px solid #999;
+    break-after:avoid-column;
+  }
+  #printSheetAll .pa-item{
+    break-inside:avoid-column;
+    padding:1.5px 0;
+    border-bottom:1px dotted #ddd;
+  }
+  #printSheetAll .pa-item .pa-name{font-weight:700;}
+  #printSheetAll .pa-item .pa-name .pa-grad{font-weight:400;color:#555;}
+  #printSheetAll .pa-item .pa-clinic{display:block;color:#444;}
+  #printSheetAll .pa-footer{margin-top:8px;font-size:7.5pt;color:#777;column-span:all;}
 
   footer.foot{
     margin-top:40px;
@@ -366,6 +410,7 @@
         <button class="toggle-btn active" data-type="kinetoterapeut">Kinetoterapeuți</button>
         <button class="toggle-btn active" data-type="fizioterapeut">Fizioterapeuți</button>
       </div>
+      <button class="print-all-btn" id="printAllBtn" title="Printează lista curentă (respectă filtrele active), compact, grupată pe specialități">🖨️ Printează lista completă</button>
       <button class="reset-link" id="resetBtn">Resetează filtrele</button>
     </div>
   </div>
@@ -394,6 +439,13 @@
   <div class="print-sub" id="printSubtitle"></div>
   <div id="printList"></div>
   <div class="print-footer">Generat din directorul medici Sibiu (nerryremus.github.io/medici-sibiu) — verificați telefonic programarea.</div>
+</div>
+
+<div id="printSheetAll">
+  <h1>Medici Sibiu — listă completă în contract CAS (pe specialități)</h1>
+  <div class="pa-sub" id="printAllSub"></div>
+  <div class="pa-list" id="printAllList"></div>
+  <div class="pa-footer">Generat din directorul medici Sibiu (nerryremus.github.io/medici-sibiu) — listele CAS se schimbă periodic, verificați telefonic înainte de programare.</div>
 </div>
 
 <script src="data.js"></script>
@@ -535,6 +587,33 @@
     updateSelectBar();
   }
 
+  function getFilteredPeople(){
+    const q = document.getElementById("search").value.trim();
+    const specF = document.getElementById("filterSpec").value;
+    const clinicF = document.getElementById("filterClinic").value;
+    const gradF = document.getElementById("filterGrad").value;
+    return PEOPLE.filter(p=>{
+      if(!activeTypes.has(p.t)) return false;
+      if(specF && p.s !== specF) return false;
+      if(clinicF && p.c !== clinicF) return false;
+      if(gradF && p.g !== gradF) return false;
+      if(!matchesSearch(p, q)) return false;
+      return true;
+    });
+  }
+
+  function enterPrintMode(mode){
+    // ascundem continutul normal si inline (nu doar prin clasa) pentru robustete pe Android,
+    // unde snapshot-ul de print se poate lua inainte sa se aplice clasa CSS.
+    document.querySelector('.wrap').style.display = 'none';
+    document.body.classList.add(mode);
+    void document.body.offsetHeight; // forteaza reflow inainte de print
+  }
+  function exitPrintMode(){
+    document.querySelector('.wrap').style.display = '';
+    document.body.classList.remove('print-mode-selection','print-mode-all');
+  }
+
   function printSelection(){
     const chosen = PEOPLE.filter(p=>selectedIds.has(p._id));
     if(chosen.length === 0) return;
@@ -551,7 +630,37 @@
         </div>
       `;
     }).join("");
-    window.print();
+    enterPrintMode('print-mode-selection');
+    setTimeout(()=>{ window.print(); }, 120);
+  }
+
+  function printAllCompact(){
+    const filtered = getFilteredPeople();
+    if(filtered.length === 0) return;
+    const grouped = {};
+    filtered.forEach(p=>{ (grouped[p.s] = grouped[p.s] || []).push(p); });
+    const specs = Object.keys(grouped).sort((a,b)=>a.localeCompare(b,'ro'));
+
+    document.getElementById("printAllSub").textContent =
+      "Generat la " + new Date().toLocaleDateString('ro-RO') + " · actualizat: " + DATA_UPDATED +
+      " · " + filtered.length + " persoane · " + specs.length + " specialități";
+
+    document.getElementById("printAllList").innerHTML = specs.map(spec=>{
+      const people = grouped[spec].sort((a,b)=>a.n.localeCompare(b.n,'ro'));
+      return `
+        <div class="pa-group">
+          <h3>${escapeHtml(spec)} &middot; ${people.length}</h3>
+          ${people.map(p=>{
+            const clinic = CLINICS[p.c] || { name:"-", phone:"-" };
+            const grad = (p.g && p.g !== '-') ? ` <span class="pa-grad">(${escapeHtml(p.g[0])})</span>` : '';
+            return `<div class="pa-item"><span class="pa-name">${escapeHtml(p.n)}${grad}</span><span class="pa-clinic">${escapeHtml(clinic.name)} &middot; ${escapeHtml(clinic.phone)}</span></div>`;
+          }).join("")}
+        </div>
+      `;
+    }).join("");
+
+    enterPrintMode('print-mode-all');
+    setTimeout(()=>{ window.print(); }, 120);
   }
 
   function renderCard(p){
@@ -613,6 +722,10 @@
 
   document.getElementById("clearSelection").addEventListener("click", clearSelection);
   document.getElementById("printSelection").addEventListener("click", printSelection);
+  document.getElementById("printAllBtn").addEventListener("click", printAllCompact);
+  window.addEventListener("afterprint", exitPrintMode);
+  document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible") exitPrintMode(); });
+  window.addEventListener("focus", exitPrintMode);
 
   // --- Contor de vizite (serviciu extern gratuit, fara cont) ---
   fetch("https://api.counterapi.dev/v1/medici-sibiu-nerry/vizite/up")
