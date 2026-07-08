@@ -167,6 +167,25 @@
     font-size:13px;
     color:var(--ink-soft);
   }
+  .spec-header .select-all-spec{
+    margin-left:auto;
+    font-family:inherit;
+    font-size:12px;
+    font-weight:600;
+    padding:4px 12px;
+    border:1.5px solid var(--accent, #2563eb);
+    border-radius:999px;
+    background:transparent;
+    color:var(--accent, #2563eb);
+    cursor:pointer;
+    white-space:nowrap;
+    align-self:center;
+  }
+  .spec-header .select-all-spec:hover{
+    background:var(--accent, #2563eb);
+    color:#fff;
+  }
+  @media print{ .spec-header .select-all-spec{ display:none; } }
 
   .person-grid{
     display:grid;
@@ -533,6 +552,7 @@
           <div class="spec-header">
             <h2>${spec}</h2>
             <span class="count">${people.length} ${people.length===1?'persoană':'persoane'}</span>
+            <button class="select-all-spec" data-spec="${escapeHtml(spec)}" title="Selectează toți din această specialitate">Selectează toți</button>
           </div>
           <div class="person-grid">
             ${people.map(p=>renderCard(p)).join("")}
@@ -540,6 +560,28 @@
         </div>
       `;
     }).join("");
+
+    document.querySelectorAll(".select-all-spec").forEach(btn=>{
+      btn.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        const spec = btn.dataset.spec;
+        // cardurile din ACELASI grup de specialitate (cel mai apropiat spec-group)
+        const group = btn.closest(".spec-group");
+        const checks = [...group.querySelectorAll(".select-check")];
+        // daca toti sunt deja selectati -> ii deselectam (toggle); altfel ii selectam pe toti
+        const allSelected = checks.every(c => selectedIds.has(parseInt(c.dataset.select,10)));
+        checks.forEach(c=>{
+          const idx = parseInt(c.dataset.select,10);
+          const isSel = selectedIds.has(idx);
+          if(allSelected && isSel){          // deselecteaza tot
+            selectedIds.delete(idx); c.classList.remove("checked"); c.textContent="";
+          } else if(!allSelected && !isSel){ // selecteaza doar ce lipseste
+            selectedIds.add(idx); c.classList.add("checked"); c.textContent="✓";
+          }
+        });
+        updateSelectBar();
+      });
+    });
 
     document.querySelectorAll(".person-card").forEach(card=>{
       card.addEventListener("click", (e)=>{
@@ -567,7 +609,20 @@
     updateSelectBar();
   }
 
+  function syncSelectAllButtons(){
+    // pastreaza eticheta fiecarui buton "Selecteaza/Deselecteaza toti" in acord cu starea reala a grupului,
+    // chiar si dupa selectari/deselectari individuale de carduri
+    document.querySelectorAll(".spec-group").forEach(group=>{
+      const btn = group.querySelector(".select-all-spec");
+      if(!btn) return;
+      const checks = [...group.querySelectorAll(".select-check")];
+      const allSelected = checks.length>0 && checks.every(c=>selectedIds.has(parseInt(c.dataset.select,10)));
+      btn.textContent = allSelected ? "Deselectează toți" : "Selectează toți";
+    });
+  }
+
   function updateSelectBar(){
+    syncSelectAllButtons();
     const bar = document.getElementById("selectBar");
     const n = selectedIds.size;
     if(n === 0){
