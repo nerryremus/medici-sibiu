@@ -124,6 +124,69 @@
   }
   @media print{ .theme-toggle{ display:none; } }
 
+  .top-actions{ display:flex; gap:8px; flex-shrink:0; }
+
+  /* --- Modal instructiuni "Adauga pe telefon" --- */
+  .install-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    z-index:1000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .install-overlay.visible{ display:flex; }
+  @media print{ .install-overlay{ display:none !important; } }
+  .install-modal{
+    background:var(--paper-card);
+    color:var(--ink);
+    border-radius:16px;
+    max-width:400px;
+    width:100%;
+    padding:24px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.3);
+  }
+  .install-modal h3{ margin:0 0 4px; font-size:18px; }
+  .install-modal .im-sub{ font-size:13px; color:var(--ink-soft); margin-bottom:18px; }
+  .install-modal ol{ margin:0; padding-left:22px; line-height:1.7; font-size:14.5px; }
+  .install-modal ol li{ margin-bottom:6px; }
+  .install-modal .im-plat{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    color:var(--accent-deep);
+    background:var(--accent-soft);
+    padding:3px 10px;
+    border-radius:999px;
+    margin-bottom:12px;
+  }
+  .install-modal .im-close{
+    margin-top:20px;
+    width:100%;
+    padding:11px;
+    border:none;
+    border-radius:999px;
+    background:var(--accent);
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  .install-modal .im-close:hover{ background:var(--accent-deep); }
+  .install-modal kbd{
+    font-family:var(--mono);
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:1px 6px;
+    font-size:13px;
+  }
+
   .controls{
     position:sticky;
     top:0;
@@ -471,9 +534,14 @@
   <header class="top">
     <div class="top-row">
       <h1>Medici Sibiu &mdash; în contract CAS</h1>
-      <button class="theme-toggle" id="themeToggle" title="Comută între temă luminoasă și întunecată" aria-label="Comută tema">
-        <span class="theme-icon">🌙</span>
-      </button>
+      <div class="top-actions">
+        <button class="theme-toggle" id="installBtn" title="Adaugă directorul pe ecranul telefonului" aria-label="Adaugă pe telefon">
+          <span>📲</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" title="Comută între temă luminoasă și întunecată" aria-label="Comută tema">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </div>
     </div>
     <div class="meta">
       <span>📋 sursă: liste oficiale CNAS / CAS Sibiu</span>
@@ -537,6 +605,15 @@
   <div class="pa-sub" id="printAllSub"></div>
   <div class="pa-list" id="printAllList"></div>
   <div class="pa-footer">Generat din directorul medici Sibiu (nerryremus.github.io/medici-sibiu) — listele CAS se schimbă periodic, verificați telefonic înainte de programare.</div>
+</div>
+
+<div class="install-overlay" id="installOverlay">
+  <div class="install-modal">
+    <h3>📲 Adaugă pe telefon</h3>
+    <div class="im-sub">Ai directorul la un click distanță, direct de pe ecranul telefonului.</div>
+    <div id="installSteps"></div>
+    <button class="im-close" id="installClose">Am înțeles</button>
+  </div>
 </div>
 
 <script src="data.js"></script>
@@ -864,6 +941,52 @@
   applyTheme(prefersDark);
   themeToggle.addEventListener("click", ()=>{
     applyTheme(!document.body.classList.contains("dark"));
+  });
+
+  // --- Buton "Adauga pe telefon" cu instructiuni dupa platforma ---
+  const installBtn = document.getElementById("installBtn");
+  const installOverlay = document.getElementById("installOverlay");
+  const installSteps = document.getElementById("installSteps");
+
+  function detectPlatform(){
+    const ua = navigator.userAgent || "";
+    if(/iPhone|iPad|iPod/i.test(ua)) return "ios";
+    if(/Android/i.test(ua)) return "android";
+    return "desktop";
+  }
+
+  const STEPS = {
+    ios: `<div class="im-plat">iPhone / iPad</div>
+      <ol>
+        <li>Apasă butonul <strong>Share</strong> <kbd>⎋</kbd> din bara de jos a Safari.</li>
+        <li>Derulează și alege <strong>„Add to Home Screen”</strong> (Adaugă pe ecranul principal).</li>
+        <li>Apasă <strong>„Add”</strong> — gata, apare iconița pe ecran.</li>
+      </ol>`,
+    android: `<div class="im-plat">Android</div>
+      <ol>
+        <li>Apasă meniul <kbd>⋮</kbd> din colțul dreapta-sus al browserului.</li>
+        <li>Alege <strong>„Adaugă la ecranul principal”</strong> (Add to Home screen).</li>
+        <li>Confirmă <strong>„Adaugă”</strong> — apare iconița pe ecran.</li>
+      </ol>`,
+    desktop: `<div class="im-plat">Calculator</div>
+      <ol>
+        <li>Poți adăuga pagina la <strong>Favorite / Bookmarks</strong> cu <kbd>Ctrl</kbd>+<kbd>D</kbd>.</li>
+        <li>Pe telefon: deschide acest site în browser și apasă tot butonul 📲 pentru pașii de instalare.</li>
+      </ol>`
+  };
+
+  installBtn.addEventListener("click", ()=>{
+    installSteps.innerHTML = STEPS[detectPlatform()];
+    installOverlay.classList.add("visible");
+  });
+  document.getElementById("installClose").addEventListener("click", ()=>{
+    installOverlay.classList.remove("visible");
+  });
+  installOverlay.addEventListener("click", (e)=>{
+    if(e.target === installOverlay) installOverlay.classList.remove("visible");
+  });
+  document.addEventListener("keydown", (e)=>{
+    if(e.key === "Escape") installOverlay.classList.remove("visible");
   });
   window.addEventListener("afterprint", exitPrintMode);
   document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible") exitPrintMode(); });
