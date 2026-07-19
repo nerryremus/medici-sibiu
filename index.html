@@ -26,6 +26,30 @@
     --radius:10px;
     --mono: "SF Mono", "Roboto Mono", Consolas, monospace;
   }
+
+  body.dark{
+    --ink:#e6e9e6;
+    --ink-soft:#9aa8a0;
+    --paper:#161a18;
+    --paper-card:#1f2523;
+    --line:#333b37;
+    --accent:#5fb488;
+    --accent-soft:#22302a;
+    --accent-deep:#7fc9a2;
+    --primar:#d9a566;
+    --primar-bg:#33281a;
+    --specialist:#5fb488;
+    --specialist-bg:#22302a;
+    --psiholog:#a99bd6;
+    --psiholog-bg:#2a2540;
+    --kineto:#7bafce;
+    --kineto-bg:#1f2c34;
+  }
+
+  html{ transition:none; }
+  body, .toggle-btn, select, #search, .person-card, header.top{
+    transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+  }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
@@ -59,6 +83,46 @@
     margin-top:8px;
   }
   header.top .meta span{white-space:nowrap;}
+
+  header.top .top-row{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .theme-toggle{
+    flex-shrink:0;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    border:1.5px solid var(--line);
+    background:var(--paper-card);
+    cursor:pointer;
+    font-size:18px;
+    line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+  }
+  .theme-toggle:hover{ border-color:var(--accent); }
+  .theme-toggle:active{ transform:scale(0.94); }
+
+  header.top .credit{
+    margin-top:12px;
+    font-size:12.5px;
+    font-style:italic;
+    color:var(--ink-soft);
+    padding-top:10px;
+    border-top:1px solid var(--line);
+    max-width:640px;
+  }
+  header.top .credit strong{
+    font-style:normal;
+    font-weight:700;
+    color:var(--ink);
+  }
+  @media print{ .theme-toggle{ display:none; } }
 
   .controls{
     position:sticky;
@@ -313,6 +377,8 @@
   #printSheet{display:none;}
 
   @media print{
+    /* la print fortam mereu alb/negru, chiar daca ecranul e pe dark mode */
+    body, body.dark{ background:#fff !important; color:#000 !important; }
     /* scoatem TOT continutul normal din flux (display:none, nu visibility:hidden!)
        altfel grid-ul de sute de carduri ramane "prezent" ca inaltime si genereaza
        zeci de pagini goale in spatele recomandarii. */
@@ -403,12 +469,18 @@
 
 <div class="wrap">
   <header class="top">
-    <h1>Medici Sibiu &mdash; în contract CAS</h1>
+    <div class="top-row">
+      <h1>Medici Sibiu &mdash; în contract CAS</h1>
+      <button class="theme-toggle" id="themeToggle" title="Comută între temă luminoasă și întunecată" aria-label="Comută tema">
+        <span class="theme-icon">🌙</span>
+      </button>
+    </div>
     <div class="meta">
       <span>📋 sursă: liste oficiale CNAS / CAS Sibiu</span>
       <span id="updatedSpan">actualizat: &mdash;</span>
       <span>📍 jud. Sibiu (Sibiu, Mediaș, Agnita, Cisnădie, Avrig, Săliște)</span>
     </div>
+    <div class="credit">proiect realizat prin voluntariat, în mod gratuit, de <strong>Dr. Nerișanu Remus-Octavian</strong> — medic de familie</div>
   </header>
 
   <div class="controls">
@@ -778,6 +850,21 @@
   document.getElementById("clearSelection").addEventListener("click", clearSelection);
   document.getElementById("printSelection").addEventListener("click", printSelection);
   document.getElementById("printAllBtn").addEventListener("click", printAllCompact);
+
+  // --- Tema luminoasa / intunecata ---
+  const themeToggle = document.getElementById("themeToggle");
+  function applyTheme(dark){
+    document.body.classList.toggle("dark", dark);
+    themeToggle.querySelector(".theme-icon").textContent = dark ? "☀️" : "🌙";
+    themeToggle.setAttribute("title", dark ? "Comută pe temă luminoasă" : "Comută pe temă întunecată");
+  }
+  // la incarcare: respecta preferinta sistemului de operare al utilizatorului
+  let prefersDark = false;
+  try { prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches; } catch(e){}
+  applyTheme(prefersDark);
+  themeToggle.addEventListener("click", ()=>{
+    applyTheme(!document.body.classList.contains("dark"));
+  });
   window.addEventListener("afterprint", exitPrintMode);
   document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible") exitPrintMode(); });
   window.addEventListener("focus", exitPrintMode);
