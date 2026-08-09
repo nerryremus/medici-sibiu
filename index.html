@@ -143,7 +143,8 @@
   .simple-card .sc-line{font-size:12.5px;margin:2px 0;}
   .simple-card .sc-tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;border:1px solid var(--line);margin-right:5px;}
   .alt-note{background:var(--accent-soft);border:1.5px solid var(--accent);border-radius:11px;padding:11px 14px;font-size:13px;line-height:1.55;margin:0 0 12px;}
-  #altResults{padding-bottom:96px;}
+  #altResults{padding-bottom:24px;}
+  body.has-alt-sel #altResults{padding-bottom:110px;}
   .simple-card{position:relative;}
   .simple-card.picked{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
   .sc-check{position:absolute;top:11px;right:12px;width:24px;height:24px;border-radius:6px;border:1.5px solid var(--line);background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;color:#fff;}
@@ -153,6 +154,7 @@
   @media print{ .alt-bar{display:none !important;} }
   .alt-bar span{font-size:13px;flex:1;}
   .alt-bar button{padding:8px 14px;font-size:13px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;}
+  .alt-bar .b-share{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.45);border-radius:8px;}
   .alt-bar .b-print{background:var(--accent);color:#fff;}
   .alt-bar .b-all{background:transparent;color:#cfd6d0;text-decoration:underline;}
   .alt-bar .b-clear{background:transparent;color:#cfd6d0;text-decoration:underline;}
@@ -517,6 +519,7 @@
     cursor:pointer;
     font-weight:600;
   }
+  .select-bar .btn-share{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.45);}
   .select-bar .btn-print{background:var(--accent);color:#fff;}
   .select-bar .btn-print:hover{background:var(--accent-deep);}
   .select-bar .btn-clear{background:transparent;color:#cfd6d0;text-decoration:underline;}
@@ -712,6 +715,7 @@
     </div>
     <div class="filter-row">
       <select id="altFilter"><option value="">Toate localitățile</option></select>
+      <button class="print-all-btn" id="altPrintAll">🖨️ Printează lista afișată</button>
       <button class="reset-link" id="altReset">Resetează</button>
     </div>
   </div>
@@ -720,9 +724,9 @@
   <div id="altResults"></div>
   <div class="alt-bar" id="altBar">
     <span id="altBarCount"></span>
-    <button class="b-all" id="altSelectAll">Selectează tot ce e afișat</button>
     <button class="b-clear" id="altClear">Golește selecția</button>
-    <button class="b-print" id="altPrint">🖨️ Printează</button>
+    <button class="b-share" id="altShare">📤 Trimite</button>
+    <button class="b-print" id="altPrint">🖨️ Printează selecția</button>
   </div>
 
   <footer class="foot">
@@ -738,6 +742,7 @@
   <span class="count" id="selectCount">0 selectați</span>
   <span class="spacer"></span>
   <button class="btn-clear" id="clearSelection">Golește selecția</button>
+  <button class="btn-share" id="shareSelection">📤 Trimite</button>
   <button class="btn-print" id="printSelection">🖨️ Printează recomandarea</button>
 </div>
 
@@ -1086,6 +1091,17 @@
 
   document.getElementById("clearSelection").addEventListener("click", clearSelection);
   document.getElementById("printSelection").addEventListener("click", printSelection);
+  document.getElementById("shareSelection").addEventListener("click", function(){
+    const chosen = PEOPLE.filter(p=>selectedIds.has(p._id));
+    if(!chosen.length) return;
+    const lines = chosen.map(p=>{
+      const c = CLINICS[p.c] || { name:"-", address:"-", phone:"-" };
+      return "• " + p.n + (p.g && p.g!=='-' ? " ("+p.g+")" : "") + " — " + p.s +
+             "\n  " + c.name + ", " + c.address + "\n  tel. " + c.phone;
+    });
+    window.shareOrCopy("Recomandare medici — CAS Sibiu",
+      "Medici recomandați (în contract cu CAS Sibiu / OPSNAJ):\n\n" + lines.join("\n\n"));
+  });
   document.getElementById("printAllBtn").addEventListener("click", printAllCompact);
 
   // --- Tema luminoasa / intunecata ---
@@ -1585,11 +1601,10 @@ var QRLite = (function(){
   });
   function syncBar(){
     var n=Object.keys(PICKED).length, bar=document.getElementById("altBar");
-    document.getElementById("altBarCount").textContent = n
-      ? (n+(n===1?" selectat":" selectate")+" — se printează doar acestea")
-      : "Bifează ce vrei să printezi, sau apasă direct 🖨️ pentru toată lista afișată";
-    document.getElementById("altClear").style.display = n?"":"none";
-    bar.classList.toggle("show", SEC!=="medici");
+    document.getElementById("altBarCount").textContent =
+      n + (n===1?" selectat":" selectate");
+    bar.classList.toggle("show", n>0 && SEC!=="medici");
+    document.body.classList.toggle("has-alt-sel", n>0 && SEC!=="medici");
   }
   altRes.addEventListener("click",function(e){
     var t=e.target.closest("[data-pick]"); if(!t) return;
@@ -1597,17 +1612,11 @@ var QRLite = (function(){
     if(PICKED[id]) delete PICKED[id]; else PICKED[id]=1;
     renderAlt(); syncBar();
   });
-  document.getElementById("altSelectAll").addEventListener("click",function(){
-    var cfg=CFG[SEC]; LAST_ROWS.forEach(function(r){ PICKED[cfg.id(r)]=1; });
-    renderAlt(); syncBar();
-  });
   document.getElementById("altClear").addEventListener("click",function(){
     PICKED={}; renderAlt(); syncBar();
   });
-  document.getElementById("altPrint").addEventListener("click",function(){
+  function altPrintRows(rows){
     var cfg=CFG[SEC];
-    var rows=cfg.data().filter(function(r){return PICKED[cfg.id(r)];});
-    if(!rows.length) rows=LAST_ROWS.slice();
     if(!rows.length) return;
     var body='<h1>'+esc(cfg.title)+'</h1>'+
       '<div class="sub">Generat la '+new Date().toLocaleDateString("ro-RO")+' · '+rows.length+' '+esc(cfg.label)+'</div>'+
@@ -1616,6 +1625,24 @@ var QRLite = (function(){
       '<div class="foot">nerryremus.github.io/medici-sibiu · Listele CAS se schimbă periodic; verificați telefonic.</div>';
     window.printDocument(body, window.PRINT_CSS_LIST +
       '.note{border:1px solid #000;padding:2mm 3mm;font-size:9pt;margin:0 0 4mm;}');
+  }
+  function altPicked(){
+    var cfg=CFG[SEC];
+    return cfg.data().filter(function(r){return PICKED[cfg.id(r)];});
+  }
+  document.getElementById("altPrint").addEventListener("click",function(){
+    altPrintRows(altPicked());
+  });
+  document.getElementById("altPrintAll").addEventListener("click",function(){
+    altPrintRows(LAST_ROWS.slice());
+  });
+  document.getElementById("altShare").addEventListener("click",function(){
+    var cfg=CFG[SEC], rows=altPicked();
+    if(!rows.length) return;
+    var txt = rows.map(function(r){
+      return "• " + cfg.pline(r).replace(/<[^>]+>/g," ").replace(/\s+/g," ").trim();
+    }).join("\n");
+    window.shareOrCopy(cfg.title, cfg.title + ":\n\n" + txt);
   });
   window.addEventListener("afterprint",function(){
     document.querySelector(".wrap").style.display="";
@@ -1710,6 +1737,22 @@ window.printDocument = function(bodyHtml, css){
 
 (function(){ var hint=document.getElementById("printHint");
   if(hint && window.IS_MOBILE) hint.style.display=""; })();
+
+
+window.shareOrCopy = function(title, text){
+  var full = text + "\n\n" + window.location.href;
+  if(navigator.share){
+    navigator.share({ title: title, text: full }).catch(function(){});
+    return;
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(full).then(function(){
+      alert("Lista a fost copiată. O poți lipi în WhatsApp, SMS sau e-mail.");
+    }).catch(function(){ window.prompt("Copiază textul:", full); });
+    return;
+  }
+  window.prompt("Copiază textul:", full);
+};
 
 window.PRINT_CSS_LIST =
   'h1{font-size:15pt;margin:0 0 2mm;}'+
