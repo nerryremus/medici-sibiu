@@ -425,6 +425,7 @@
     color:var(--ink-soft);
     margin:0 0 8px;
   }
+  .person-note{font-size:12.5px;color:var(--accent-deep);margin:2px 0 0;font-style:italic;}
   .badge-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
   .badge{
     font-family:var(--mono);
@@ -733,7 +734,7 @@
     Date: <strong id="updatedSpan2"></strong> &middot; Sursă: documente oficiale CNAS/CAS Sibiu — ambulatoriu specialități clinice + servicii conexe (13.07.2026), stomatologie (01.07.2026), investigații paraclinice (01.06.2026), farmacii — încărcate manual.<br>
     Listele CAS se schimbă periodic — verificați telefonic înainte de a trimite un pacient pentru o programare urgentă.<br>
     <span id="printHint" style="display:none">📱 Pe telefon, butoanele de printare deschid o filă nouă, pregătită pentru tipar — apăsați acolo „Printează / Salvează PDF”. Dacă nu se deschide nimic, permiteți ferestrele pop-up pentru acest site.</span><br>
-    Pagină statică, fără server. Statistici anonime de trafic (GoatCounter), fără cookie-uri și fără date personale. Funcționează offline după prima încărcare.<br>
+    Pagină statică, fără server, fără cookie-uri și fără date personale. Funcționează offline după prima încărcare.<br>
     <span id="visitCounter"></span>
   </footer>
 </div>
@@ -996,7 +997,7 @@
     const items = chosen.map(p=>{
       const clinic = CLINICS[p.c] || { name:"-", address:"-", phone:"-" };
       return '<div class="item"><b>'+escapeHtml(p.n)+(p.g&&p.g!=='-'?' ('+escapeHtml(p.g)+')':'')+'</b>'+
-             '<span>'+escapeHtml(p.s)+' — '+escapeHtml(clinic.name)+'</span>'+
+             '<span>'+escapeHtml(p.s)+(p.note?' · '+escapeHtml(p.note):'')+' — '+escapeHtml(clinic.name)+'</span>'+
              '<span>'+escapeHtml(clinic.address)+' · tel. '+escapeHtml(clinic.phone)+'</span></div>';
     }).join("");
     const body =
@@ -1042,6 +1043,7 @@
         <div class="select-check ${isChecked?'checked':''}" data-select="${p._id}">${isChecked?'✓':''}</div>
         <p class="person-name">${escapeHtml(p.n)}</p>
         <p class="person-clinic">${escapeHtml(clinic.name)}</p>
+        ${p.note ? `<p class="person-note">${escapeHtml(p.note)}</p>` : ""}
         <div class="badge-row">
           ${gradBadge}
           ${typeBadge}
@@ -1096,7 +1098,7 @@
     if(!chosen.length) return;
     const lines = chosen.map(p=>{
       const c = CLINICS[p.c] || { name:"-", address:"-", phone:"-" };
-      return "• " + p.n + (p.g && p.g!=='-' ? " ("+p.g+")" : "") + " — " + p.s +
+      return "• " + p.n + (p.g && p.g!=='-' ? " ("+p.g+")" : "") + " — " + p.s + (p.note ? " · "+p.note : "") +
              "\n  " + c.name + ", " + c.address + "\n  tel. " + c.phone;
     });
     window.shareOrCopy("Recomandare medici — CAS Sibiu",
@@ -1168,33 +1170,18 @@
   document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible") exitPrintMode(); });
   window.addEventListener("focus", exitPrintMode);
 
-  // --- Contor de vizitatori ---
-  // Sursa principala: GoatCounter (numara vizitatori unici, fara cookie-uri).
-  // Necesita bifat in setarile GoatCounter: "Allow adding visitor counts on your website".
-  // Daca endpoint-ul nu raspunde (optiunea nebifata / serviciu picat), cadem pe badge-ul
-  // hits.sh, care numara afisari si nu cere niciun cont.
+  // --- Contor de vizite (hits.sh: badge SVG, fara cont, fara cookie-uri) ---
   (function(){
     var el = document.getElementById("visitCounter");
     if(!el) return;
-
-    function fallbackHits(){
-      var img = new Image();
-      img.alt = "Număr de vizite";
-      img.style.verticalAlign = "middle";
-      img.style.height = "20px";
-      img.onload  = function(){ el.innerHTML = ""; el.appendChild(img); };
-      img.onerror = function(){ el.style.display = "none"; };
-      img.src = "https://hits.sh/nerryremus.github.io/medici-sibiu.svg"
-              + "?view=today-total&label=vizite&color=2f6f4e&labelColor=444444&style=flat";
-    }
-
-    fetch("https://nerry.goatcounter.com/counter/TOTAL.json")
-      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
-      .then(function(d){
-        if(!d || d.count == null) throw 0;
-        el.textContent = "👁️ " + d.count + " vizitatori";
-      })
-      .catch(fallbackHits);
+    var img = new Image();
+    img.alt = "Număr de vizite";
+    img.style.verticalAlign = "middle";
+    img.style.height = "20px";
+    img.onload  = function(){ el.innerHTML = ""; el.appendChild(img); };
+    img.onerror = function(){ el.style.display = "none"; };
+    img.src = "https://hits.sh/nerryremus.github.io/medici-sibiu.svg"
+            + "?view=today-total&label=vizite&color=2f6f4e&labelColor=444444&style=flat";
   })();
 
   populateSelects();
@@ -1671,9 +1658,6 @@ var QRLite = (function(){
   });
 })();
 </script>
-<!-- GoatCounter: statistici de trafic, fara cookie-uri. Panoul: https://nerry.goatcounter.com -->
-<script data-goatcounter="https://nerry.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
 <script>
 /* ---------------------------------------------------------------
    Printare prin iframe izolat.

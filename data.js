@@ -99,6 +99,7 @@ const PEOPLE = [
   { n: "Paraschiva Victoria", s: "Chirurgie Generala", g: "Specialist", c: "aria", t: "medic" },
   { n: "Picu Alexandru Cristian", s: "Dermato-venerologie", g: "Specialist", c: "aria", t: "medic" },
   { n: "Iancu Bianca Maria", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "aria", t: "medic" },
+  { n: "Boboia Ana Alina", s: "Pediatrie", g: "Specialist", c: "aria", t: "medic", note: "Consultant in alaptare" },
   { n: "Birsan Alexandru", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "aria", t: "medic" },
 
   // --- BAN COSMINA ---
