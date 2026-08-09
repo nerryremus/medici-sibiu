@@ -2,10 +2,11 @@
 // Lista furnizorilor de servicii medicale de specialitate din ambulatoriul
 // pentru specialitati clinice in contract cu CAS Sibiu, la 01.05.2026
 // + servicii conexe (psihologi, kinetoterapeuti) din lista-servicii-conexe-01-07-2025
-const DATA_UPDATED = "01.05.2026 (medici) / 01.07.2025 (servicii conexe)";
+const DATA_UPDATED = "13.07.2026 (medici) / 13.07.2026 (servicii conexe)";
 const DATA_SOURCE = "Casa de Asigurari de Sanatate Sibiu (CNAS) - documente oficiale incarcate manual";
 
 const CLINICS = {
+  "taroi": { name: "Taroi Serv Med SRL", address: "Str. Prof. Victor Lazar, nr. 11A, Sibiu", phone: "0790505075" },
   "spital-militar": { name: "Spitalul Clinic Militar de Urgenta \"Dr. Alexandru Augustin\" (Ambulatoriu integrat)", address: "B-dul Victoriei, nr. 46, Sibiu", phone: "0790070310", casa: "OPSNAJ / CAS" },
   "alexa-og": { name: "Cabinet Alexa Delia-Alexandra (OG)", address: "Sos. Alba Iulia, nr. 50, et. I, ap. 2, Sibiu", phone: "0741110816" },
   "arcada": { name: "Arcada Clinic SRL", address: "Str. Barsei, bl. 8, Sibiu", phone: "0745514696" },
@@ -139,8 +140,8 @@ const PEOPLE = [
   { n: "Boga Mirela", s: "Psihiatrie", g: "Specialist", c: "praxismed", t: "medic" },
   { n: "Boga Zeno Adrian", s: "Psihiatrie", g: "Specialist", c: "praxismed", t: "medic" },
   { n: "Serb Silvana Elena", s: "Psiholog", g: "-", c: "praxismed", t: "psiholog" },
-  { n: "Catalinoiu Alexandra Loredana", s: "Medicina Fizica si de Reabilitare", g: "-", c: "praxismed", t: "kinetoterapeut" },
-  { n: "Fagarasi Timea", s: "Medicina Fizica si de Reabilitare", g: "-", c: "praxismed", t: "kinetoterapeut" },
+  { n: "Catalinoiu Alexandra Loredana", s: "Recuperare, Medicina Fizica si Balneologie", g: "-", c: "praxismed", t: "kinetoterapeut" },
+  { n: "Fagarasi Timea", s: "Recuperare, Medicina Fizica si Balneologie", g: "-", c: "praxismed", t: "kinetoterapeut" },
 
   // --- CENTRUL MEDICAL STEJARI ---
   { n: "Rusu Vlad", s: "Oftalmologie", g: "Primar", c: "stejari", t: "medic" },
@@ -219,7 +220,7 @@ const PEOPLE = [
   { n: "Giurgiu Iulia", s: "Diabet, nutritie si boli metabolice", g: "Specialist", c: "polisano", t: "medic" },
   { n: "Carcalici Ioan Radu", s: "Neurologie", g: "Primar", c: "polisano", t: "medic" },
   { n: "Plesca Adelina Ioana", s: "Neurologie", g: "Primar", c: "polisano", t: "medic" },
-  { n: "Fulea Teodora Ioana", s: "Medicina Fizica si Reabilitare", g: "Specialist", c: "polisano", t: "medic" },
+  { n: "Fulea Teodora Ioana", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "polisano", t: "medic" },
   { n: "Bartos Tiberiu Ioan", s: "Kinetoterapie", g: "-", c: "polisano", t: "kinetoterapeut" },
   { n: "Mocanu Lorena Camelia", s: "Cardiologie", g: "Specialist", c: "polisano", t: "medic" },
   { n: "Mitea Raluca Daria", s: "Cardiologie", g: "Primar", c: "polisano", t: "medic" },
@@ -317,7 +318,7 @@ const PEOPLE = [
   { n: "Coman Vasile Liviu", s: "Psihiatrie Pediatrica", g: "Specialist", c: "gensan", t: "medic" },
   { n: "Palcu Florina", s: "Dermato-venerologie", g: "Primar", c: "gensan", t: "medic" },
   { n: "Barbu Alexandra", s: "Dermato-venerologie", g: "Specialist", c: "gensan", t: "medic" },
-  { n: "Stefanescu Anisoara", s: "Medicina Fizica si Reabilitare", g: "Primar", c: "gensan", t: "medic" },
+  { n: "Stefanescu Anisoara", s: "Recuperare, Medicina Fizica si Balneologie", g: "Primar", c: "gensan", t: "medic" },
 
   // --- GYNDIA NOVA ---
   { n: "Nicolescu Georgiana", s: "Diabet, nutritie si boli metabolice", g: "Primar", c: "gyndia", t: "medic" },
@@ -401,8 +402,8 @@ const PEOPLE = [
   // --- NEUROBRAIN CLINIQ ---
   { n: "Costea Simona Daniela", s: "Neurologie", g: "Primar", c: "neurobrain", t: "medic" },
   { n: "Mosorescu Ruxandra", s: "Neurologie", g: "Specialist", c: "neurobrain", t: "medic" },
-  { n: "Albu Maria Mihaela", s: "Medicina Fizica si Reabilitare", g: "Specialist", c: "neurobrain", t: "medic" },
-  { n: "Iacob Rares Florin", s: "Medicina Fizica si Reabilitare", g: "Specialist", c: "neurobrain", t: "medic" },
+  { n: "Albu Maria Mihaela", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "neurobrain", t: "medic" },
+  { n: "Iacob Rares Florin", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "neurobrain", t: "medic" },
   { n: "Teodorescu Stefania", s: "Kinetoterapie", g: "-", c: "neurobrain", t: "kinetoterapeut" },
   { n: "Moldovan Alexandru", s: "Kinetoterapie", g: "-", c: "neurobrain", t: "kinetoterapeut" },
   { n: "Dorobantu Ion-Ovidiu", s: "Psihiatrie", g: "Specialist", c: "neurobrain", t: "medic" },
@@ -458,8 +459,8 @@ const PEOPLE = [
   { n: "Vasiu Cristina Florina", s: "Psihiatrie", g: "Specialist", c: "platin", t: "medic" },
   { n: "Coman Vasile Liviu", s: "Psihiatrie Pediatrica", g: "Specialist", c: "platin", t: "medic" },
   { n: "Al Kaddah Elena", s: "Psihiatrie Pediatrica", g: "Specialist", c: "platin", t: "medic" },
-  { n: "Stroia Alexandra", s: "Medicina Fizica si Reabilitare", g: "Specialist", c: "platin", t: "medic" },
-  { n: "Costinescu Anca", s: "Medicina Fizica si Reabilitare", g: "Specialist", c: "platin", t: "medic" },
+  { n: "Stroia Alexandra", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "platin", t: "medic" },
+  { n: "Costinescu Anca", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "platin", t: "medic" },
   { n: "Moga Daniela", s: "Psiholog", g: "-", c: "platin", t: "psiholog" },
   { n: "Parvu Denisa Andrada", s: "Psiholog", g: "-", c: "platin", t: "psiholog" },
 
@@ -550,8 +551,8 @@ const PEOPLE = [
   { n: "Valeanu Valeria Vioara", s: "Oncologie", g: "Primar", c: "rmn", t: "medic" },
   { n: "Muntean Cristina", s: "Oncologie", g: "Specialist", c: "rmn", t: "medic" },
   { n: "Tarcea Ioana Maria", s: "Pediatrie", g: "Specialist", c: "rmn", t: "medic" },
-  { n: "Ciora Adriana Petrica", s: "Medicina Fizica si Reabilitare", g: "Specialist", c: "rmn", t: "medic" },
-  { n: "Luca Daniel Simion", s: "Medicina Fizica si Reabilitare", g: "Primar", c: "rmn", t: "medic" },
+  { n: "Ciora Adriana Petrica", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "rmn", t: "medic" },
+  { n: "Luca Daniel Simion", s: "Recuperare, Medicina Fizica si Balneologie", g: "Primar", c: "rmn", t: "medic" },
   { n: "Constantin Elena", s: "Kinetoterapie", g: "-", c: "rmn", t: "kinetoterapeut" },
   { n: "Csillag Andreea", s: "Alergologie", g: "Primar", c: "spital-pediatrie", t: "medic" },
   { n: "Luca Mihaela Codruta", s: "Boli Infectioase", g: "Specialist", c: "spital-pediatrie", t: "medic" },
@@ -806,7 +807,7 @@ const PEOPLE = [
   { n: "Opris Anca Maria", s: "Dermato-venerologie", g: "Primar", c: "spital-cf", t: "medic" },
   { n: "Luca Silvia", s: "Medicina Interna", g: "Primar", c: "spital-cf", t: "medic" },
   { n: "Damian Alina Daniela", s: "Medicina Interna", g: "Specialist", c: "spital-cf", t: "medic" },
-  { n: "Iacob Rares Florin", s: "Medicina Fizica si Reabilitare", g: "Specialist", c: "spital-cf", t: "medic" },
+  { n: "Iacob Rares Florin", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "spital-cf", t: "medic" },
   { n: "Tanase Alexandra", s: "Neurologie", g: "Specialist", c: "spital-cf", t: "medic" },
   { n: "Stupariu Adrian Laurentiu", s: "Oftalmologie", g: "Primar", c: "spital-cf", t: "medic" },
   { n: "Frandes Iulia", s: "ORL", g: "Primar", c: "spital-cf", t: "medic" },
@@ -952,4 +953,35 @@ const PEOPLE = [
   { n: "Maxim Radu-Aurel", s: "Urologie", g: "Primar", c: "spital-militar", t: "medic" },
   { n: "Ghenti Zolti-Razvan", s: "Urologie", g: "Specialist", c: "spital-militar", t: "medic" },
   { n: "Ruxandu Eliza-Ada", s: "Pneumologie", g: "Primar", c: "spital-militar", t: "medic" },
+  // --- ADAUGATI DIN LISTA CAS 13.07.2026 ---
+  { n: "Barbu Angelo", s: "Urologie", g: "Specialist", c: "polisano", t: "medic" },
+  { n: "Trailovic Zvonko", s: "Dermato-venerologie", g: "Specialist", c: "polisano", t: "medic" },
+  { n: "Jipa Andra", s: "Dermato-venerologie", g: "Specialist", c: "dermatop", t: "medic" },
+  { n: "Turcu Adina Elena", s: "Neurologie", g: "Specialist", c: "misanmed", t: "medic" },
+  { n: "Mitu Nicoleta Anamaria", s: "Ortopedie", g: "Specialist", c: "misanmed", t: "medic" },
+  { n: "Badea Bogdan", s: "Kinetoterapie", g: "-", c: "neurobrain", t: "kinetoterapeut" },
+  { n: "Fiser Roxana Stefania", s: "Oncologie", g: "Specialist", c: "noemi", t: "medic" },
+  { n: "Al-darayseh Mohammad", s: "Dermato-venerologie", g: "Specialist", c: "platin", t: "medic" },
+  { n: "Iancu Bianca", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "platin", t: "medic" },
+  { n: "Buzaianu Vlad", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "platin", t: "medic" },
+  { n: "Rus Gabriela Sabina", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "sfmihail", t: "medic" },
+  { n: "Sonchereche Simina Elena", s: "Psiholog", g: "-", c: "sfmihail", t: "psiholog" },
+  { n: "Costea Patrick Ilie", s: "Fizioterapie", g: "-", c: "sfmihail", t: "fizioterapeut" },
+  { n: "Munteanu Cosmina", s: "Psihiatrie", g: "Primar", c: "psihoconcept", t: "medic" },
+  { n: "Capatina Alina Florina", s: "Psiholog", g: "-", c: "psihoconcept", t: "psiholog" },
+  { n: "Barta Anamaria", s: "Cardiologie", g: "Specialist", c: "rmn", t: "medic" },
+  { n: "Moisin Andrei Catalin", s: "Chirurgie Generala", g: "Specialist", c: "rmn", t: "medic" },
+  { n: "Mutu Andreea Codruta", s: "Psihiatrie", g: "Specialist", c: "rmn", t: "medic" },
+  { n: "Ungureanu Dandreia Andreea Mihaela", s: "Hematologie", g: "Specialist", c: "rmn", t: "medic" },
+  { n: "Savu Denisa", s: "Neurologie", g: "Specialist", c: "rmn", t: "medic" },
+  { n: "Preda Andreea", s: "Obstetrica-Ginecologie", g: "Specialist", c: "rmn", t: "medic" },
+  { n: "Barbu Alin", s: "Obstetrica-Ginecologie", g: "Specialist", c: "rmn", t: "medic" },
+  { n: "Craciun Smaralda", s: "Boli Infectioase", g: "Specialist", c: "scju", t: "medic" },
+  { n: "Gavrilovici Liviu", s: "Neurochirurgie", g: "Specialist", c: "scju", t: "medic" },
+  { n: "Cornila Svet Tatiana", s: "Neurologie", g: "Specialist", c: "scju", t: "medic" },
+  { n: "Siancu Paul", s: "Oncologie", g: "Specialist", c: "scju", t: "medic" },
+  { n: "Diconi Alexandru Florin", s: "Ortopedie", g: "Specialist", c: "scju", t: "medic" },
+  { n: "Hulpus Andreea Gabriela", s: "Pneumologie", g: "Primar", c: "spital-medias", t: "medic" },
+  { n: "Calin Elena", s: "Pediatrie", g: "Specialist", c: "spital-cisnadie", t: "medic" },
+  { n: "Taroi Paula", s: "Obstetrica-Ginecologie", g: "Specialist", c: "taroi", t: "medic" },
 ];

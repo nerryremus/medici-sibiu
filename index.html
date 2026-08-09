@@ -122,6 +122,17 @@
     font-weight:700;
     color:var(--ink);
   }
+  .qr-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:900;padding:18px;}
+  .qr-overlay.open{display:flex;}
+  .qr-box{background:var(--paper-card);border:1.5px solid var(--line);border-radius:14px;padding:20px;max-width:360px;width:100%;text-align:center;}
+  .qr-box h3{margin:0 0 4px;font-size:17px;}
+  .qr-box p{margin:0 0 14px;font-size:12.5px;color:var(--ink-soft);}
+  .qr-box canvas{width:100%;max-width:280px;height:auto;image-rendering:pixelated;border-radius:8px;background:#fff;padding:10px;box-sizing:border-box;}
+  .qr-box input{width:100%;box-sizing:border-box;margin:12px 0 10px;padding:8px 10px;font-size:12.5px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);}
+  .qr-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+  .qr-actions button{padding:8px 14px;font-size:13px;border-radius:8px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;}
+  .qr-actions button.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+  @media print{ .qr-overlay{display:none !important;} .theme-toggle{display:none;} }
   @media print{ .theme-toggle{ display:none; } }
 
   .top-actions{ display:flex; gap:8px; flex-shrink:0; }
@@ -535,6 +546,9 @@
     <div class="top-row">
       <h1>Medici Sibiu &mdash; în contract CAS</h1>
       <div class="top-actions">
+        <button class="theme-toggle" id="qrBtn" title="Generează cod QR pentru acest director" aria-label="Generează cod QR">
+          <span>🔳</span>
+        </button>
         <button class="theme-toggle" id="installBtn" title="Adaugă directorul pe ecranul telefonului" aria-label="Adaugă pe telefon">
           <span>📲</span>
         </button>
@@ -1008,5 +1022,219 @@
 })();
 </script>
 
+
+<div class="qr-overlay" id="qrOverlay">
+  <div class="qr-box">
+    <h3>Cod QR</h3>
+    <p>Scanează sau descarcă imaginea pentru afiș / rețetă.</p>
+    <canvas id="qrCanvas" width="300" height="300"></canvas>
+    <input type="text" id="qrText" spellcheck="false">
+    <div class="qr-actions">
+      <button class="primary" id="qrRegen">Regenerează</button>
+      <button id="qrDownload">Descarcă PNG</button>
+      <button id="qrClose">Închide</button>
+    </div>
+  </div>
+</div>
+<script>
+/* QR generator - byte mode, EC level M, versions 1..10. Self-contained. */
+var QRLite = (function(){
+  var EXP=new Array(512), LOG=new Array(256);
+  (function(){ var x=1; for(var i=0;i<255;i++){ EXP[i]=x; LOG[x]=i; x<<=1; if(x&0x100) x^=0x11d; }
+    for(var i=255;i<512;i++) EXP[i]=EXP[i-255]; })();
+  function gmul(a,b){ return (a===0||b===0)?0:EXP[LOG[a]+LOG[b]]; }
+  function genPoly(n){ var p=[1]; for(var i=0;i<n;i++){ var q=p.concat([0]);
+      for(var j=0;j<p.length;j++) q[j+1]^=gmul(p[j],EXP[i]); p=q; } return p; }
+  function ecBytes(data,n){ var res=data.concat(new Array(n).fill(0)); var g=genPoly(n);
+    for(var i=0;i<data.length;i++){ var c=res[i]; if(c===0) continue;
+      for(var j=0;j<g.length;j++) res[i+j]^=gmul(g[j],c); }
+    return res.slice(data.length); }
+
+  // [version] = [totalCodewords, ecPerBlock, blocksG1, dataPerBlockG1, blocksG2, dataPerBlockG2]  (EC level M)
+  var RS={1:[26,10,1,16,0,0],2:[44,16,1,28,0,0],3:[70,26,1,44,0,0],4:[100,18,2,32,0,0],
+    5:[134,24,2,43,0,0],6:[172,16,4,27,0,0],7:[196,18,4,31,0,0],8:[242,22,2,38,2,39],
+    9:[292,22,3,36,2,37],10:[346,26,4,43,1,44]};
+  var ALIGN={1:[],2:[6,18],3:[6,22],4:[6,26],5:[6,30],6:[6,34],7:[6,22,38],8:[6,24,42],9:[6,26,46],10:[6,28,50]};
+  var VERINFO=null; // versions <7 need none; 7..10 below
+  var VER_BITS={7:0x07C94,8:0x085BC,9:0x09A99,10:0x0A4D3};
+  var FMT_M=[0x5412,0x5125,0x5E7C,0x5B4B,0x45F9,0x40CE,0x4F97,0x4AA0]; // EC M, masks 0..7
+
+  function utf8(str){ var out=[],i,c;
+    for(i=0;i<str.length;i++){ c=str.charCodeAt(i);
+      if(c<0x80) out.push(c);
+      else if(c<0x800){ out.push(0xc0|c>>6,0x80|c&63); }
+      else if(c<0xd800||c>=0xe000){ out.push(0xe0|c>>12,0x80|(c>>6&63),0x80|c&63); }
+      else { i++; var cp=0x10000+(((c&0x3ff)<<10)|(str.charCodeAt(i)&0x3ff));
+             out.push(0xf0|cp>>18,0x80|(cp>>12&63),0x80|(cp>>6&63),0x80|cp&63); }
+    } return out; }
+
+  function pickVersion(len){
+    for(var v=1;v<=10;v++){
+      var r=RS[v], dataCw=r[2]*r[3]+r[4]*r[5];
+      var lenBits=(v<10)?8:16;
+      var need=Math.ceil((4+lenBits+len*8)/8);
+      if(need<=dataCw) return v;
+    }
+    throw new Error("Text prea lung pentru QR versiune <=10");
+  }
+
+  function buildData(bytes,v){
+    var r=RS[v], dataCw=r[2]*r[3]+r[4]*r[5];
+    var bits=[];
+    function push(val,n){ for(var i=n-1;i>=0;i--) bits.push((val>>i)&1); }
+    push(4,4);                       // byte mode
+    push(bytes.length,(v<10)?8:16);
+    for(var i=0;i<bytes.length;i++) push(bytes[i],8);
+    var cap=dataCw*8;
+    for(var i=0;i<4&&bits.length<cap;i++) bits.push(0);
+    while(bits.length%8) bits.push(0);
+    var cw=[]; for(var i=0;i<bits.length;i+=8){ var b=0; for(var j=0;j<8;j++) b=(b<<1)|bits[i+j]; cw.push(b); }
+    var pad=[0xEC,0x11],k=0; while(cw.length<dataCw) cw.push(pad[k++%2]);
+    // blocks
+    var blocks=[],ecs=[],pos=0;
+    for(var i=0;i<r[2];i++){ var d=cw.slice(pos,pos+r[3]); pos+=r[3]; blocks.push(d); ecs.push(ecBytes(d,r[1])); }
+    for(var i=0;i<r[4];i++){ var d=cw.slice(pos,pos+r[5]); pos+=r[5]; blocks.push(d); ecs.push(ecBytes(d,r[1])); }
+    var out=[],maxD=Math.max(r[3],r[5]||0);
+    for(var i=0;i<maxD;i++) for(var b=0;b<blocks.length;b++) if(i<blocks[b].length) out.push(blocks[b][i]);
+    for(var i=0;i<r[1];i++) for(var b=0;b<ecs.length;b++) out.push(ecs[b][i]);
+    return out;
+  }
+
+  function buildMatrix(v){
+    var n=17+4*v, m=[],res=[];
+    for(var i=0;i<n;i++){ m.push(new Array(n).fill(null)); res.push(new Array(n).fill(false)); }
+    function finder(r,c){
+      for(var i=-1;i<=7;i++) for(var j=-1;j<=7;j++){
+        var y=r+i,x=c+j; if(y<0||y>=n||x<0||x>=n) continue;
+        var on=(i>=0&&i<=6&&(j===0||j===6))||(j>=0&&j<=6&&(i===0||i===6))||(i>=2&&i<=4&&j>=2&&j<=4);
+        m[y][x]=on?1:0; res[y][x]=true;
+      }
+    }
+    finder(0,0); finder(0,n-7); finder(n-7,0);
+    var al=ALIGN[v];
+    for(var a=0;a<al.length;a++) for(var b=0;b<al.length;b++){
+      var r=al[a],c=al[b];
+      if((r<=7&&c<=7)||(r<=7&&c>=n-8)||(r>=n-8&&c<=7)) continue;
+      for(var i=-2;i<=2;i++) for(var j=-2;j<=2;j++){
+        m[r+i][c+j]=(Math.max(Math.abs(i),Math.abs(j))!==1)?1:0; res[r+i][c+j]=true;
+      }
+    }
+    for(var i=8;i<n-8;i++){ m[6][i]=(i%2===0)?1:0; res[6][i]=true; m[i][6]=(i%2===0)?1:0; res[i][6]=true; }
+    m[n-8][8]=1; res[n-8][8]=true;
+    // format info areas reserved
+    for(var i=0;i<9;i++){ if(!res[8][i]){res[8][i]=true;m[8][i]=0;} if(!res[i][8]){res[i][8]=true;m[i][8]=0;} }
+    for(var i=0;i<8;i++){ if(!res[8][n-1-i]){res[8][n-1-i]=true;m[8][n-1-i]=0;} if(!res[n-1-i][8]){res[n-1-i][8]=true;m[n-1-i][8]=0;} }
+    if(v>=7){ for(var i=0;i<18;i++){ var r=Math.floor(i/3), c=i%3;
+        res[n-11+c][r]=true; m[n-11+c][r]=0; res[r][n-11+c]=true; m[r][n-11+c]=0; } }
+    return {m:m,res:res,n:n};
+  }
+
+  function maskFn(k){
+    return [function(i,j){return (i+j)%2===0;},function(i,j){return i%2===0;},
+      function(i,j){return j%3===0;},function(i,j){return (i+j)%3===0;},
+      function(i,j){return (Math.floor(i/2)+Math.floor(j/3))%2===0;},
+      function(i,j){return (i*j)%2+(i*j)%3===0;},
+      function(i,j){return ((i*j)%2+(i*j)%3)%2===0;},
+      function(i,j){return ((i+j)%2+(i*j)%3)%2===0;}][k];
+  }
+
+  function penalty(m,n){
+    var p=0,i,j,k;
+    for(i=0;i<n;i++){ for(var dir=0;dir<2;dir++){ var run=1,prev=dir?m[0][i]:m[i][0];
+      for(j=1;j<n;j++){ var cur=dir?m[j][i]:m[i][j];
+        if(cur===prev) run++; else { if(run>=5) p+=3+(run-5); run=1; prev=cur; } }
+      if(run>=5) p+=3+(run-5); } }
+    for(i=0;i<n-1;i++) for(j=0;j<n-1;j++){ var s=m[i][j]+m[i][j+1]+m[i+1][j]+m[i+1][j+1];
+      if(s===0||s===4) p+=3; }
+    var pat=[1,0,1,1,1,0,1,0,0,0,0], pat2=[0,0,0,0,1,0,1,1,1,0,1];
+    function look(get){ var c=0; for(i=0;i<n;i++) for(j=0;j+10<n;j++){ var ok1=true,ok2=true;
+        for(k=0;k<11;k++){ var val=get(i,j+k); if(val!==pat[k]) ok1=false; if(val!==pat2[k]) ok2=false; }
+        if(ok1) c++; if(ok2) c++; } return c; }
+    p+=40*(look(function(a,b){return m[a][b];})+look(function(a,b){return m[b][a];}));
+    var dark=0; for(i=0;i<n;i++) for(j=0;j<n;j++) dark+=m[i][j];
+    p+=10*Math.floor(Math.abs(dark*100/(n*n)-50)/5);
+    return p;
+  }
+
+  function generate(text){
+    var bytes=utf8(text), v=pickVersion(bytes.length), cw=buildData(bytes,v);
+    var base=buildMatrix(v), n=base.n;
+    // place data
+    function place(mask){
+      var m=base.m.map(function(r){return r.slice();}), res=base.res;
+      var bitIdx=0, dirUp=true;
+      for(var col=n-1;col>0;col-=2){
+        if(col===6) col--;
+        for(var t=0;t<n;t++){
+          var row=dirUp?(n-1-t):t;
+          for(var c2=0;c2<2;c2++){
+            var cc=col-c2;
+            if(res[row][cc]) continue;
+            var bit=0;
+            if(bitIdx<cw.length*8) bit=(cw[bitIdx>>3]>>(7-(bitIdx&7)))&1;
+            bitIdx++;
+            if(maskFn(mask)(row,cc)) bit^=1;
+            m[row][cc]=bit;
+          }
+        }
+        dirUp=!dirUp;
+      }
+      // format info
+      var fmt=FMT_M[mask];
+      for(var i=0;i<15;i++){
+        var b=(fmt>>i)&1;
+        if(i<6) m[i][8]=b; else if(i<8) m[i+1][8]=b; else if(i===8) m[8][7]=b;
+        else m[8][14-i]=b;
+        if(i<8) m[8][n-1-i]=b; else m[n-15+i][8]=b;
+      }
+      m[n-8][8]=1;
+      if(v>=7){ var vb=VER_BITS[v];
+        for(var i=0;i<18;i++){ var b2=(vb>>i)&1, r=Math.floor(i/3), c=i%3;
+          m[n-11+c][r]=b2; m[r][n-11+c]=b2; } }
+      return m;
+    }
+    var best=null,bestP=Infinity;
+    for(var k=0;k<8;k++){ var m=place(k), p=penalty(m,n); if(p<bestP){bestP=p;best=m;} }
+    return best;
+  }
+  return {generate:generate};
+})();
+
+(function(){
+  var overlay=document.getElementById("qrOverlay"),cv=document.getElementById("qrCanvas"),
+      inp=document.getElementById("qrText");
+  function draw(text){
+    try{
+      var m=QRLite.generate(text), n=m.length, q=4, s=Math.max(2,Math.floor(560/(n+2*q))), W=(n+2*q)*s;
+      cv.width=W; cv.height=W;
+      var c=cv.getContext("2d");
+      c.fillStyle="#ffffff"; c.fillRect(0,0,W,W);
+      c.fillStyle="#000000";
+      for(var i=0;i<n;i++) for(var j=0;j<n;j++) if(m[i][j]) c.fillRect((j+q)*s,(i+q)*s,s,s);
+    }catch(e){
+      var c=cv.getContext("2d"); cv.width=300; cv.height=300;
+      c.fillStyle="#fff"; c.fillRect(0,0,300,300);
+      c.fillStyle="#b00"; c.font="14px sans-serif"; c.textAlign="center";
+      c.fillText("Text prea lung", 150, 150);
+    }
+  }
+  document.getElementById("qrBtn").addEventListener("click",function(){
+    inp.value=window.location.href;      // generat de-novo, de fiecare data
+    draw(inp.value);
+    overlay.classList.add("open");
+  });
+  document.getElementById("qrRegen").addEventListener("click",function(){ draw(inp.value); });
+  inp.addEventListener("keydown",function(e){ if(e.key==="Enter") draw(inp.value); });
+  document.getElementById("qrClose").addEventListener("click",function(){ overlay.classList.remove("open"); });
+  overlay.addEventListener("click",function(e){ if(e.target===overlay) overlay.classList.remove("open"); });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape") overlay.classList.remove("open"); });
+  document.getElementById("qrDownload").addEventListener("click",function(){
+    var a=document.createElement("a");
+    a.download="medici-sibiu-qr.png";
+    a.href=cv.toDataURL("image/png");
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  });
+})();
+</script>
 </body>
 </html>
