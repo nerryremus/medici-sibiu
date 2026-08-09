@@ -133,6 +133,16 @@
   .qr-actions button{padding:8px 14px;font-size:13px;border-radius:8px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;}
   .qr-actions button.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
   @media print{ .qr-overlay{display:none !important;} .theme-toggle{display:none;} }
+  .section-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  .sec-btn{padding:9px 15px;font-size:13.5px;font-weight:600;border-radius:9px;border:1.5px solid var(--line);background:var(--paper-card);color:var(--ink-soft);cursor:pointer;font-family:inherit;}
+  .sec-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .sec-btn:hover:not(.active){border-color:var(--ink-soft);}
+  .simple-card{background:var(--paper-card);border:1.5px solid var(--line);border-radius:11px;padding:13px 15px;margin-bottom:9px;}
+  .simple-card .sc-name{font-weight:700;font-size:15px;margin:0 0 3px;}
+  .simple-card .sc-sub{font-size:13px;color:var(--ink-soft);margin:0 0 6px;}
+  .simple-card .sc-line{font-size:12.5px;margin:2px 0;}
+  .simple-card .sc-tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;border:1px solid var(--line);margin-right:5px;}
+  @media print{ .section-tabs{display:none;} }
   @media print{ .theme-toggle{ display:none; } }
 
   .top-actions{ display:flex; gap:8px; flex-shrink:0; }
@@ -565,6 +575,13 @@
     <div class="credit">proiect realizat voluntar de <strong>Dr. Nerișanu Remus-Octavian</strong> — medic de familie</div>
   </header>
 
+  <div class="section-tabs" id="sectionTabs">
+    <button class="sec-btn active" data-sec="medici">🩺 Medici specialiști</button>
+    <button class="sec-btn" data-sec="dentisti">🦷 Stomatologi</button>
+    <button class="sec-btn" data-sec="laboratoare">🔬 Laboratoare &amp; imagistică</button>
+    <button class="sec-btn" data-sec="farmacii">💊 Farmacii</button>
+  </div>
+
   <div class="controls">
     <div class="search-row">
       <input type="text" id="search" placeholder="Caută nume, specialitate sau clinică… (ex: cardiologie, Polisano, Mutu)" autocomplete="off">
@@ -592,8 +609,20 @@
 
   <div id="results"></div>
 
+  <div class="controls" id="altControls" style="display:none">
+    <div class="search-row">
+      <input type="text" id="altSearch" placeholder="Caută nume, cabinet, localitate…" autocomplete="off">
+    </div>
+    <div class="filter-row">
+      <select id="altFilter"><option value="">Toate localitățile</option></select>
+      <button class="reset-link" id="altReset">Resetează</button>
+    </div>
+  </div>
+  <div class="stats-bar" id="altStats" style="display:none"></div>
+  <div id="altResults"></div>
+
   <footer class="foot">
-    Date: <strong id="updatedSpan2"></strong> &middot; Sursă: documente oficiale CNAS/CAS Sibiu (lista furnizorilor de servicii medicale ambulatoriu specialități clinice + servicii conexe), încărcate manual.<br>
+    Date: <strong id="updatedSpan2"></strong> &middot; Sursă: documente oficiale CNAS/CAS Sibiu — ambulatoriu specialități clinice + servicii conexe (13.07.2026), stomatologie (01.07.2026), investigații paraclinice (01.06.2026), farmacii — încărcate manual.<br>
     Listele CAS se schimbă periodic — verificați telefonic înainte de a trimite un pacient pentru o programare urgentă.<br>
     Pagină statică, fără server, fără tracking. Funcționează offline după prima încărcare.<br>
     <span id="visitCounter"></span>
@@ -1233,6 +1262,147 @@ var QRLite = (function(){
     a.download="medici-sibiu-qr.png";
     a.href=cv.toDataURL("image/png");
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  });
+})();
+</script>
+<script>
+(function(){
+  var SEC="medici";
+  var mainCtl=document.querySelector(".controls"),
+      mainStats=document.getElementById("statsBar"),
+      mainRes=document.getElementById("results"),
+      printAll=document.getElementById("printAllBtn"),
+      altCtl=document.getElementById("altControls"),
+      altStats=document.getElementById("altStats"),
+      altRes=document.getElementById("altResults"),
+      altSearch=document.getElementById("altSearch"),
+      altFilter=document.getElementById("altFilter");
+
+  function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+  function tel(t){
+    if(!t) return "";
+    return String(t).split(/[;\s]+/).filter(Boolean).map(function(x){
+      return '<a href="tel:'+esc(x.replace(/[^0-9+]/g,""))+'">'+esc(x)+'</a>';
+    }).join(" · ");
+  }
+
+  var CFG={
+    dentisti:{
+      data:function(){return (typeof DENTISTS!=="undefined")?DENTISTS:[];},
+      label:"medici stomatologi",
+      facet:function(r){
+        var LOC=["Sibiu","Medias","Cisnadie","Selimbar","Avrig","Saliste","Talmaciu","Agnita","Cristian","Sura Mare","Sura Mica","Rasinari","Orlat","Vurpar","Seica Mare","Seica Mica","Arpasu de Jos","Carta","Marpod","Tilisca","Racovita","Boita","Nocrich","Rau Sadului","Micasasa","Poplaca","Gura Raului","Turnu Rosu","Daia","Apoldu de Jos","Dumbraveni","Porumbacu de Sus","Rosia","Merghindeal","Sadu","Bazna","Copsa Mica","Ocna Sibiului","Laslea","Mosna","Pauca","Slimnic","Sacel","Jina","Poiana Sibiului","Bradeni","Alma","Atel","Axente Sever","Darlos","Blajel","Chirpar","Loamnes","Birghis","Iacobeni","Mirsa","Cartisoara","Vestem","Nou","Brateiu","Miercurea Sibiului","Rusi"];
+        var a=(r.a||"").toLowerCase().replace(/ă/g,"a").replace(/â/g,"a").replace(/î/g,"i").replace(/ș/g,"s").replace(/ț/g,"t");
+        var best="",bl=0;
+        for(var i=0;i<LOC.length;i++){
+          var k=LOC[i].toLowerCase();
+          if(a.indexOf(k)>=0 && k.length>bl){ best=LOC[i]; bl=k.length; }
+        }
+        return best||"— (adresă incompletă)";
+      },
+      facetLabel:"Toate localitățile",
+      search:function(r){return [r.n,r.f,r.a].join(" ");},
+      card:function(r){
+        return '<div class="simple-card"><p class="sc-name">'+esc(r.n)+'</p>'+
+          '<p class="sc-sub">'+esc(r.f)+'</p>'+
+          '<div class="sc-line">📍 '+esc(r.a||"—")+'</div>'+
+          '<div class="sc-line">📞 '+tel(r.tel)+'</div>'+
+          '<div class="sc-line" style="margin-top:6px"><span class="sc-tag">'+(r.m==="rural"?"rural":"urban")+'</span><span class="sc-tag">CAS</span></div></div>';
+      }
+    },
+    laboratoare:{
+      data:function(){return (typeof LABS!=="undefined")?LABS:[];},
+      label:"furnizori de investigații",
+      facet:function(r){
+        var s=(r.inv||"").toLowerCase(), out=[];
+        if(s.indexOf("analize")>=0) out.push("Analize de laborator");
+        if(s.indexOf("ecografie")>=0) out.push("Ecografie");
+        if(s.indexOf("rmn")>=0) out.push("RMN");
+        if(s.indexOf("tomograf")>=0) out.push("Computer Tomograf");
+        if(s.indexOf("mamografie")>=0) out.push("Mamografie");
+        if(s.indexOf("radiologie")>=0) out.push("Radiologie-imagistică");
+        if(s.indexOf("osteodensito")>=0) out.push("Osteodensitometrie");
+        if(s.indexOf("anatomie")>=0) out.push("Anatomie patologică");
+        if(s.indexOf("scintigrafie")>=0) out.push("Scintigrafie");
+        return out.length?out:["—"];
+      },
+      facetLabel:"Toate investigațiile",
+      search:function(r){return [r.f,r.a,r.inv].join(" ");},
+      card:function(r){
+        return '<div class="simple-card"><p class="sc-name">'+esc(r.f)+'</p>'+
+          '<div class="sc-line">📍 '+esc(r.a)+'</div>'+
+          '<div class="sc-line">📞 '+tel(r.tel)+'</div>'+
+          '<div class="sc-line" style="margin-top:6px">🔬 '+esc(r.inv)+'</div></div>';
+      }
+    },
+    farmacii:{
+      data:function(){return (typeof PHARMACIES!=="undefined")?PHARMACIES:[];},
+      label:"farmacii",
+      facet:function(r){return (r.loc||"—").replace(/ Oficina$/i,"").trim()||"—";},
+      facetLabel:"Toate localitățile",
+      search:function(r){return [r.f,r.loc,r.sef].join(" ");},
+      card:function(r){
+        var of=/oficina/i.test(r.f)||/oficina/i.test(r.loc);
+        return '<div class="simple-card"><p class="sc-name">'+esc(r.f)+'</p>'+
+          '<div class="sc-line">📍 '+esc(r.loc)+'</div>'+
+          '<div class="sc-line">👤 farmacist șef: '+esc(r.sef||"—")+'</div>'+
+          '<div class="sc-line">📞 '+tel(r.tel)+'</div>'+
+          (of?'<div class="sc-line" style="margin-top:6px"><span class="sc-tag">oficină</span></div>':"")+
+          '</div>';
+      }
+    }
+  };
+
+  function norm(s){return (s||"").toString().toLowerCase()
+    .replace(/ă/g,"a").replace(/â/g,"a").replace(/î/g,"i").replace(/ș/g,"s").replace(/ş/g,"s").replace(/ț/g,"t").replace(/ţ/g,"t");}
+
+  function facetsOf(cfg,r){var f=cfg.facet(r);return Array.isArray(f)?f:[f];}
+
+  function fillFacets(cfg){
+    var set={};
+    cfg.data().forEach(function(r){ facetsOf(cfg,r).forEach(function(v){ set[v]=1; }); });
+    var keys=Object.keys(set).sort(function(a,b){return a.localeCompare(b,"ro");});
+    altFilter.innerHTML='<option value="">'+cfg.facetLabel+'</option>'+
+      keys.map(function(k){return '<option value="'+esc(k)+'">'+esc(k)+'</option>';}).join("");
+  }
+
+  function renderAlt(){
+    var cfg=CFG[SEC]; if(!cfg) return;
+    var q=norm(altSearch.value.trim()), fv=altFilter.value;
+    var rows=cfg.data().filter(function(r){
+      if(fv && facetsOf(cfg,r).indexOf(fv)<0) return false;
+      if(q && norm(cfg.search(r)).indexOf(q)<0) return false;
+      return true;
+    });
+    altStats.textContent=rows.length+" din "+cfg.data().length+" "+cfg.label;
+    altRes.innerHTML=rows.length?rows.map(cfg.card).join(""):
+      '<div class="simple-card"><p class="sc-sub">Niciun rezultat. Încearcă alt termen sau resetează filtrele.</p></div>';
+  }
+
+  function show(sec){
+    SEC=sec;
+    var isMain=(sec==="medici");
+    mainCtl.style.display=isMain?"":"none";
+    mainStats.style.display=isMain?"":"none";
+    mainRes.style.display=isMain?"":"none";
+    if(printAll) printAll.style.display=isMain?"":"none";
+    altCtl.style.display=isMain?"none":"";
+    altStats.style.display=isMain?"none":"";
+    altRes.style.display=isMain?"none":"";
+    if(!isMain){ altSearch.value=""; fillFacets(CFG[sec]); renderAlt(); }
+  }
+
+  document.querySelectorAll("#sectionTabs .sec-btn").forEach(function(b){
+    b.addEventListener("click",function(){
+      document.querySelectorAll("#sectionTabs .sec-btn").forEach(function(x){x.classList.remove("active");});
+      b.classList.add("active");
+      show(b.dataset.sec);
+    });
+  });
+  altSearch.addEventListener("input",renderAlt);
+  altFilter.addEventListener("change",renderAlt);
+  document.getElementById("altReset").addEventListener("click",function(){
+    altSearch.value=""; altFilter.value=""; renderAlt();
   });
 })();
 </script>
