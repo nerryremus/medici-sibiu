@@ -728,6 +728,7 @@
   <footer class="foot">
     Date: <strong id="updatedSpan2"></strong> &middot; Sursă: documente oficiale CNAS/CAS Sibiu — ambulatoriu specialități clinice + servicii conexe (13.07.2026), stomatologie (01.07.2026), investigații paraclinice (01.06.2026), farmacii — încărcate manual.<br>
     Listele CAS se schimbă periodic — verificați telefonic înainte de a trimite un pacient pentru o programare urgentă.<br>
+    <span id="printHint" style="display:none">📱 Pe telefon, butoanele de printare deschid o filă nouă, pregătită pentru tipar — apăsați acolo „Printează / Salvează PDF”. Dacă nu se deschide nimic, permiteți ferestrele pop-up pentru acest site.</span><br>
     Pagină statică, fără server. Statistici anonime de trafic (GoatCounter), fără cookie-uri și fără date personale. Funcționează offline după prima încărcare.<br>
     <span id="visitCounter"></span>
   </footer>
@@ -1638,7 +1639,53 @@ var QRLite = (function(){
    un document HTML separat, cu propriul CSS de print, si printam
    acel document. Merge identic pe desktop si pe telefon.
 ----------------------------------------------------------------*/
+window.IS_MOBILE = (function(){
+  return /Android|iPhone|iPad|iPod|Mobile|SamsungBrowser/i.test(navigator.userAgent)
+      || (window.matchMedia && window.matchMedia("(pointer:coarse)").matches);
+})();
+
+function buildPrintHtml(bodyHtml, css, withToolbar){
+  return '<!DOCTYPE html><html lang="ro"><head><meta charset="utf-8">'+
+    '<meta name="viewport" content="width=device-width,initial-scale=1">'+
+    '<title>Furnizori de sanatate — CAS Sibiu / OPSNAJ</title><style>'+
+    '@page{margin:12mm;}'+
+    'html,body{margin:0;padding:0;background:#fff;color:#000;'+
+      'font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;}'+
+    'a{color:#000;text-decoration:none;}'+
+    '#pbar{position:sticky;top:0;background:#1f2a24;color:#fff;padding:10px 14px;'+
+      'display:flex;gap:10px;align-items:center;font-size:14px;z-index:9;}'+
+    '#pbar button{padding:9px 16px;border:0;border-radius:8px;background:#3f9d72;color:#fff;'+
+      'font-size:14px;font-weight:600;}'+
+    '#pwrap{padding:14px;}'+
+    '@media print{#pbar{display:none !important;} #pwrap{padding:0;}}'+
+    (css||'')+
+    '</style></head><body>'+
+    (withToolbar
+      ? '<div id="pbar"><span>Pagină pregătită pentru printare</span>'+
+        '<button onclick="window.print()">🖨️ Printează / Salvează PDF</button></div>'
+      : '')+
+    '<div id="pwrap">'+bodyHtml+'</div></body></html>';
+}
+
+/* ---------------------------------------------------------------
+   Printare.
+   Desktop: iframe ascuns, printare directa.
+   Android (Chrome si Samsung Internet): printarea unui iframe sau a
+   documentului curent da pagina alba. Singura cale sigura este o
+   fila noua, curata, pe care utilizatorul apasa "Printează".
+----------------------------------------------------------------*/
 window.printDocument = function(bodyHtml, css){
+  if(window.IS_MOBILE){
+    var w = window.open("", "_blank");
+    if(!w){
+      alert("Blochează ferestrele pop-up. Permite-le pentru acest site ca să poți printa de pe telefon.");
+      return;
+    }
+    w.document.open();
+    w.document.write(buildPrintHtml(bodyHtml, css, true));
+    w.document.close();
+    return;
+  }
   var old = document.getElementById("printFrame");
   if(old) old.parentNode.removeChild(old);
   var f = document.createElement("iframe");
@@ -1647,16 +1694,7 @@ window.printDocument = function(bodyHtml, css){
   f.style.cssText = "position:fixed;right:0;bottom:0;width:1px;height:1px;opacity:0;border:0;";
   document.body.appendChild(f);
   var d = f.contentWindow.document;
-  d.open();
-  d.write('<!DOCTYPE html><html lang="ro"><head><meta charset="utf-8">'+
-    '<title>Furnizori de sanatate — CAS Sibiu / OPSNAJ</title><style>'+
-    '@page{margin:12mm;}'+
-    'html,body{margin:0;padding:0;background:#fff;color:#000;'+
-      'font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;}'+
-    'a{color:#000;text-decoration:none;}'+
-    (css||'')+
-    '</style></head><body>'+bodyHtml+'</body></html>');
-  d.close();
+  d.open(); d.write(buildPrintHtml(bodyHtml, css, false)); d.close();
   var go = function(){
     try{ f.contentWindow.focus(); f.contentWindow.print(); }catch(e){ window.print(); }
     setTimeout(function(){ if(f.parentNode) f.parentNode.removeChild(f); }, 1500);
@@ -1667,8 +1705,11 @@ window.printDocument = function(bodyHtml, css){
     if(!imgs[i].complete){ pending++; imgs[i].onload = imgs[i].onerror = function(){ if(--pending<=0) fire(); }; }
   }
   if(pending===0) setTimeout(fire, 60);
-  setTimeout(fire, 2500); // plasa de siguranta
+  setTimeout(fire, 2500);
 };
+
+(function(){ var hint=document.getElementById("printHint");
+  if(hint && window.IS_MOBILE) hint.style.display=""; })();
 
 window.PRINT_CSS_LIST =
   'h1{font-size:15pt;margin:0 0 2mm;}'+
