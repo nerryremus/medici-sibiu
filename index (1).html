@@ -82,7 +82,7 @@
     flex-wrap:wrap;
     margin-top:8px;
   }
-  header.top .meta span{white-space:nowrap;}
+  header.top .meta span{white-space:normal;overflow-wrap:anywhere;}
 
   header.top .top-row{
     display:flex;
@@ -142,12 +142,14 @@
   .simple-card .sc-sub{font-size:13px;color:var(--ink-soft);margin:0 0 6px;}
   .simple-card .sc-line{font-size:12.5px;margin:2px 0;}
   .simple-card .sc-tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;border:1px solid var(--line);margin-right:5px;}
+  .alt-note{background:var(--accent-soft);border:1.5px solid var(--accent);border-radius:11px;padding:11px 14px;font-size:13px;line-height:1.55;margin:0 0 12px;}
   .simple-card{position:relative;}
   .simple-card.picked{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
   .sc-check{position:absolute;top:11px;right:12px;width:24px;height:24px;border-radius:6px;border:1.5px solid var(--line);background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;color:#fff;}
   .sc-check.checked{background:var(--accent);border-color:var(--accent);}
   .alt-bar{position:sticky;bottom:0;z-index:60;background:#1f2a24;color:#fff;border-radius:12px;padding:10px 14px;margin:10px 0;display:none;align-items:center;gap:10px;flex-wrap:wrap;}
   .alt-bar.show{display:flex;}
+  @media print{ .alt-bar{display:none !important;} }
   .alt-bar span{font-size:13px;flex:1;}
   .alt-bar button{padding:8px 14px;font-size:13px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;}
   .alt-bar .b-print{background:var(--accent);color:#fff;}
@@ -157,6 +159,7 @@
   @media print{
     body.print-mode-alt .wrap, body.print-mode-alt .qr-overlay{display:none !important;}
     body.print-mode-alt #printSheetAlt{display:block !important;width:100%;padding:0;}
+    body.print-mode-alt .wrap{display:none !important;}
   }
   #printSheetAlt h1{font-size:14pt;margin:0 0 2px;}
   #printSheetAlt .pa-sub{font-size:8.5pt;color:#555;margin-bottom:7px;font-family:var(--mono);}
@@ -166,6 +169,19 @@
   #printSheetAlt .pa-item b{display:block;font-size:9.3pt;}
   #printSheetAlt .pa-item span{display:block;color:#444;}
   #printSheetAlt .pa-footer{margin-top:8px;font-size:7.5pt;color:#777;column-span:all;}
+  #printSheetQR{display:none;}
+  @media print{
+    body.print-mode-qr .wrap, body.print-mode-qr .qr-overlay{display:none !important;}
+    body.print-mode-qr #printSheetQR{display:block !important;width:100%;padding:0;}
+    @page{ margin:14mm; }
+  }
+  #printSheetQR .qs-inner{text-align:center;color:#000;}
+  #printSheetQR h1{font-size:17pt;line-height:1.3;margin:0 0 5mm;font-weight:800;text-align:left;}
+  #printSheetQR .qs-lead{font-size:12pt;margin:0 0 7mm;color:#222;}
+  #printSheetQR #qsImg{width:118mm;height:118mm;display:block;margin:0 auto 5mm;}
+  #printSheetQR .qs-url{font-family:var(--mono);font-size:11pt;margin:0 0 7mm;word-break:break-all;}
+  #printSheetQR .qs-how{font-size:12pt;margin:0 0 6mm;color:#222;}
+  #printSheetQR .qs-foot{font-size:9pt;color:#555;margin:0;}
   @media print{ .section-tabs{display:none;} }
   @media print{ .theme-toggle{ display:none; } }
 
@@ -494,9 +510,12 @@
        zeci de pagini goale in spatele recomandarii. */
     .wrap, .select-bar, .controls, header.top, footer.foot{ display:none !important; }
     /* implicit ascundem ambele foi; JS afiseaza doar pe cea ceruta prin clasa pe body */
-    #printSheet, #printSheetAll{ display:none !important; }
+    #printSheet, #printSheetAll, #printSheetAlt, #printSheetQR{ display:none !important; }
     body.print-mode-selection #printSheet{ display:block !important; width:100%; padding:0; }
     body.print-mode-all #printSheetAll{ display:block !important; width:100%; padding:0; }
+    /* pe Android, containerele cu inaltime/scroll fixat produc pagini albe */
+    html, body{ height:auto !important; min-height:0 !important; overflow:visible !important; }
+    .qr-overlay{ display:none !important; }
     @page{ margin:12mm; }
   }
   #printSheet h1{font-size:20px;margin:0 0 4px;}
@@ -579,11 +598,28 @@
   }
   footer.foot a{color:var(--accent-deep);}
 
+  /* --- nimic nu depaseste latimea ecranului --- */
+  @media screen{ html,body{max-width:100%;overflow-x:hidden;} }
+  @media print{ html,body{overflow:visible !important;height:auto !important;max-width:none !important;} }
+  *,*::before,*::after{min-width:0;}
+  select{max-width:100%;text-overflow:ellipsis;}
+  .simple-card,.person-card{overflow-wrap:anywhere;}
+
   @media (max-width:600px){
     header.top h1{font-size:21px;}
     .person-grid{grid-template-columns:1fr;}
-    .filter-row{gap:6px;}
-    select{font-size:13px;padding:7px 9px;}
+    .filter-row{gap:6px;flex-direction:column;align-items:stretch;}
+    .filter-row > select,
+    .filter-row > button,
+    .filter-row > .reset-link{width:100%;}
+    select{font-size:13px;padding:8px 9px;width:100%;box-sizing:border-box;}
+    .type-toggles{flex-wrap:wrap;}
+    .type-toggles .toggle-btn{flex:1 1 45%;}
+    .sec-btn{flex:1 1 45%;font-size:12.5px;padding:9px 6px;}
+    .alt-bar{flex-direction:column;align-items:stretch;}
+    .alt-bar button{width:100%;}
+    header.top .meta{gap:6px 14px;font-size:11.5px;}
+    header.top .meta span{white-space:normal;overflow-wrap:anywhere;max-width:100%;}
   }
 </style>
 </head>
@@ -657,12 +693,13 @@
     </div>
   </div>
   <div class="stats-bar" id="altStats" style="display:none"></div>
+  <div class="alt-note" id="altNote" style="display:none"></div>
   <div id="altResults"></div>
   <div class="alt-bar" id="altBar">
     <span id="altBarCount"></span>
     <button class="b-all" id="altSelectAll">Selectează tot ce e afișat</button>
-    <button class="b-clear" id="altClear">Golește</button>
-    <button class="b-print" id="altPrint">🖨️ Printează selecția</button>
+    <button class="b-clear" id="altClear">Golește selecția</button>
+    <button class="b-print" id="altPrint">🖨️ Printează</button>
   </div>
 
   <footer class="foot">
@@ -685,6 +722,18 @@
   <div class="print-sub" id="printSubtitle"></div>
   <div id="printList"></div>
   <div class="print-footer">Generat din directorul medici Sibiu (nerryremus.github.io/medici-sibiu) — verificați telefonic programarea.</div>
+</div>
+
+
+<div id="printSheetQR">
+  <div class="qs-inner">
+    <h1 id="qsTitle"></h1>
+    <p class="qs-lead" id="qsLead"></p>
+    <img id="qsImg" alt="Cod QR">
+    <p class="qs-url" id="qsUrl"></p>
+    <p class="qs-how" id="qsHow"></p>
+    <p class="qs-foot" id="qsFoot"></p>
+  </div>
 </div>
 
 <div id="printSheetAlt">
@@ -1131,6 +1180,7 @@
     <div class="qr-actions">
       <button class="primary" id="qrRegen">Regenerează</button>
       <button id="qrDownload">Descarcă PNG</button>
+      <button id="qrPrint">🖨️ Printează afiș A4</button>
       <button id="qrClose">Închide</button>
     </div>
   </div>
@@ -1327,6 +1377,28 @@ var QRLite = (function(){
   document.getElementById("qrClose").addEventListener("click",function(){ overlay.classList.remove("open"); });
   overlay.addEventListener("click",function(e){ if(e.target===overlay) overlay.classList.remove("open"); });
   document.addEventListener("keydown",function(e){ if(e.key==="Escape") overlay.classList.remove("open"); });
+  document.getElementById("qrPrint").addEventListener("click",function(){
+    var url=inp.value;
+    document.getElementById("qsTitle").textContent =
+      "Medici, ambulatorii, laboratoare și farmacii care sunt în contract cu Casa de Asigurări și pot fi accesate cu bilet de trimitere de la medicul de familie:";
+    document.getElementById("qsLead").textContent =
+      "Județul Sibiu — CAS Sibiu și OPSNAJ. Scanează codul cu camera telefonului.";
+    document.getElementById("qsImg").src = cv.toDataURL("image/png");
+    document.getElementById("qsUrl").textContent = url;
+    document.getElementById("qsHow").textContent =
+      "Cum scanezi: deschide camera foto a telefonului, îndreapt-o spre cod și atinge linkul care apare. Nu ai nevoie de nicio aplicație.";
+    document.getElementById("qsFoot").textContent =
+      "Listă gratuită, fără reclame, actualizată după documentele oficiale CNAS/CAS. Verificați telefonic programul înainte de deplasare.";
+    var w=document.querySelector(".wrap");
+    w.style.display="none";
+    document.body.classList.add("print-mode-qr");
+    void document.body.offsetHeight;
+    setTimeout(function(){ window.print(); },250);
+  });
+  window.addEventListener("afterprint",function(){
+    document.querySelector(".wrap").style.display="";
+    document.body.classList.remove("print-mode-qr");
+  });
   document.getElementById("qrDownload").addEventListener("click",function(){
     var a=document.createElement("a");
     a.download="medici-sibiu-qr.png";
@@ -1360,6 +1432,7 @@ var QRLite = (function(){
     dentisti:{
       data:function(){return (typeof DENTISTS!=="undefined")?DENTISTS:[];},
       label:"medici stomatologi",
+      note:"<b>Nu este nevoie de bilet de trimitere.</b> Prezentarea la un cabinet de medicină dentară aflat în contract cu Casa de Asigurări se face direct, fără trimitere de la medicul de familie.",
       title:"Stomatologi în contract CAS Sibiu",
       id:function(r){return "d|"+r.n+"|"+r.f;},
       pline:function(r){return "<b>"+esc(r.n)+"</b><span>"+esc(r.f)+"</span><span>"+esc(r.a||"—")+" · "+esc(r.tel)+"</span>";},
@@ -1454,6 +1527,9 @@ var QRLite = (function(){
       return true;
     });
     altStats.textContent=rows.length+" din "+cfg.data().length+" "+cfg.label;
+    var note=document.getElementById("altNote");
+    note.innerHTML = cfg.note ? cfg.note : "";
+    note.style.display = cfg.note ? "" : "none";
     LAST_ROWS=rows;
     altRes.innerHTML=rows.length?rows.map(function(r){
       var id=cfg.id(r), on=!!PICKED[id];
@@ -1475,6 +1551,7 @@ var QRLite = (function(){
     altStats.style.display=isMain?"none":"";
     altRes.style.display=isMain?"none":"";
     document.getElementById("altBar").style.display=isMain?"none":"";
+    if(isMain){ var nn=document.getElementById("altNote"); if(nn) nn.style.display="none"; }
     if(!isMain){ altSearch.value=""; PICKED={}; fillFacets(CFG[sec]); renderAlt(); syncBar(); }
     else { document.getElementById("altBar").classList.remove("show"); }
   }
@@ -1488,8 +1565,11 @@ var QRLite = (function(){
   });
   function syncBar(){
     var n=Object.keys(PICKED).length, bar=document.getElementById("altBar");
-    document.getElementById("altBarCount").textContent=n+(n===1?" selectat":" selectate");
-    bar.classList.toggle("show", n>0);
+    document.getElementById("altBarCount").textContent = n
+      ? (n+(n===1?" selectat":" selectate")+" — se printează doar acestea")
+      : "Bifează ce vrei să printezi, sau apasă direct 🖨️ pentru toată lista afișată";
+    document.getElementById("altClear").style.display = n?"":"none";
+    bar.classList.toggle("show", SEC!=="medici");
   }
   altRes.addEventListener("click",function(e){
     var t=e.target.closest("[data-pick]"); if(!t) return;
@@ -1507,6 +1587,7 @@ var QRLite = (function(){
   document.getElementById("altPrint").addEventListener("click",function(){
     var cfg=CFG[SEC];
     var rows=cfg.data().filter(function(r){return PICKED[cfg.id(r)];});
+    if(!rows.length) rows=LAST_ROWS.slice();
     if(!rows.length) return;
     document.getElementById("altPrintTitle").textContent=cfg.title;
     document.getElementById("altPrintSub").textContent=
@@ -1515,9 +1596,10 @@ var QRLite = (function(){
       rows.map(function(r){return '<div class="pa-item">'+cfg.pline(r)+'</div>';}).join("");
     document.getElementById("printSheetAlt").classList.toggle("ps-single", rows.length<=2);
     var wrap=document.querySelector(".wrap");
-    wrap.style.display="none"; document.body.classList.add("print-mode-alt");
+    wrap.style.display="none";
+    document.body.classList.add("print-mode-alt");
     void document.body.offsetHeight;
-    setTimeout(function(){ window.print(); },120);
+    setTimeout(function(){ window.print(); },250);
   });
   window.addEventListener("afterprint",function(){
     document.querySelector(".wrap").style.display="";
