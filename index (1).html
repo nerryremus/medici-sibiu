@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Furnizori de sănătate Sibiu — CAS Sibiu &amp; OPSNAJ</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f6feb'/%3E%3Cpath d='M26 50 C26 44 38 42 38 36 C38 31 26 29 26 24 C26 19 38 17 36 13' fill='none' stroke='%23fff' stroke-width='5.5' stroke-linecap='round'/%3E%3Cline x1='32' y1='8' x2='32' y2='54' stroke='%231f6feb' stroke-width='7'/%3E%3Cline x1='32' y1='8' x2='32' y2='54' stroke='%23fff' stroke-width='3.6' stroke-linecap='round'/%3E%3Ccircle cx='36' cy='13' r='3.8' fill='%23fff'/%3E%3Ccircle cx='26' cy='50' r='3' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#1c2620;
+    --ink-soft:#4b5a52;
+    --paper:#f7f5f0;
+    --paper-card:#ffffff;
+    --line:#d8d4c8;
+    --accent:#2f6b4f;
+    --accent-soft:#e3ede7;
+    --accent-deep:#1d4a36;
+    --primar:#a8651f;
+    --primar-bg:#f7ecdc;
+    --specialist:#2f6b4f;
+    --specialist-bg:#e3ede7;
+    --psiholog:#5a4b8a;
+    --psiholog-bg:#ebe7f5;
+    --kineto:#3d6b8a;
+    --kineto-bg:#e3edf2;
+    --radius:10px;
+    --mono: "SF Mono", "Roboto Mono", Consolas, monospace;
+  }
+
+  body.dark{
+    --ink:#e6e9e6;
+    --ink-soft:#9aa8a0;
+    --paper:#161a18;
+    --paper-card:#1f2523;
+    --line:#333b37;
+    --accent:#5fb488;
+    --accent-soft:#22302a;
+    --accent-deep:#7fc9a2;
+    --primar:#d9a566;
+    --primar-bg:#33281a;
+    --specialist:#5fb488;
+    --specialist-bg:#22302a;
+    --psiholog:#a99bd6;
+    --psiholog-bg:#2a2540;
+    --kineto:#7bafce;
+    --kineto-bg:#1f2c34;
+  }
+
+  html{ transition:none; }
+  body, .toggle-btn, select, #search, .person-card, header.top{
+    transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height:1.5;
+    min-height:100vh;
+  }
+
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px 60px;}
+
+  header.top{
+    border-bottom:2px solid var(--ink);
+    padding:28px 0 18px;
+    margin-bottom:24px;
+  }
+  header.top h1{
+    font-size:26px;
+    margin:0 0 4px;
+    letter-spacing:-0.01em;
+    font-weight:700;
+  }
+  header.top .meta{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--ink-soft);
+    display:flex;
+    gap:18px;
+    flex-wrap:wrap;
+    margin-top:8px;
+  }
+  header.top .meta span{white-space:nowrap;}
+
+  header.top .top-row{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .theme-toggle{
+    flex-shrink:0;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    border:1.5px solid var(--line);
+    background:var(--paper-card);
+    cursor:pointer;
+    font-size:18px;
+    line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+  }
+  .theme-toggle:hover{ border-color:var(--accent); }
+  .theme-toggle:active{ transform:scale(0.94); }
+
+  header.top .credit{
+    margin-top:12px;
+    font-size:12.5px;
+    font-style:italic;
+    color:var(--ink-soft);
+    padding-top:10px;
+    border-top:1px solid var(--line);
+    max-width:640px;
+  }
+  header.top .credit strong{
+    font-style:normal;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .qr-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:900;padding:18px;}
+  .qr-overlay.open{display:flex;}
+  .qr-box{background:var(--paper-card);border:1.5px solid var(--line);border-radius:14px;padding:20px;max-width:360px;width:100%;text-align:center;}
+  .qr-box h3{margin:0 0 4px;font-size:17px;}
+  .qr-box p{margin:0 0 14px;font-size:12.5px;color:var(--ink-soft);}
+  .qr-box canvas{width:100%;max-width:280px;height:auto;image-rendering:pixelated;border-radius:8px;background:#fff;padding:10px;box-sizing:border-box;}
+  .qr-box input{width:100%;box-sizing:border-box;margin:12px 0 10px;padding:8px 10px;font-size:12.5px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);}
+  .qr-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+  .qr-actions button{padding:8px 14px;font-size:13px;border-radius:8px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer;}
+  .qr-actions button.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+  @media print{ .qr-overlay{display:none !important;} .theme-toggle{display:none;} }
+  .section-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+  .sec-btn{padding:9px 15px;font-size:13.5px;font-weight:600;border-radius:9px;border:1.5px solid var(--line);background:var(--paper-card);color:var(--ink-soft);cursor:pointer;font-family:inherit;}
+  .sec-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .sec-btn:hover:not(.active){border-color:var(--ink-soft);}
+  .simple-card{background:var(--paper-card);border:1.5px solid var(--line);border-radius:11px;padding:13px 15px;margin-bottom:9px;}
+  .simple-card .sc-name{font-weight:700;font-size:15px;margin:0 0 3px;}
+  .simple-card .sc-sub{font-size:13px;color:var(--ink-soft);margin:0 0 6px;}
+  .simple-card .sc-line{font-size:12.5px;margin:2px 0;}
+  .simple-card .sc-tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;border:1px solid var(--line);margin-right:5px;}
+  .simple-card{position:relative;}
+  .simple-card.picked{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
+  .sc-check{position:absolute;top:11px;right:12px;width:24px;height:24px;border-radius:6px;border:1.5px solid var(--line);background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;color:#fff;}
+  .sc-check.checked{background:var(--accent);border-color:var(--accent);}
+  .alt-bar{position:sticky;bottom:0;z-index:60;background:#1f2a24;color:#fff;border-radius:12px;padding:10px 14px;margin:10px 0;display:none;align-items:center;gap:10px;flex-wrap:wrap;}
+  .alt-bar.show{display:flex;}
+  .alt-bar span{font-size:13px;flex:1;}
+  .alt-bar button{padding:8px 14px;font-size:13px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;}
+  .alt-bar .b-print{background:var(--accent);color:#fff;}
+  .alt-bar .b-all{background:transparent;color:#cfd6d0;text-decoration:underline;}
+  .alt-bar .b-clear{background:transparent;color:#cfd6d0;text-decoration:underline;}
+  #printSheetAlt{display:none;}
+  @media print{
+    body.print-mode-alt .wrap, body.print-mode-alt .qr-overlay{display:none !important;}
+    body.print-mode-alt #printSheetAlt{display:block !important;width:100%;padding:0;}
+  }
+  #printSheetAlt h1{font-size:14pt;margin:0 0 2px;}
+  #printSheetAlt .pa-sub{font-size:8.5pt;color:#555;margin-bottom:7px;font-family:var(--mono);}
+  #printSheetAlt .pa-list{column-count:2;column-gap:12px;font-size:8.6pt;line-height:1.28;}
+  #printSheetAlt.ps-single .pa-list{column-count:1;font-size:10pt;}
+  #printSheetAlt .pa-item{break-inside:avoid-column;padding:2.5px 0;border-bottom:1px dotted #ccc;}
+  #printSheetAlt .pa-item b{display:block;font-size:9.3pt;}
+  #printSheetAlt .pa-item span{display:block;color:#444;}
+  #printSheetAlt .pa-footer{margin-top:8px;font-size:7.5pt;color:#777;column-span:all;}
+  @media print{ .section-tabs{display:none;} }
+  @media print{ .theme-toggle{ display:none; } }
+
+  .top-actions{ display:flex; gap:8px; flex-shrink:0; }
+
+  /* --- Modal instructiuni "Adauga pe telefon" --- */
+  .install-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    z-index:1000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .install-overlay.visible{ display:flex; }
+  @media print{ .install-overlay{ display:none !important; } }
+  .install-modal{
+    background:var(--paper-card);
+    color:var(--ink);
+    border-radius:16px;
+    max-width:400px;
+    width:100%;
+    padding:24px;
+    box-shadow:0 12px 40px rgba(0,0,0,0.3);
+  }
+  .install-modal h3{ margin:0 0 4px; font-size:18px; }
+  .install-modal .im-sub{ font-size:13px; color:var(--ink-soft); margin-bottom:18px; }
+  .install-modal ol{ margin:0; padding-left:22px; line-height:1.7; font-size:14.5px; }
+  .install-modal ol li{ margin-bottom:6px; }
+  .install-modal .im-plat{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.03em;
+    color:var(--accent-deep);
+    background:var(--accent-soft);
+    padding:3px 10px;
+    border-radius:999px;
+    margin-bottom:12px;
+  }
+  .install-modal .im-close{
+    margin-top:20px;
+    width:100%;
+    padding:11px;
+    border:none;
+    border-radius:999px;
+    background:var(--accent);
+    color:#fff;
+    font-size:15px;
+    font-weight:600;
+    font-family:inherit;
+    cursor:pointer;
+  }
+  .install-modal .im-close:hover{ background:var(--accent-deep); }
+  .install-modal kbd{
+    font-family:var(--mono);
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:5px;
+    padding:1px 6px;
+    font-size:13px;
+  }
+
+  .controls{
+    position:sticky;
+    top:0;
+    background:var(--paper);
+    padding:14px 0 14px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:22px;
+    z-index:10;
+  }
+  .search-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  #search, #altSearch{
+    flex:1;
+    width:100%;
+    box-sizing:border-box;
+    padding:13px 16px;
+    font-size:16px;
+    border:2px solid var(--ink);
+    border-radius:var(--radius);
+    background:var(--paper-card);
+    color:var(--ink);
+    font-family:inherit;
+  }
+  #search:focus, #altSearch:focus{outline:none;border-color:var(--accent-deep);box-shadow:0 0 0 3px var(--accent-soft);}
+  #search::placeholder, #altSearch::placeholder{color:#9b9588;}
+
+  .filter-row{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  select{
+    padding:9px 12px;
+    border:1.5px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--paper-card);
+    color:var(--ink);
+    font-family:inherit;
+    font-size:14px;
+    cursor:pointer;
+  }
+  select:focus{outline:none;border-color:var(--accent);}
+
+  .toggle-group{display:flex;gap:6px;flex-wrap:wrap;}
+  .toggle-btn{
+    padding:8px 14px;
+    border:1.5px solid var(--line);
+    border-radius:999px;
+    background:var(--paper-card);
+    font-size:13px;
+    font-family:inherit;
+    cursor:pointer;
+    color:var(--ink-soft);
+    transition:all .12s ease;
+  }
+  .toggle-btn.active{
+    border-color:var(--accent-deep);
+    background:var(--accent);
+    color:#fff;
+    font-weight:600;
+  }
+  .toggle-btn:hover:not(.active){border-color:var(--ink-soft);}
+
+  .reset-link{
+    margin-left:auto;
+    font-size:13px;
+    color:var(--ink-soft);
+    text-decoration:underline;
+    cursor:pointer;
+    background:none;
+    border:none;
+    font-family:inherit;
+    padding:8px 4px;
+  }
+  .reset-link:hover{color:var(--ink);}
+
+  .stats-bar{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-bottom:18px;
+    padding-bottom:12px;
+    border-bottom:1px dashed var(--line);
+  }
+  .stats-bar strong{color:var(--ink);font-weight:700;}
+
+  .spec-group{margin-bottom:28px;}
+  .spec-header{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    margin-bottom:10px;
+    padding-bottom:6px;
+    border-bottom:2px solid var(--ink);
+  }
+  .spec-header h2{
+    font-size:18px;
+    margin:0;
+    font-weight:700;
+  }
+  .spec-header .count{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+  .spec-header .select-all-spec{
+    margin-left:auto;
+    font-family:inherit;
+    font-size:12px;
+    font-weight:600;
+    padding:4px 12px;
+    border:1.5px solid var(--accent, #2563eb);
+    border-radius:999px;
+    background:transparent;
+    color:var(--accent, #2563eb);
+    cursor:pointer;
+    white-space:nowrap;
+    align-self:center;
+  }
+  .spec-header .select-all-spec:hover{
+    background:var(--accent, #2563eb);
+    color:#fff;
+  }
+  @media print{ .spec-header .select-all-spec{ display:none; } }
+
+  .person-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+    gap:10px;
+  }
+  .person-card{
+    background:var(--paper-card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:13px 15px;
+    position:relative;
+  }
+  .person-name{
+    font-weight:700;
+    font-size:15px;
+    margin:0 0 4px;
+    color:var(--ink);
+  }
+  .person-clinic{
+    font-size:13px;
+    color:var(--ink-soft);
+    margin:0 0 8px;
+  }
+  .badge-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+  .badge{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:600;
+    padding:3px 9px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .badge.primar{background:var(--primar-bg);color:var(--primar);}
+  .badge.specialist{background:var(--specialist-bg);color:var(--specialist);}
+  .badge.psiholog{background:var(--psiholog-bg);color:var(--psiholog);}
+  .badge.kinetoterapeut, .badge.fizioterapeut{background:var(--kineto-bg);color:var(--kineto);}
+  .badge.cas{
+    background:var(--accent-deep);
+    color:#fff;
+  }
+
+  .clinic-detail{
+    margin-top:8px;
+    padding-top:8px;
+    border-top:1px dashed var(--line);
+    font-size:12px;
+    color:var(--ink-soft);
+    display:none;
+  }
+  .person-card.expanded .clinic-detail{display:block;}
+  .person-card{cursor:pointer;}
+  .clinic-detail .addr-line{margin-bottom:2px;}
+  .clinic-detail .phone-line a{color:var(--accent-deep);text-decoration:none;font-weight:600;}
+  .clinic-detail .phone-line a:hover{text-decoration:underline;}
+
+  .empty-state{
+    text-align:center;
+    padding:60px 20px;
+    color:var(--ink-soft);
+  }
+  .empty-state .big{font-size:40px;margin-bottom:10px;}
+
+  /* --- Selectie pentru printare --- */
+  .select-check{
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:22px;
+    height:22px;
+    border:2px solid var(--line);
+    border-radius:6px;
+    background:var(--paper-card);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:14px;
+    color:transparent;
+    flex-shrink:0;
+  }
+  .person-card{position:relative;padding-right:44px;}
+  .select-check.checked{
+    background:var(--accent-deep);
+    border-color:var(--accent-deep);
+    color:#fff;
+  }
+
+  .select-bar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    background:var(--ink);
+    color:#fff;
+    padding:12px 20px;
+    display:none;
+    align-items:center;
+    gap:14px;
+    z-index:100;
+    box-shadow:0 -4px 16px rgba(0,0,0,0.2);
+  }
+  .select-bar.visible{display:flex;}
+  .select-bar .count{
+    font-family:var(--mono);
+    font-size:14px;
+    white-space:nowrap;
+  }
+  .select-bar .spacer{flex:1;}
+  .select-bar button{
+    font-family:inherit;
+    font-size:14px;
+    padding:9px 16px;
+    border-radius:var(--radius);
+    border:none;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .select-bar .btn-print{background:var(--accent);color:#fff;}
+  .select-bar .btn-print:hover{background:var(--accent-deep);}
+  .select-bar .btn-clear{background:transparent;color:#cfd6d0;text-decoration:underline;}
+  .select-bar .btn-clear:hover{color:#fff;}
+
+  /* --- Foaia de printat (ascunsa normal, vizibila doar la print) --- */
+  #printSheet{display:none;}
+
+  @media print{
+    /* la print fortam mereu alb/negru, chiar daca ecranul e pe dark mode */
+    body, body.dark{ background:#fff !important; color:#000 !important; }
+    /* scoatem TOT continutul normal din flux (display:none, nu visibility:hidden!)
+       altfel grid-ul de sute de carduri ramane "prezent" ca inaltime si genereaza
+       zeci de pagini goale in spatele recomandarii. */
+    .wrap, .select-bar, .controls, header.top, footer.foot{ display:none !important; }
+    /* implicit ascundem ambele foi; JS afiseaza doar pe cea ceruta prin clasa pe body */
+    #printSheet, #printSheetAll{ display:none !important; }
+    body.print-mode-selection #printSheet{ display:block !important; width:100%; padding:0; }
+    body.print-mode-all #printSheetAll{ display:block !important; width:100%; padding:0; }
+    @page{ margin:12mm; }
+  }
+  #printSheet h1{font-size:20px;margin:0 0 4px;}
+  #printSheet .print-sub{font-size:12px;color:#555;margin-bottom:18px;font-family:var(--mono);}
+  #printSheet h1{font-size:14pt;}
+  #printSheet .print-sub{font-size:8.5pt;margin-bottom:7px;}
+  #printSheet #printList{
+    column-count:2;
+    column-gap:12px;
+    font-size:9pt;
+    line-height:1.28;
+  }
+  #printSheet.ps-single #printList{ column-count:1; font-size:10pt; }
+  #printSheet .print-item{
+    break-inside:avoid-column;
+    border-bottom:1px dotted #ccc;
+    padding:2.5px 0;
+    margin:0;
+  }
+  #printSheet .print-item p{margin:0;}
+  #printSheet .print-item .pname{font-size:9.5pt;font-weight:700;}
+  #printSheet .print-item .pspec{color:#333;}
+  #printSheet .print-item .pclinic{color:#000;}
+  #printSheet .print-item .paddr{color:#444;font-size:8pt;}
+  #printSheet .print-footer{margin-top:8px;font-size:7.5pt;color:#777;column-span:all;}
+
+  /* --- Buton "Printeaza lista completa" --- */
+  .print-all-btn{
+    font-size:13px;
+    font-weight:600;
+    font-family:inherit;
+    padding:8px 14px;
+    border:1.5px solid var(--accent-deep);
+    border-radius:999px;
+    background:var(--accent-soft, #eaf1ff);
+    color:var(--accent-deep);
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .print-all-btn:hover{background:var(--accent);color:#fff;}
+
+  /* --- Foaia compacta (lista completa pe specialitati) --- */
+  #printSheetAll{display:none;}
+  #printSheetAll h1{font-size:16px;margin:0 0 2px;}
+  #printSheetAll .pa-sub{font-size:10px;color:#555;margin-bottom:8px;font-family:var(--mono);}
+  #printSheetAll .pa-list{
+    column-count:3;
+    column-gap:14px;
+    font-size:8.4pt;
+    line-height:1.3;
+  }
+  #printSheetAll .pa-group{ break-inside:avoid-column; margin-bottom:7px; }
+  #printSheetAll .pa-group h3{
+    font-size:9pt;
+    text-transform:uppercase;
+    letter-spacing:.02em;
+    margin:0 0 2px;
+    padding-bottom:1px;
+    border-bottom:1px solid #999;
+    break-after:avoid-column;
+  }
+  #printSheetAll .pa-item{
+    break-inside:avoid-column;
+    padding:1.5px 0;
+    border-bottom:1px dotted #ddd;
+  }
+  #printSheetAll .pa-item .pa-name{font-weight:700;}
+  #printSheetAll .pa-item .pa-name .pa-grad{font-weight:400;color:#555;}
+  #printSheetAll .pa-item .pa-clinic{display:block;color:#444;}
+  #printSheetAll .pa-footer{margin-top:8px;font-size:7.5pt;color:#777;column-span:all;}
+
+  footer.foot{
+    margin-top:40px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    font-size:12px;
+    color:var(--ink-soft);
+    font-family:var(--mono);
+    line-height:1.7;
+  }
+  footer.foot a{color:var(--accent-deep);}
+
+  @media (max-width:600px){
+    header.top h1{font-size:21px;}
+    .person-grid{grid-template-columns:1fr;}
+    .filter-row{gap:6px;}
+    select{font-size:13px;padding:7px 9px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="top-row">
+      <h1>Furnizori de sănătate în contract cu CAS Sibiu și CAS OPSNAJ</h1>
+      <div class="top-actions">
+        <button class="theme-toggle" id="qrBtn" title="Generează cod QR pentru acest director" aria-label="Generează cod QR">
+          <span>🔳</span>
+        </button>
+        <button class="theme-toggle" id="installBtn" title="Adaugă directorul pe ecranul telefonului" aria-label="Adaugă pe telefon">
+          <span>📲</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" title="Comută între temă luminoasă și întunecată" aria-label="Comută tema">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+    <div class="meta">
+      <span>📋 sursă: liste oficiale CNAS / CAS Sibiu &middot; Spitalul Militar — CAS OPSNAJ / MApN</span>
+      <span id="updatedSpan">actualizat: &mdash;</span>
+      <span>📍 jud. Sibiu (Sibiu, Mediaș, Agnita, Cisnădie, Avrig, Săliște)</span>
+    </div>
+    <div class="credit">proiect realizat voluntar de <strong>Dr. Nerișanu Remus-Octavian</strong> — medic de familie</div>
+  </header>
+
+  <div class="section-tabs" id="sectionTabs">
+    <button class="sec-btn active" data-sec="medici">🩺 Medici, Ambulatorii, Spitale</button>
+    <button class="sec-btn" data-sec="dentisti">🦷 Stomatologi</button>
+    <button class="sec-btn" data-sec="laboratoare">🔬 Laboratoare &amp; imagistică</button>
+    <button class="sec-btn" data-sec="farmacii">💊 Farmacii</button>
+  </div>
+
+  <div class="controls">
+    <div class="search-row">
+      <input type="text" id="search" placeholder="Caută nume, specialitate sau clinică… (ex: cardiologie, Polisano, Mutu)" autocomplete="off">
+    </div>
+    <div class="filter-row">
+      <select id="filterSpec"><option value="">Toate specialitățile</option></select>
+      <select id="filterClinic"><option value="">Toate clinicile</option></select>
+      <select id="filterGrad">
+        <option value="">Primar + Specialist</option>
+        <option value="Primar">Doar Primar</option>
+        <option value="Specialist">Doar Specialist</option>
+      </select>
+      <div class="toggle-group" id="typeToggle">
+        <button class="toggle-btn active" data-type="medic">Medici</button>
+        <button class="toggle-btn active" data-type="psiholog">Psihologi</button>
+        <button class="toggle-btn active" data-type="kinetoterapeut">Kinetoterapeuți</button>
+        <button class="toggle-btn active" data-type="fizioterapeut">Fizioterapeuți</button>
+      </div>
+      <button class="print-all-btn" id="printAllBtn" title="Printează lista curentă (respectă filtrele active), compact, grupată pe specialități">🖨️ Printează lista completă</button>
+      <button class="reset-link" id="resetBtn">Resetează filtrele</button>
+    </div>
+  </div>
+
+  <div class="stats-bar" id="statsBar"></div>
+
+  <div id="results"></div>
+
+  <div class="controls" id="altControls" style="display:none">
+    <div class="search-row">
+      <input type="text" id="altSearch" placeholder="Caută nume, cabinet, localitate…" autocomplete="off">
+    </div>
+    <div class="filter-row">
+      <select id="altFilter"><option value="">Toate localitățile</option></select>
+      <button class="reset-link" id="altReset">Resetează</button>
+    </div>
+  </div>
+  <div class="stats-bar" id="altStats" style="display:none"></div>
+  <div id="altResults"></div>
+  <div class="alt-bar" id="altBar">
+    <span id="altBarCount"></span>
+    <button class="b-all" id="altSelectAll">Selectează tot ce e afișat</button>
+    <button class="b-clear" id="altClear">Golește</button>
+    <button class="b-print" id="altPrint">🖨️ Printează selecția</button>
+  </div>
+
+  <footer class="foot">
+    Date: <strong id="updatedSpan2"></strong> &middot; Sursă: documente oficiale CNAS/CAS Sibiu — ambulatoriu specialități clinice + servicii conexe (13.07.2026), stomatologie (01.07.2026), investigații paraclinice (01.06.2026), farmacii — încărcate manual.<br>
+    Listele CAS se schimbă periodic — verificați telefonic înainte de a trimite un pacient pentru o programare urgentă.<br>
+    Pagină statică, fără server. Statistici anonime de trafic (GoatCounter), fără cookie-uri și fără date personale. Funcționează offline după prima încărcare.<br>
+    <span id="visitCounter"></span>
+  </footer>
+</div>
+
+<div class="select-bar" id="selectBar">
+  <span class="count" id="selectCount">0 selectați</span>
+  <span class="spacer"></span>
+  <button class="btn-clear" id="clearSelection">Golește selecția</button>
+  <button class="btn-print" id="printSelection">🖨️ Printează recomandarea</button>
+</div>
+
+<div id="printSheet">
+  <h1>Recomandare medic de familie</h1>
+  <div class="print-sub" id="printSubtitle"></div>
+  <div id="printList"></div>
+  <div class="print-footer">Generat din directorul medici Sibiu (nerryremus.github.io/medici-sibiu) — verificați telefonic programarea.</div>
+</div>
+
+<div id="printSheetAlt">
+  <h1 id="altPrintTitle"></h1>
+  <div class="pa-sub" id="altPrintSub"></div>
+  <div class="pa-list" id="altPrintList"></div>
+  <div class="pa-footer">Generat din lista furnizorilor de sănătate în contract cu CAS Sibiu și CAS OPSNAJ (nerryremus.github.io/medici-sibiu) — verificați telefonic înainte de programare.</div>
+</div>
+
+<div id="printSheetAll">
+  <h1>Furnizori de sănătate în contract cu CAS Sibiu și CAS OPSNAJ — listă completă (pe specialități)</h1>
+  <div class="pa-sub" id="printAllSub"></div>
+  <div class="pa-list" id="printAllList"></div>
+  <div class="pa-footer">Generat din directorul medici Sibiu (nerryremus.github.io/medici-sibiu) — listele CAS se schimbă periodic, verificați telefonic înainte de programare.</div>
+</div>
+
+<div class="install-overlay" id="installOverlay">
+  <div class="install-modal">
+    <h3>📲 Adaugă pe telefon</h3>
+    <div class="im-sub">Ai directorul la un click distanță, direct de pe ecranul telefonului.</div>
+    <div id="installSteps"></div>
+    <button class="im-close" id="installClose">Am înțeles</button>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+(function(){
+  const TYPE_LABELS = { medic:"Medici", psiholog:"Psihologi", kinetoterapeut:"Kinetoterapeuți", fizioterapeut:"Fizioterapeuți" };
+  let activeTypes = new Set(["medic","psiholog","kinetoterapeut","fizioterapeut"]);
+  const selectedIds = new Set();
+
+  document.getElementById("updatedSpan").textContent = "actualizat: " + DATA_UPDATED;
+  document.getElementById("updatedSpan2").textContent = DATA_UPDATED;
+
+  PEOPLE.forEach((p, idx) => { p._id = idx; });
+
+  function populateSelects(){
+    const specs = [...new Set(PEOPLE.map(p=>p.s))].sort((a,b)=>a.localeCompare(b,'ro'));
+    const specSel = document.getElementById("filterSpec");
+    specs.forEach(s=>{
+      const o = document.createElement("option");
+      o.value = s; o.textContent = s;
+      specSel.appendChild(o);
+    });
+
+    const clinicSel = document.getElementById("filterClinic");
+    const clinicIds = [...new Set(PEOPLE.map(p=>p.c))]
+      .filter(id => CLINICS[id])
+      .sort((a,b)=>CLINICS[a].name.localeCompare(CLINICS[b].name,'ro'));
+    clinicIds.forEach(id=>{
+      const o = document.createElement("option");
+      o.value = id; o.textContent = CLINICS[id].name;
+      clinicSel.appendChild(o);
+    });
+  }
+
+  function normalize(str){
+    return (str||"").toLowerCase()
+      .replace(/ă/g,"a").replace(/â/g,"a").replace(/î/g,"i")
+      .replace(/ș/g,"s").replace(/ş/g,"s").replace(/ț/g,"t").replace(/ţ/g,"t");
+  }
+
+  function matchesSearch(p, q){
+    if(!q) return true;
+    const nq = normalize(q);
+    const clinic = CLINICS[p.c];
+    const haystack = normalize(p.n + " " + p.s + " " + (clinic ? clinic.name : "") + " " + (clinic ? clinic.address : ""));
+    return haystack.includes(nq);
+  }
+
+  function render(){
+    const q = document.getElementById("search").value.trim();
+    const specF = document.getElementById("filterSpec").value;
+    const clinicF = document.getElementById("filterClinic").value;
+    const gradF = document.getElementById("filterGrad").value;
+
+    const filtered = PEOPLE.filter(p=>{
+      if(!activeTypes.has(p.t)) return false;
+      if(specF && p.s !== specF) return false;
+      if(clinicF && p.c !== clinicF) return false;
+      if(gradF && p.g !== gradF) return false;
+      if(!matchesSearch(p, q)) return false;
+      return true;
+    });
+
+    const grouped = {};
+    filtered.forEach(p=>{
+      if(!grouped[p.s]) grouped[p.s] = [];
+      grouped[p.s].push(p);
+    });
+    const specs = Object.keys(grouped).sort((a,b)=>a.localeCompare(b,'ro'));
+
+    const clinicsCount = new Set(filtered.map(p=>p.c)).size;
+    document.getElementById("statsBar").innerHTML =
+      `<strong>${filtered.length}</strong> persoane &middot; <strong>${specs.length}</strong> specialități &middot; <strong>${clinicsCount}</strong> clinici/cabinete`;
+
+    const resultsEl = document.getElementById("results");
+    if(specs.length === 0){
+      resultsEl.innerHTML = `<div class="empty-state"><div class="big">🔍</div>Niciun rezultat. Încearcă alt termen de căutare sau resetează filtrele.</div>`;
+      return;
+    }
+
+    resultsEl.innerHTML = specs.map(spec=>{
+      const people = grouped[spec].sort((a,b)=>a.n.localeCompare(b.n,'ro'));
+      return `
+        <div class="spec-group">
+          <div class="spec-header">
+            <h2>${spec}</h2>
+            <span class="count">${people.length} ${people.length===1?'persoană':'persoane'}</span>
+            <button class="select-all-spec" data-spec="${escapeHtml(spec)}" title="Selectează toți din această specialitate">Selectează toți</button>
+          </div>
+          <div class="person-grid">
+            ${people.map(p=>renderCard(p)).join("")}
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    document.querySelectorAll(".select-all-spec").forEach(btn=>{
+      btn.addEventListener("click", (e)=>{
+        e.stopPropagation();
+        const spec = btn.dataset.spec;
+        // cardurile din ACELASI grup de specialitate (cel mai apropiat spec-group)
+        const group = btn.closest(".spec-group");
+        const checks = [...group.querySelectorAll(".select-check")];
+        // daca toti sunt deja selectati -> ii deselectam (toggle); altfel ii selectam pe toti
+        const allSelected = checks.every(c => selectedIds.has(parseInt(c.dataset.select,10)));
+        checks.forEach(c=>{
+          const idx = parseInt(c.dataset.select,10);
+          const isSel = selectedIds.has(idx);
+          if(allSelected && isSel){          // deselecteaza tot
+            selectedIds.delete(idx); c.classList.remove("checked"); c.textContent="";
+          } else if(!allSelected && !isSel){ // selecteaza doar ce lipseste
+            selectedIds.add(idx); c.classList.add("checked"); c.textContent="✓";
+          }
+        });
+        updateSelectBar();
+      });
+    });
+
+    document.querySelectorAll(".person-card").forEach(card=>{
+      card.addEventListener("click", (e)=>{
+        if(e.target.closest(".select-check")){
+          e.stopPropagation();
+          const idx = parseInt(e.target.closest(".select-check").dataset.select, 10);
+          toggleSelect(idx, e.target.closest(".select-check"));
+          return;
+        }
+        card.classList.toggle("expanded");
+      });
+    });
+  }
+
+  function toggleSelect(idx, checkEl){
+    if(selectedIds.has(idx)){
+      selectedIds.delete(idx);
+      checkEl.classList.remove("checked");
+      checkEl.textContent = "";
+    } else {
+      selectedIds.add(idx);
+      checkEl.classList.add("checked");
+      checkEl.textContent = "✓";
+    }
+    updateSelectBar();
+  }
+
+  function syncSelectAllButtons(){
+    // pastreaza eticheta fiecarui buton "Selecteaza/Deselecteaza toti" in acord cu starea reala a grupului,
+    // chiar si dupa selectari/deselectari individuale de carduri
+    document.querySelectorAll(".spec-group").forEach(group=>{
+      const btn = group.querySelector(".select-all-spec");
+      if(!btn) return;
+      const checks = [...group.querySelectorAll(".select-check")];
+      const allSelected = checks.length>0 && checks.every(c=>selectedIds.has(parseInt(c.dataset.select,10)));
+      btn.textContent = allSelected ? "Deselectează toți" : "Selectează toți";
+    });
+  }
+
+  function updateSelectBar(){
+    syncSelectAllButtons();
+    const bar = document.getElementById("selectBar");
+    const n = selectedIds.size;
+    if(n === 0){
+      bar.classList.remove("visible");
+      return;
+    }
+    bar.classList.add("visible");
+    document.getElementById("selectCount").textContent = `${n} ${n===1?'medic selectat':'medici selectați'}`;
+  }
+
+  function clearSelection(){
+    selectedIds.clear();
+    document.querySelectorAll(".select-check").forEach(el=>{
+      el.classList.remove("checked");
+      el.textContent = "";
+    });
+    updateSelectBar();
+  }
+
+  function getFilteredPeople(){
+    const q = document.getElementById("search").value.trim();
+    const specF = document.getElementById("filterSpec").value;
+    const clinicF = document.getElementById("filterClinic").value;
+    const gradF = document.getElementById("filterGrad").value;
+    return PEOPLE.filter(p=>{
+      if(!activeTypes.has(p.t)) return false;
+      if(specF && p.s !== specF) return false;
+      if(clinicF && p.c !== clinicF) return false;
+      if(gradF && p.g !== gradF) return false;
+      if(!matchesSearch(p, q)) return false;
+      return true;
+    });
+  }
+
+  function enterPrintMode(mode){
+    // ascundem continutul normal si inline (nu doar prin clasa) pentru robustete pe Android,
+    // unde snapshot-ul de print se poate lua inainte sa se aplice clasa CSS.
+    document.querySelector('.wrap').style.display = 'none';
+    document.body.classList.add(mode);
+    void document.body.offsetHeight; // forteaza reflow inainte de print
+  }
+  function exitPrintMode(){
+    document.querySelector('.wrap').style.display = '';
+    document.body.classList.remove('print-mode-selection','print-mode-all');
+  }
+
+  function printSelection(){
+    const chosen = PEOPLE.filter(p=>selectedIds.has(p._id));
+    if(chosen.length === 0) return;
+    document.getElementById("printSubtitle").textContent =
+      "Generat la " + new Date().toLocaleDateString('ro-RO') + " · " + chosen.length + " " + (chosen.length===1?"recomandare":"recomandări");
+    document.getElementById("printList").innerHTML = chosen.map(p=>{
+      const clinic = CLINICS[p.c] || { name:"-", address:"-", phone:"-" };
+      return `
+        <div class="print-item">
+          <p class="pname">${escapeHtml(p.n)} ${p.g && p.g!=='-' ? '('+escapeHtml(p.g)+')' : ''}</p>
+          <p class="pspec">${escapeHtml(p.s)}</p>
+          <p class="pclinic">${escapeHtml(clinic.name)}</p>
+          <p class="paddr">📍 ${escapeHtml(clinic.address)} &nbsp;&nbsp; 📞 ${escapeHtml(clinic.phone)}</p>
+        </div>
+      `;
+    }).join("");
+    document.getElementById('printSheet').classList.toggle('ps-single', chosen.length<=2);
+    enterPrintMode('print-mode-selection');
+    setTimeout(()=>{ window.print(); }, 120);
+  }
+
+  function printAllCompact(){
+    const filtered = getFilteredPeople();
+    if(filtered.length === 0) return;
+    const grouped = {};
+    filtered.forEach(p=>{ (grouped[p.s] = grouped[p.s] || []).push(p); });
+    const specs = Object.keys(grouped).sort((a,b)=>a.localeCompare(b,'ro'));
+
+    document.getElementById("printAllSub").textContent =
+      "Generat la " + new Date().toLocaleDateString('ro-RO') + " · actualizat: " + DATA_UPDATED +
+      " · " + filtered.length + " persoane · " + specs.length + " specialități";
+
+    document.getElementById("printAllList").innerHTML = specs.map(spec=>{
+      const people = grouped[spec].sort((a,b)=>a.n.localeCompare(b.n,'ro'));
+      return `
+        <div class="pa-group">
+          <h3>${escapeHtml(spec)} &middot; ${people.length}</h3>
+          ${people.map(p=>{
+            const clinic = CLINICS[p.c] || { name:"-", phone:"-" };
+            const grad = (p.g && p.g !== '-') ? ` <span class="pa-grad">(${escapeHtml(p.g[0])})</span>` : '';
+            return `<div class="pa-item"><span class="pa-name">${escapeHtml(p.n)}${grad}</span><span class="pa-clinic">${escapeHtml(clinic.name)} &middot; ${escapeHtml(clinic.phone)}</span></div>`;
+          }).join("")}
+        </div>
+      `;
+    }).join("");
+
+    enterPrintMode('print-mode-all');
+    setTimeout(()=>{ window.print(); }, 120);
+  }
+
+  function renderCard(p){
+    const clinic = CLINICS[p.c] || { name: "Clinică necunoscută", address: "-", phone: "-" };
+    const typeBadge = p.t !== "medic" ? `<span class="badge ${p.t}">${TYPE_LABELS[p.t]}</span>` : "";
+    const gradBadge = (p.g && p.g !== "-") ? `<span class="badge ${p.g.toLowerCase()==='primar'?'primar':'specialist'}">${p.g}</span>` : "";
+    const isChecked = selectedIds.has(p._id);
+    return `
+      <div class="person-card" data-idx="${p._id}">
+        <div class="select-check ${isChecked?'checked':''}" data-select="${p._id}">${isChecked?'✓':''}</div>
+        <p class="person-name">${escapeHtml(p.n)}</p>
+        <p class="person-clinic">${escapeHtml(clinic.name)}</p>
+        <div class="badge-row">
+          ${gradBadge}
+          ${typeBadge}
+          <span class="badge cas">${escapeHtml(clinic.casa || "CAS")}</span>
+        </div>
+        <div class="clinic-detail">
+          <div class="addr-line">📍 ${escapeHtml(clinic.address)}</div>
+          <div class="phone-line">📞 <a href="tel:${escapeHtml(clinic.phone)}">${escapeHtml(clinic.phone)}</a></div>
+        </div>
+      </div>
+    `;
+  }
+
+  function escapeHtml(s){
+    const d = document.createElement("div");
+    d.textContent = s == null ? "" : String(s);
+    return d.innerHTML;
+  }
+
+  function resetFilters(){
+    document.getElementById("search").value = "";
+    document.getElementById("filterSpec").value = "";
+    document.getElementById("filterClinic").value = "";
+    document.getElementById("filterGrad").value = "";
+    activeTypes = new Set(["medic","psiholog","kinetoterapeut","fizioterapeut"]);
+    document.querySelectorAll(".toggle-btn").forEach(b=>b.classList.add("active"));
+    render();
+  }
+
+  document.getElementById("search").addEventListener("input", render);
+  document.getElementById("filterSpec").addEventListener("change", render);
+  document.getElementById("filterClinic").addEventListener("change", render);
+  document.getElementById("filterGrad").addEventListener("change", render);
+  document.getElementById("resetBtn").addEventListener("click", resetFilters);
+
+  document.querySelectorAll(".toggle-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const type = btn.dataset.type;
+      if(activeTypes.has(type)){
+        if(activeTypes.size > 1){ activeTypes.delete(type); btn.classList.remove("active"); }
+      } else {
+        activeTypes.add(type); btn.classList.add("active");
+      }
+      render();
+    });
+  });
+
+  document.getElementById("clearSelection").addEventListener("click", clearSelection);
+  document.getElementById("printSelection").addEventListener("click", printSelection);
+  document.getElementById("printAllBtn").addEventListener("click", printAllCompact);
+
+  // --- Tema luminoasa / intunecata ---
+  const themeToggle = document.getElementById("themeToggle");
+  function applyTheme(dark){
+    document.body.classList.toggle("dark", dark);
+    themeToggle.querySelector(".theme-icon").textContent = dark ? "☀️" : "🌙";
+    themeToggle.setAttribute("title", dark ? "Comută pe temă luminoasă" : "Comută pe temă întunecată");
+  }
+  // la incarcare: respecta preferinta sistemului de operare al utilizatorului
+  let prefersDark = false;
+  try { prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches; } catch(e){}
+  applyTheme(prefersDark);
+  themeToggle.addEventListener("click", ()=>{
+    applyTheme(!document.body.classList.contains("dark"));
+  });
+
+  // --- Buton "Adauga pe telefon" cu instructiuni dupa platforma ---
+  const installBtn = document.getElementById("installBtn");
+  const installOverlay = document.getElementById("installOverlay");
+  const installSteps = document.getElementById("installSteps");
+
+  function detectPlatform(){
+    const ua = navigator.userAgent || "";
+    if(/iPhone|iPad|iPod/i.test(ua)) return "ios";
+    if(/Android/i.test(ua)) return "android";
+    return "desktop";
+  }
+
+  const STEPS = {
+    ios: `<div class="im-plat">iPhone / iPad</div>
+      <ol>
+        <li>Apasă butonul <strong>Share</strong> <kbd>⎋</kbd> din bara de jos a Safari.</li>
+        <li>Derulează și alege <strong>„Add to Home Screen”</strong> (Adaugă pe ecranul principal).</li>
+        <li>Apasă <strong>„Add”</strong> — gata, apare iconița pe ecran.</li>
+      </ol>`,
+    android: `<div class="im-plat">Android</div>
+      <ol>
+        <li>Apasă meniul <kbd>⋮</kbd> din colțul dreapta-sus al browserului.</li>
+        <li>Alege <strong>„Adaugă la ecranul principal”</strong> (Add to Home screen).</li>
+        <li>Confirmă <strong>„Adaugă”</strong> — apare iconița pe ecran.</li>
+      </ol>`,
+    desktop: `<div class="im-plat">Calculator</div>
+      <ol>
+        <li>Poți adăuga pagina la <strong>Favorite / Bookmarks</strong> cu <kbd>Ctrl</kbd>+<kbd>D</kbd>.</li>
+        <li>Pe telefon: deschide acest site în browser și apasă tot butonul 📲 pentru pașii de instalare.</li>
+      </ol>`
+  };
+
+  installBtn.addEventListener("click", ()=>{
+    installSteps.innerHTML = STEPS[detectPlatform()];
+    installOverlay.classList.add("visible");
+  });
+  document.getElementById("installClose").addEventListener("click", ()=>{
+    installOverlay.classList.remove("visible");
+  });
+  installOverlay.addEventListener("click", (e)=>{
+    if(e.target === installOverlay) installOverlay.classList.remove("visible");
+  });
+  document.addEventListener("keydown", (e)=>{
+    if(e.key === "Escape") installOverlay.classList.remove("visible");
+  });
+  window.addEventListener("afterprint", exitPrintMode);
+  document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible") exitPrintMode(); });
+  window.addEventListener("focus", exitPrintMode);
+
+  // --- Contor de vizitatori ---
+  // Sursa principala: GoatCounter (numara vizitatori unici, fara cookie-uri).
+  // Necesita bifat in setarile GoatCounter: "Allow adding visitor counts on your website".
+  // Daca endpoint-ul nu raspunde (optiunea nebifata / serviciu picat), cadem pe badge-ul
+  // hits.sh, care numara afisari si nu cere niciun cont.
+  (function(){
+    var el = document.getElementById("visitCounter");
+    if(!el) return;
+
+    function fallbackHits(){
+      var img = new Image();
+      img.alt = "Număr de vizite";
+      img.style.verticalAlign = "middle";
+      img.style.height = "20px";
+      img.onload  = function(){ el.innerHTML = ""; el.appendChild(img); };
+      img.onerror = function(){ el.style.display = "none"; };
+      img.src = "https://hits.sh/nerryremus.github.io/medici-sibiu.svg"
+              + "?view=today-total&label=vizite&color=2f6f4e&labelColor=444444&style=flat";
+    }
+
+    fetch("https://nerry.goatcounter.com/counter/TOTAL.json")
+      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(d){
+        if(!d || d.count == null) throw 0;
+        el.textContent = "👁️ " + d.count + " vizitatori";
+      })
+      .catch(fallbackHits);
+  })();
+
+  populateSelects();
+  render();
+})();
+</script>
+
+
+<div class="qr-overlay" id="qrOverlay">
+  <div class="qr-box">
+    <h3>Cod QR</h3>
+    <p>Scanează sau descarcă imaginea pentru afiș / rețetă.</p>
+    <canvas id="qrCanvas" width="300" height="300"></canvas>
+    <input type="text" id="qrText" spellcheck="false">
+    <div class="qr-actions">
+      <button class="primary" id="qrRegen">Regenerează</button>
+      <button id="qrDownload">Descarcă PNG</button>
+      <button id="qrClose">Închide</button>
+    </div>
+  </div>
+</div>
+<script>
+/* QR generator - byte mode, EC level M, versions 1..10. Self-contained. */
+var QRLite = (function(){
+  var EXP=new Array(512), LOG=new Array(256);
+  (function(){ var x=1; for(var i=0;i<255;i++){ EXP[i]=x; LOG[x]=i; x<<=1; if(x&0x100) x^=0x11d; }
+    for(var i=255;i<512;i++) EXP[i]=EXP[i-255]; })();
+  function gmul(a,b){ return (a===0||b===0)?0:EXP[LOG[a]+LOG[b]]; }
+  function genPoly(n){ var p=[1]; for(var i=0;i<n;i++){ var q=p.concat([0]);
+      for(var j=0;j<p.length;j++) q[j+1]^=gmul(p[j],EXP[i]); p=q; } return p; }
+  function ecBytes(data,n){ var res=data.concat(new Array(n).fill(0)); var g=genPoly(n);
+    for(var i=0;i<data.length;i++){ var c=res[i]; if(c===0) continue;
+      for(var j=0;j<g.length;j++) res[i+j]^=gmul(g[j],c); }
+    return res.slice(data.length); }
+
+  // [version] = [totalCodewords, ecPerBlock, blocksG1, dataPerBlockG1, blocksG2, dataPerBlockG2]  (EC level M)
+  var RS={1:[26,10,1,16,0,0],2:[44,16,1,28,0,0],3:[70,26,1,44,0,0],4:[100,18,2,32,0,0],
+    5:[134,24,2,43,0,0],6:[172,16,4,27,0,0],7:[196,18,4,31,0,0],8:[242,22,2,38,2,39],
+    9:[292,22,3,36,2,37],10:[346,26,4,43,1,44]};
+  var ALIGN={1:[],2:[6,18],3:[6,22],4:[6,26],5:[6,30],6:[6,34],7:[6,22,38],8:[6,24,42],9:[6,26,46],10:[6,28,50]};
+  var VERINFO=null; // versions <7 need none; 7..10 below
+  var VER_BITS={7:0x07C94,8:0x085BC,9:0x09A99,10:0x0A4D3};
+  var FMT_M=[0x5412,0x5125,0x5E7C,0x5B4B,0x45F9,0x40CE,0x4F97,0x4AA0]; // EC M, masks 0..7
+
+  function utf8(str){ var out=[],i,c;
+    for(i=0;i<str.length;i++){ c=str.charCodeAt(i);
+      if(c<0x80) out.push(c);
+      else if(c<0x800){ out.push(0xc0|c>>6,0x80|c&63); }
+      else if(c<0xd800||c>=0xe000){ out.push(0xe0|c>>12,0x80|(c>>6&63),0x80|c&63); }
+      else { i++; var cp=0x10000+(((c&0x3ff)<<10)|(str.charCodeAt(i)&0x3ff));
+             out.push(0xf0|cp>>18,0x80|(cp>>12&63),0x80|(cp>>6&63),0x80|cp&63); }
+    } return out; }
+
+  function pickVersion(len){
+    for(var v=1;v<=10;v++){
+      var r=RS[v], dataCw=r[2]*r[3]+r[4]*r[5];
+      var lenBits=(v<10)?8:16;
+      var need=Math.ceil((4+lenBits+len*8)/8);
+      if(need<=dataCw) return v;
+    }
+    throw new Error("Text prea lung pentru QR versiune <=10");
+  }
+
+  function buildData(bytes,v){
+    var r=RS[v], dataCw=r[2]*r[3]+r[4]*r[5];
+    var bits=[];
+    function push(val,n){ for(var i=n-1;i>=0;i--) bits.push((val>>i)&1); }
+    push(4,4);                       // byte mode
+    push(bytes.length,(v<10)?8:16);
+    for(var i=0;i<bytes.length;i++) push(bytes[i],8);
+    var cap=dataCw*8;
+    for(var i=0;i<4&&bits.length<cap;i++) bits.push(0);
+    while(bits.length%8) bits.push(0);
+    var cw=[]; for(var i=0;i<bits.length;i+=8){ var b=0; for(var j=0;j<8;j++) b=(b<<1)|bits[i+j]; cw.push(b); }
+    var pad=[0xEC,0x11],k=0; while(cw.length<dataCw) cw.push(pad[k++%2]);
+    // blocks
+    var blocks=[],ecs=[],pos=0;
+    for(var i=0;i<r[2];i++){ var d=cw.slice(pos,pos+r[3]); pos+=r[3]; blocks.push(d); ecs.push(ecBytes(d,r[1])); }
+    for(var i=0;i<r[4];i++){ var d=cw.slice(pos,pos+r[5]); pos+=r[5]; blocks.push(d); ecs.push(ecBytes(d,r[1])); }
+    var out=[],maxD=Math.max(r[3],r[5]||0);
+    for(var i=0;i<maxD;i++) for(var b=0;b<blocks.length;b++) if(i<blocks[b].length) out.push(blocks[b][i]);
+    for(var i=0;i<r[1];i++) for(var b=0;b<ecs.length;b++) out.push(ecs[b][i]);
+    return out;
+  }
+
+  function buildMatrix(v){
+    var n=17+4*v, m=[],res=[];
+    for(var i=0;i<n;i++){ m.push(new Array(n).fill(null)); res.push(new Array(n).fill(false)); }
+    function finder(r,c){
+      for(var i=-1;i<=7;i++) for(var j=-1;j<=7;j++){
+        var y=r+i,x=c+j; if(y<0||y>=n||x<0||x>=n) continue;
+        var on=(i>=0&&i<=6&&(j===0||j===6))||(j>=0&&j<=6&&(i===0||i===6))||(i>=2&&i<=4&&j>=2&&j<=4);
+        m[y][x]=on?1:0; res[y][x]=true;
+      }
+    }
+    finder(0,0); finder(0,n-7); finder(n-7,0);
+    var al=ALIGN[v];
+    for(var a=0;a<al.length;a++) for(var b=0;b<al.length;b++){
+      var r=al[a],c=al[b];
+      if((r<=7&&c<=7)||(r<=7&&c>=n-8)||(r>=n-8&&c<=7)) continue;
+      for(var i=-2;i<=2;i++) for(var j=-2;j<=2;j++){
+        m[r+i][c+j]=(Math.max(Math.abs(i),Math.abs(j))!==1)?1:0; res[r+i][c+j]=true;
+      }
+    }
+    for(var i=8;i<n-8;i++){ m[6][i]=(i%2===0)?1:0; res[6][i]=true; m[i][6]=(i%2===0)?1:0; res[i][6]=true; }
+    m[n-8][8]=1; res[n-8][8]=true;
+    // format info areas reserved
+    for(var i=0;i<9;i++){ if(!res[8][i]){res[8][i]=true;m[8][i]=0;} if(!res[i][8]){res[i][8]=true;m[i][8]=0;} }
+    for(var i=0;i<8;i++){ if(!res[8][n-1-i]){res[8][n-1-i]=true;m[8][n-1-i]=0;} if(!res[n-1-i][8]){res[n-1-i][8]=true;m[n-1-i][8]=0;} }
+    if(v>=7){ for(var i=0;i<18;i++){ var r=Math.floor(i/3), c=i%3;
+        res[n-11+c][r]=true; m[n-11+c][r]=0; res[r][n-11+c]=true; m[r][n-11+c]=0; } }
+    return {m:m,res:res,n:n};
+  }
+
+  function maskFn(k){
+    return [function(i,j){return (i+j)%2===0;},function(i,j){return i%2===0;},
+      function(i,j){return j%3===0;},function(i,j){return (i+j)%3===0;},
+      function(i,j){return (Math.floor(i/2)+Math.floor(j/3))%2===0;},
+      function(i,j){return (i*j)%2+(i*j)%3===0;},
+      function(i,j){return ((i*j)%2+(i*j)%3)%2===0;},
+      function(i,j){return ((i+j)%2+(i*j)%3)%2===0;}][k];
+  }
+
+  function penalty(m,n){
+    var p=0,i,j,k;
+    for(i=0;i<n;i++){ for(var dir=0;dir<2;dir++){ var run=1,prev=dir?m[0][i]:m[i][0];
+      for(j=1;j<n;j++){ var cur=dir?m[j][i]:m[i][j];
+        if(cur===prev) run++; else { if(run>=5) p+=3+(run-5); run=1; prev=cur; } }
+      if(run>=5) p+=3+(run-5); } }
+    for(i=0;i<n-1;i++) for(j=0;j<n-1;j++){ var s=m[i][j]+m[i][j+1]+m[i+1][j]+m[i+1][j+1];
+      if(s===0||s===4) p+=3; }
+    var pat=[1,0,1,1,1,0,1,0,0,0,0], pat2=[0,0,0,0,1,0,1,1,1,0,1];
+    function look(get){ var c=0; for(i=0;i<n;i++) for(j=0;j+10<n;j++){ var ok1=true,ok2=true;
+        for(k=0;k<11;k++){ var val=get(i,j+k); if(val!==pat[k]) ok1=false; if(val!==pat2[k]) ok2=false; }
+        if(ok1) c++; if(ok2) c++; } return c; }
+    p+=40*(look(function(a,b){return m[a][b];})+look(function(a,b){return m[b][a];}));
+    var dark=0; for(i=0;i<n;i++) for(j=0;j<n;j++) dark+=m[i][j];
+    p+=10*Math.floor(Math.abs(dark*100/(n*n)-50)/5);
+    return p;
+  }
+
+  function generate(text){
+    var bytes=utf8(text), v=pickVersion(bytes.length), cw=buildData(bytes,v);
+    var base=buildMatrix(v), n=base.n;
+    // place data
+    function place(mask){
+      var m=base.m.map(function(r){return r.slice();}), res=base.res;
+      var bitIdx=0, dirUp=true;
+      for(var col=n-1;col>0;col-=2){
+        if(col===6) col--;
+        for(var t=0;t<n;t++){
+          var row=dirUp?(n-1-t):t;
+          for(var c2=0;c2<2;c2++){
+            var cc=col-c2;
+            if(res[row][cc]) continue;
+            var bit=0;
+            if(bitIdx<cw.length*8) bit=(cw[bitIdx>>3]>>(7-(bitIdx&7)))&1;
+            bitIdx++;
+            if(maskFn(mask)(row,cc)) bit^=1;
+            m[row][cc]=bit;
+          }
+        }
+        dirUp=!dirUp;
+      }
+      // format info
+      var fmt=FMT_M[mask];
+      for(var i=0;i<15;i++){
+        var b=(fmt>>i)&1;
+        if(i<6) m[i][8]=b; else if(i<8) m[i+1][8]=b; else if(i===8) m[8][7]=b;
+        else m[8][14-i]=b;
+        if(i<8) m[8][n-1-i]=b; else m[n-15+i][8]=b;
+      }
+      m[n-8][8]=1;
+      if(v>=7){ var vb=VER_BITS[v];
+        for(var i=0;i<18;i++){ var b2=(vb>>i)&1, r=Math.floor(i/3), c=i%3;
+          m[n-11+c][r]=b2; m[r][n-11+c]=b2; } }
+      return m;
+    }
+    var best=null,bestP=Infinity;
+    for(var k=0;k<8;k++){ var m=place(k), p=penalty(m,n); if(p<bestP){bestP=p;best=m;} }
+    return best;
+  }
+  return {generate:generate};
+})();
+
+(function(){
+  var overlay=document.getElementById("qrOverlay"),cv=document.getElementById("qrCanvas"),
+      inp=document.getElementById("qrText");
+  function draw(text){
+    try{
+      var m=QRLite.generate(text), n=m.length, q=4, s=Math.max(2,Math.floor(560/(n+2*q))), W=(n+2*q)*s;
+      cv.width=W; cv.height=W;
+      var c=cv.getContext("2d");
+      c.fillStyle="#ffffff"; c.fillRect(0,0,W,W);
+      c.fillStyle="#000000";
+      for(var i=0;i<n;i++) for(var j=0;j<n;j++) if(m[i][j]) c.fillRect((j+q)*s,(i+q)*s,s,s);
+    }catch(e){
+      var c=cv.getContext("2d"); cv.width=300; cv.height=300;
+      c.fillStyle="#fff"; c.fillRect(0,0,300,300);
+      c.fillStyle="#b00"; c.font="14px sans-serif"; c.textAlign="center";
+      c.fillText("Text prea lung", 150, 150);
+    }
+  }
+  document.getElementById("qrBtn").addEventListener("click",function(){
+    inp.value=window.location.href;      // generat de-novo, de fiecare data
+    draw(inp.value);
+    overlay.classList.add("open");
+  });
+  document.getElementById("qrRegen").addEventListener("click",function(){ draw(inp.value); });
+  inp.addEventListener("keydown",function(e){ if(e.key==="Enter") draw(inp.value); });
+  document.getElementById("qrClose").addEventListener("click",function(){ overlay.classList.remove("open"); });
+  overlay.addEventListener("click",function(e){ if(e.target===overlay) overlay.classList.remove("open"); });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape") overlay.classList.remove("open"); });
+  document.getElementById("qrDownload").addEventListener("click",function(){
+    var a=document.createElement("a");
+    a.download="medici-sibiu-qr.png";
+    a.href=cv.toDataURL("image/png");
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  });
+})();
+</script>
+<script>
+(function(){
+  var SEC="medici", PICKED={}, LAST_ROWS=[];
+  var mainCtl=document.querySelector(".controls"),
+      mainStats=document.getElementById("statsBar"),
+      mainRes=document.getElementById("results"),
+      printAll=document.getElementById("printAllBtn"),
+      altCtl=document.getElementById("altControls"),
+      altStats=document.getElementById("altStats"),
+      altRes=document.getElementById("altResults"),
+      altSearch=document.getElementById("altSearch"),
+      altFilter=document.getElementById("altFilter");
+
+  function esc(s){var d=document.createElement("div");d.textContent=s==null?"":String(s);return d.innerHTML;}
+  function tel(t){
+    if(!t) return "";
+    return String(t).split(/[;\s]+/).filter(Boolean).map(function(x){
+      return '<a href="tel:'+esc(x.replace(/[^0-9+]/g,""))+'">'+esc(x)+'</a>';
+    }).join(" · ");
+  }
+
+  var CFG={
+    dentisti:{
+      data:function(){return (typeof DENTISTS!=="undefined")?DENTISTS:[];},
+      label:"medici stomatologi",
+      title:"Stomatologi în contract CAS Sibiu",
+      id:function(r){return "d|"+r.n+"|"+r.f;},
+      pline:function(r){return "<b>"+esc(r.n)+"</b><span>"+esc(r.f)+"</span><span>"+esc(r.a||"—")+" · "+esc(r.tel)+"</span>";},
+      facet:function(r){
+        var LOC=["Sibiu","Medias","Cisnadie","Selimbar","Avrig","Saliste","Talmaciu","Agnita","Cristian","Sura Mare","Sura Mica","Rasinari","Orlat","Vurpar","Seica Mare","Seica Mica","Arpasu de Jos","Carta","Marpod","Tilisca","Racovita","Boita","Nocrich","Rau Sadului","Micasasa","Poplaca","Gura Raului","Turnu Rosu","Daia","Apoldu de Jos","Dumbraveni","Porumbacu de Sus","Rosia","Merghindeal","Sadu","Bazna","Copsa Mica","Ocna Sibiului","Laslea","Mosna","Pauca","Slimnic","Sacel","Jina","Poiana Sibiului","Bradeni","Alma","Atel","Axente Sever","Darlos","Blajel","Chirpar","Loamnes","Birghis","Iacobeni","Mirsa","Cartisoara","Vestem","Nou","Brateiu","Miercurea Sibiului","Rusi"];
+        var a=(r.a||"").toLowerCase().replace(/ă/g,"a").replace(/â/g,"a").replace(/î/g,"i").replace(/ș/g,"s").replace(/ț/g,"t");
+        var best="",bl=0;
+        for(var i=0;i<LOC.length;i++){
+          var k=LOC[i].toLowerCase();
+          if(a.indexOf(k)>=0 && k.length>bl){ best=LOC[i]; bl=k.length; }
+        }
+        return best||"— (adresă incompletă)";
+      },
+      facetLabel:"Toate localitățile",
+      search:function(r){return [r.n,r.f,r.a].join(" ");},
+      card:function(r){
+        return '<div class="simple-card"><p class="sc-name">'+esc(r.n)+'</p>'+
+          '<p class="sc-sub">'+esc(r.f)+'</p>'+
+          '<div class="sc-line">📍 '+esc(r.a||"—")+'</div>'+
+          '<div class="sc-line">📞 '+tel(r.tel)+'</div>'+
+          '<div class="sc-line" style="margin-top:6px"><span class="sc-tag">'+(r.m==="rural"?"rural":"urban")+'</span><span class="sc-tag">CAS</span></div></div>';
+      }
+    },
+    laboratoare:{
+      data:function(){return (typeof LABS!=="undefined")?LABS:[];},
+      label:"furnizori de investigații",
+      title:"Laboratoare și investigații paraclinice — CAS Sibiu",
+      id:function(r){return "l|"+r.f+"|"+r.a;},
+      pline:function(r){return "<b>"+esc(r.f)+"</b><span>"+esc(r.a)+" · "+esc(r.tel)+"</span><span>"+esc(r.inv)+"</span>";},
+      facet:function(r){
+        var s=(r.inv||"").toLowerCase(), out=[];
+        if(s.indexOf("analize")>=0) out.push("Analize de laborator");
+        if(s.indexOf("ecografie")>=0) out.push("Ecografie");
+        if(s.indexOf("rmn")>=0) out.push("RMN");
+        if(s.indexOf("tomograf")>=0) out.push("Computer Tomograf");
+        if(s.indexOf("mamografie")>=0) out.push("Mamografie");
+        if(s.indexOf("radiologie")>=0) out.push("Radiologie-imagistică");
+        if(s.indexOf("osteodensito")>=0) out.push("Osteodensitometrie");
+        if(s.indexOf("anatomie")>=0) out.push("Anatomie patologică");
+        if(s.indexOf("scintigrafie")>=0) out.push("Scintigrafie");
+        return out.length?out:["—"];
+      },
+      facetLabel:"Toate investigațiile",
+      search:function(r){return [r.f,r.a,r.inv].join(" ");},
+      card:function(r){
+        return '<div class="simple-card"><p class="sc-name">'+esc(r.f)+'</p>'+
+          '<div class="sc-line">📍 '+esc(r.a)+'</div>'+
+          '<div class="sc-line">📞 '+tel(r.tel)+'</div>'+
+          '<div class="sc-line" style="margin-top:6px">🔬 '+esc(r.inv)+'</div></div>';
+      }
+    },
+    farmacii:{
+      data:function(){return (typeof PHARMACIES!=="undefined")?PHARMACIES:[];},
+      label:"farmacii",
+      title:"Farmacii în contract CAS Sibiu",
+      id:function(r){return "f|"+r.f+"|"+r.loc+"|"+r.sef;},
+      pline:function(r){return "<b>"+esc(r.f)+"</b><span>"+esc(r.loc)+" · "+esc(r.tel)+"</span><span>farmacist șef: "+esc(r.sef||"—")+"</span>";},
+      facet:function(r){return (r.loc||"—").replace(/ Oficina$/i,"").trim()||"—";},
+      facetLabel:"Toate localitățile",
+      search:function(r){return [r.f,r.loc,r.sef].join(" ");},
+      card:function(r){
+        var of=/oficina/i.test(r.f)||/oficina/i.test(r.loc);
+        return '<div class="simple-card"><p class="sc-name">'+esc(r.f)+'</p>'+
+          '<div class="sc-line">📍 '+esc(r.loc)+'</div>'+
+          '<div class="sc-line">👤 farmacist șef: '+esc(r.sef||"—")+'</div>'+
+          '<div class="sc-line">📞 '+tel(r.tel)+'</div>'+
+          (of?'<div class="sc-line" style="margin-top:6px"><span class="sc-tag">oficină</span></div>':"")+
+          '</div>';
+      }
+    }
+  };
+
+  function norm(s){return (s||"").toString().toLowerCase()
+    .replace(/ă/g,"a").replace(/â/g,"a").replace(/î/g,"i").replace(/ș/g,"s").replace(/ş/g,"s").replace(/ț/g,"t").replace(/ţ/g,"t");}
+
+  function facetsOf(cfg,r){var f=cfg.facet(r);return Array.isArray(f)?f:[f];}
+
+  function fillFacets(cfg){
+    var set={};
+    cfg.data().forEach(function(r){ facetsOf(cfg,r).forEach(function(v){ set[v]=1; }); });
+    var keys=Object.keys(set).sort(function(a,b){return a.localeCompare(b,"ro");});
+    altFilter.innerHTML='<option value="">'+cfg.facetLabel+'</option>'+
+      keys.map(function(k){return '<option value="'+esc(k)+'">'+esc(k)+'</option>';}).join("");
+  }
+
+  function renderAlt(){
+    var cfg=CFG[SEC]; if(!cfg) return;
+    var q=norm(altSearch.value.trim()), fv=altFilter.value;
+    var rows=cfg.data().filter(function(r){
+      if(fv && facetsOf(cfg,r).indexOf(fv)<0) return false;
+      if(q && norm(cfg.search(r)).indexOf(q)<0) return false;
+      return true;
+    });
+    altStats.textContent=rows.length+" din "+cfg.data().length+" "+cfg.label;
+    LAST_ROWS=rows;
+    altRes.innerHTML=rows.length?rows.map(function(r){
+      var id=cfg.id(r), on=!!PICKED[id];
+      var head='<div class="simple-card'+(on?' picked':'')+'" data-id="'+esc(id)+'">'+
+               '<div class="sc-check'+(on?' checked':'')+'" data-pick="'+esc(id)+'">'+(on?'\u2713':'')+'</div>';
+      return head+cfg.card(r).replace('<div class="simple-card">','');
+      }).join(""):
+      '<div class="simple-card"><p class="sc-sub">Niciun rezultat. Încearcă alt termen sau resetează filtrele.</p></div>';
+  }
+
+  function show(sec){
+    SEC=sec;
+    var isMain=(sec==="medici");
+    mainCtl.style.display=isMain?"":"none";
+    mainStats.style.display=isMain?"":"none";
+    mainRes.style.display=isMain?"":"none";
+    if(printAll) printAll.style.display=isMain?"":"none";
+    altCtl.style.display=isMain?"none":"";
+    altStats.style.display=isMain?"none":"";
+    altRes.style.display=isMain?"none":"";
+    document.getElementById("altBar").style.display=isMain?"none":"";
+    if(!isMain){ altSearch.value=""; PICKED={}; fillFacets(CFG[sec]); renderAlt(); syncBar(); }
+    else { document.getElementById("altBar").classList.remove("show"); }
+  }
+
+  document.querySelectorAll("#sectionTabs .sec-btn").forEach(function(b){
+    b.addEventListener("click",function(){
+      document.querySelectorAll("#sectionTabs .sec-btn").forEach(function(x){x.classList.remove("active");});
+      b.classList.add("active");
+      show(b.dataset.sec);
+    });
+  });
+  function syncBar(){
+    var n=Object.keys(PICKED).length, bar=document.getElementById("altBar");
+    document.getElementById("altBarCount").textContent=n+(n===1?" selectat":" selectate");
+    bar.classList.toggle("show", n>0);
+  }
+  altRes.addEventListener("click",function(e){
+    var t=e.target.closest("[data-pick]"); if(!t) return;
+    var id=t.getAttribute("data-pick");
+    if(PICKED[id]) delete PICKED[id]; else PICKED[id]=1;
+    renderAlt(); syncBar();
+  });
+  document.getElementById("altSelectAll").addEventListener("click",function(){
+    var cfg=CFG[SEC]; LAST_ROWS.forEach(function(r){ PICKED[cfg.id(r)]=1; });
+    renderAlt(); syncBar();
+  });
+  document.getElementById("altClear").addEventListener("click",function(){
+    PICKED={}; renderAlt(); syncBar();
+  });
+  document.getElementById("altPrint").addEventListener("click",function(){
+    var cfg=CFG[SEC];
+    var rows=cfg.data().filter(function(r){return PICKED[cfg.id(r)];});
+    if(!rows.length) return;
+    document.getElementById("altPrintTitle").textContent=cfg.title;
+    document.getElementById("altPrintSub").textContent=
+      "Generat la "+new Date().toLocaleDateString("ro-RO")+" · "+rows.length+" "+cfg.label;
+    document.getElementById("altPrintList").innerHTML=
+      rows.map(function(r){return '<div class="pa-item">'+cfg.pline(r)+'</div>';}).join("");
+    document.getElementById("printSheetAlt").classList.toggle("ps-single", rows.length<=2);
+    var wrap=document.querySelector(".wrap");
+    wrap.style.display="none"; document.body.classList.add("print-mode-alt");
+    void document.body.offsetHeight;
+    setTimeout(function(){ window.print(); },120);
+  });
+  window.addEventListener("afterprint",function(){
+    document.querySelector(".wrap").style.display="";
+    document.body.classList.remove("print-mode-alt");
+  });
+  altSearch.addEventListener("input",renderAlt);
+  altFilter.addEventListener("change",renderAlt);
+  document.getElementById("altReset").addEventListener("click",function(){
+    altSearch.value=""; altFilter.value=""; renderAlt();
+  });
+})();
+</script>
+<!-- GoatCounter: statistici de trafic, fara cookie-uri. Panoul: https://nerry.goatcounter.com -->
+<script data-goatcounter="https://nerry.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
