@@ -1384,6 +1384,7 @@ var QRLite = (function(){
 (function(){
   var overlay=document.getElementById("qrOverlay"),cv=document.getElementById("qrCanvas"),
       inp=document.getElementById("qrText");
+  function esc(s){var d=document.createElement("div");d.textContent=(s==null?"":String(s));return d.innerHTML;}
   function draw(text){
     try{
       var m=QRLite.generate(text), n=m.length, q=4, s=Math.max(2,Math.floor(560/(n+2*q))), W=(n+2*q)*s;
@@ -1420,6 +1421,7 @@ var QRLite = (function(){
       '<p class="how">Cum scanezi: deschide camera foto a telefonului, îndreapt-o spre cod și atinge linkul care apare. Nu ai nevoie de nicio aplicație.</p>'+
       '<p class="fine">Listă gratuită, fără reclame, actualizată după documentele oficiale CNAS/CAS. Verificați telefonic programul înainte de deplasare.</p>'+
       '</div>';
+    overlay.classList.remove("open");
     window.printDocument(body,
       '.poster{text-align:center;}'+
       '.pt{font-size:16pt;line-height:1.32;text-align:left;margin:0 0 5mm;font-weight:800;}'+
