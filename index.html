@@ -987,22 +987,19 @@
   function printSelection(){
     const chosen = PEOPLE.filter(p=>selectedIds.has(p._id));
     if(chosen.length === 0) return;
-    document.getElementById("printSubtitle").textContent =
-      "Generat la " + new Date().toLocaleDateString('ro-RO') + " · " + chosen.length + " " + (chosen.length===1?"recomandare":"recomandări");
-    document.getElementById("printList").innerHTML = chosen.map(p=>{
+    const items = chosen.map(p=>{
       const clinic = CLINICS[p.c] || { name:"-", address:"-", phone:"-" };
-      return `
-        <div class="print-item">
-          <p class="pname">${escapeHtml(p.n)} ${p.g && p.g!=='-' ? '('+escapeHtml(p.g)+')' : ''}</p>
-          <p class="pspec">${escapeHtml(p.s)}</p>
-          <p class="pclinic">${escapeHtml(clinic.name)}</p>
-          <p class="paddr">📍 ${escapeHtml(clinic.address)} &nbsp;&nbsp; 📞 ${escapeHtml(clinic.phone)}</p>
-        </div>
-      `;
+      return '<div class="item"><b>'+escapeHtml(p.n)+(p.g&&p.g!=='-'?' ('+escapeHtml(p.g)+')':'')+'</b>'+
+             '<span>'+escapeHtml(p.s)+' — '+escapeHtml(clinic.name)+'</span>'+
+             '<span>'+escapeHtml(clinic.address)+' · tel. '+escapeHtml(clinic.phone)+'</span></div>';
     }).join("");
-    document.getElementById('printSheet').classList.toggle('ps-single', chosen.length<=2);
-    enterPrintMode('print-mode-selection');
-    setTimeout(()=>{ window.print(); }, 120);
+    const body =
+      '<h1>Recomandare — furnizori în contract cu CAS Sibiu / OPSNAJ</h1>'+
+      '<div class="sub">Generat la '+new Date().toLocaleDateString('ro-RO')+' · '+chosen.length+
+      (chosen.length===1?' recomandare':' recomandări')+'</div>'+
+      items+
+      '<div class="foot">nerryremus.github.io/medici-sibiu · Sunați pentru programare; programul poate diferi.</div>';
+    window.printDocument(body, window.PRINT_CSS_LIST);
   }
 
   function printAllCompact(){
@@ -1011,27 +1008,22 @@
     const grouped = {};
     filtered.forEach(p=>{ (grouped[p.s] = grouped[p.s] || []).push(p); });
     const specs = Object.keys(grouped).sort((a,b)=>a.localeCompare(b,'ro'));
-
-    document.getElementById("printAllSub").textContent =
-      "Generat la " + new Date().toLocaleDateString('ro-RO') + " · actualizat: " + DATA_UPDATED +
-      " · " + filtered.length + " persoane · " + specs.length + " specialități";
-
-    document.getElementById("printAllList").innerHTML = specs.map(spec=>{
-      const people = grouped[spec].sort((a,b)=>a.n.localeCompare(b.n,'ro'));
-      return `
-        <div class="pa-group">
-          <h3>${escapeHtml(spec)} &middot; ${people.length}</h3>
-          ${people.map(p=>{
+    const body =
+      '<h1>Furnizori de sănătate în contract cu CAS Sibiu și CAS OPSNAJ</h1>'+
+      '<div class="sub">Generat la '+new Date().toLocaleDateString('ro-RO')+' · actualizat: '+
+        escapeHtml(DATA_UPDATED)+' · '+filtered.length+' persoane · '+specs.length+' specialități</div>'+
+      specs.map(spec=>{
+        const people = grouped[spec].sort((a,b)=>a.n.localeCompare(b.n,'ro'));
+        return '<div class="grp"><h3>'+escapeHtml(spec)+' · '+people.length+'</h3>'+
+          people.map(p=>{
             const clinic = CLINICS[p.c] || { name:"-", phone:"-" };
-            const grad = (p.g && p.g !== '-') ? ` <span class="pa-grad">(${escapeHtml(p.g[0])})</span>` : '';
-            return `<div class="pa-item"><span class="pa-name">${escapeHtml(p.n)}${grad}</span><span class="pa-clinic">${escapeHtml(clinic.name)} &middot; ${escapeHtml(clinic.phone)}</span></div>`;
-          }).join("")}
-        </div>
-      `;
-    }).join("");
-
-    enterPrintMode('print-mode-all');
-    setTimeout(()=>{ window.print(); }, 120);
+            const grad = (p.g && p.g!=='-') ? ' ('+escapeHtml(p.g[0])+')' : '';
+            return '<div class="item"><b>'+escapeHtml(p.n)+grad+'</b>'+
+                   '<span>'+escapeHtml(clinic.name)+' · '+escapeHtml(clinic.phone)+'</span></div>';
+          }).join("")+'</div>';
+      }).join("")+
+      '<div class="foot">nerryremus.github.io/medici-sibiu · Listele CAS se schimbă periodic; verificați telefonic.</div>';
+    window.printDocument(body, window.PRINT_CSS_LIST);
   }
 
   function renderCard(p){
@@ -1402,21 +1394,23 @@ var QRLite = (function(){
   document.addEventListener("keydown",function(e){ if(e.key==="Escape") overlay.classList.remove("open"); });
   document.getElementById("qrPrint").addEventListener("click",function(){
     var url=inp.value;
-    document.getElementById("qsTitle").textContent =
-      "Medici, ambulatorii, laboratoare și farmacii care sunt în contract cu Casa de Asigurări și pot fi accesate cu bilet de trimitere de la medicul de familie:";
-    document.getElementById("qsLead").textContent =
-      "Județul Sibiu — CAS Sibiu și OPSNAJ. Scanează codul cu camera telefonului.";
-    document.getElementById("qsImg").src = cv.toDataURL("image/png");
-    document.getElementById("qsUrl").textContent = url;
-    document.getElementById("qsHow").textContent =
-      "Cum scanezi: deschide camera foto a telefonului, îndreapt-o spre cod și atinge linkul care apare. Nu ai nevoie de nicio aplicație.";
-    document.getElementById("qsFoot").textContent =
-      "Listă gratuită, fără reclame, actualizată după documentele oficiale CNAS/CAS. Verificați telefonic programul înainte de deplasare.";
-    var w=document.querySelector(".wrap");
-    w.style.display="none";
-    document.body.classList.add("print-mode-qr");
-    void document.body.offsetHeight;
-    setTimeout(function(){ window.print(); },250);
+    var body=
+      '<div class="poster">'+
+      '<h1 class="pt">Medici, ambulatorii, laboratoare și farmacii care sunt în contract cu Casa de Asigurări și pot fi accesate cu bilet de trimitere de la medicul de familie:</h1>'+
+      '<p class="lead">Județul Sibiu — CAS Sibiu și OPSNAJ. Scanează codul cu camera telefonului.</p>'+
+      '<img class="qr" src="'+cv.toDataURL("image/png")+'" alt="Cod QR">'+
+      '<p class="url">'+esc(url)+'</p>'+
+      '<p class="how">Cum scanezi: deschide camera foto a telefonului, îndreapt-o spre cod și atinge linkul care apare. Nu ai nevoie de nicio aplicație.</p>'+
+      '<p class="fine">Listă gratuită, fără reclame, actualizată după documentele oficiale CNAS/CAS. Verificați telefonic programul înainte de deplasare.</p>'+
+      '</div>';
+    window.printDocument(body,
+      '.poster{text-align:center;}'+
+      '.pt{font-size:16pt;line-height:1.32;text-align:left;margin:0 0 5mm;font-weight:800;}'+
+      '.lead{font-size:12pt;margin:0 0 7mm;}'+
+      '.qr{width:115mm;height:115mm;display:block;margin:0 auto 5mm;}'+
+      '.url{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11pt;margin:0 0 7mm;word-break:break-all;}'+
+      '.how{font-size:12pt;margin:0 0 6mm;}'+
+      '.fine{font-size:9pt;color:#555;margin:0;}');
   });
   window.addEventListener("afterprint",function(){
     document.querySelector(".wrap").style.display="";
@@ -1614,17 +1608,13 @@ var QRLite = (function(){
     var rows=cfg.data().filter(function(r){return PICKED[cfg.id(r)];});
     if(!rows.length) rows=LAST_ROWS.slice();
     if(!rows.length) return;
-    document.getElementById("altPrintTitle").textContent=cfg.title;
-    document.getElementById("altPrintSub").textContent=
-      "Generat la "+new Date().toLocaleDateString("ro-RO")+" · "+rows.length+" "+cfg.label;
-    document.getElementById("altPrintList").innerHTML=
-      rows.map(function(r){return '<div class="pa-item">'+cfg.pline(r)+'</div>';}).join("");
-    document.getElementById("printSheetAlt").classList.toggle("ps-single", rows.length<=2);
-    var wrap=document.querySelector(".wrap");
-    wrap.style.display="none";
-    document.body.classList.add("print-mode-alt");
-    void document.body.offsetHeight;
-    setTimeout(function(){ window.print(); },250);
+    var body='<h1>'+esc(cfg.title)+'</h1>'+
+      '<div class="sub">Generat la '+new Date().toLocaleDateString("ro-RO")+' · '+rows.length+' '+esc(cfg.label)+'</div>'+
+      (cfg.note ? '<div class="note">'+cfg.note+'</div>' : '')+
+      rows.map(function(r){ return '<div class="item">'+cfg.pline(r)+'</div>'; }).join("")+
+      '<div class="foot">nerryremus.github.io/medici-sibiu · Listele CAS se schimbă periodic; verificați telefonic.</div>';
+    window.printDocument(body, window.PRINT_CSS_LIST +
+      '.note{border:1px solid #000;padding:2mm 3mm;font-size:9pt;margin:0 0 4mm;}');
   });
   window.addEventListener("afterprint",function(){
     document.querySelector(".wrap").style.display="";
@@ -1640,5 +1630,55 @@ var QRLite = (function(){
 <!-- GoatCounter: statistici de trafic, fara cookie-uri. Panoul: https://nerry.goatcounter.com -->
 <script data-goatcounter="https://nerry.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
+<script>
+/* ---------------------------------------------------------------
+   Printare prin iframe izolat.
+   Chrome pe Android nu reuseste sa pagineze documentul principal
+   (foaie alba, indiferent de continut). Solutia robusta: construim
+   un document HTML separat, cu propriul CSS de print, si printam
+   acel document. Merge identic pe desktop si pe telefon.
+----------------------------------------------------------------*/
+window.printDocument = function(bodyHtml, css){
+  var old = document.getElementById("printFrame");
+  if(old) old.parentNode.removeChild(old);
+  var f = document.createElement("iframe");
+  f.id = "printFrame";
+  f.setAttribute("aria-hidden","true");
+  f.style.cssText = "position:fixed;right:0;bottom:0;width:1px;height:1px;opacity:0;border:0;";
+  document.body.appendChild(f);
+  var d = f.contentWindow.document;
+  d.open();
+  d.write('<!DOCTYPE html><html lang="ro"><head><meta charset="utf-8">'+
+    '<title>Furnizori de sanatate — CAS Sibiu / OPSNAJ</title><style>'+
+    '@page{margin:12mm;}'+
+    'html,body{margin:0;padding:0;background:#fff;color:#000;'+
+      'font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;}'+
+    'a{color:#000;text-decoration:none;}'+
+    (css||'')+
+    '</style></head><body>'+bodyHtml+'</body></html>');
+  d.close();
+  var go = function(){
+    try{ f.contentWindow.focus(); f.contentWindow.print(); }catch(e){ window.print(); }
+    setTimeout(function(){ if(f.parentNode) f.parentNode.removeChild(f); }, 1500);
+  };
+  var imgs = d.images, pending = 0, done = false;
+  function fire(){ if(!done){ done = true; setTimeout(go, 60); } }
+  for(var i=0;i<imgs.length;i++){
+    if(!imgs[i].complete){ pending++; imgs[i].onload = imgs[i].onerror = function(){ if(--pending<=0) fire(); }; }
+  }
+  if(pending===0) setTimeout(fire, 60);
+  setTimeout(fire, 2500); // plasa de siguranta
+};
+
+window.PRINT_CSS_LIST =
+  'h1{font-size:15pt;margin:0 0 2mm;}'+
+  '.sub{font-size:8.5pt;color:#555;margin:0 0 5mm;font-family:ui-monospace,Menlo,Consolas,monospace;}'+
+  '.item{padding:2.2mm 0;border-bottom:1px dotted #bbb;page-break-inside:avoid;break-inside:avoid;}'+
+  '.item b{display:block;font-size:10pt;}'+
+  '.item span{display:block;font-size:8.6pt;color:#333;}'+
+  '.grp{margin:0 0 3mm;page-break-inside:auto;}'+
+  '.grp h3{font-size:10.5pt;margin:3mm 0 1mm;border-bottom:1px solid #000;padding-bottom:0.6mm;}'+
+  '.foot{margin-top:6mm;font-size:7.5pt;color:#666;border-top:1px solid #ccc;padding-top:2mm;}';
+</script>
 </body>
 </html>
