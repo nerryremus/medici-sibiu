@@ -149,6 +149,7 @@
   .sc-check.checked{background:var(--accent);border-color:var(--accent);}
   .alt-bar{position:sticky;bottom:0;z-index:60;background:#1f2a24;color:#fff;border-radius:12px;padding:10px 14px;margin:10px 0;display:none;align-items:center;gap:10px;flex-wrap:wrap;}
   .alt-bar.show{display:flex;}
+  @media print{ .alt-bar{display:none !important;} }
   .alt-bar span{font-size:13px;flex:1;}
   .alt-bar button{padding:8px 14px;font-size:13px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;}
   .alt-bar .b-print{background:var(--accent);color:#fff;}
@@ -158,6 +159,7 @@
   @media print{
     body.print-mode-alt .wrap, body.print-mode-alt .qr-overlay{display:none !important;}
     body.print-mode-alt #printSheetAlt{display:block !important;width:100%;padding:0;}
+    body.print-mode-alt .wrap{display:none !important;}
   }
   #printSheetAlt h1{font-size:14pt;margin:0 0 2px;}
   #printSheetAlt .pa-sub{font-size:8.5pt;color:#555;margin-bottom:7px;font-family:var(--mono);}
@@ -170,7 +172,7 @@
   #printSheetQR{display:none;}
   @media print{
     body.print-mode-qr .wrap, body.print-mode-qr .qr-overlay{display:none !important;}
-    body.print-mode-qr #printSheetQR{display:block !important;}
+    body.print-mode-qr #printSheetQR{display:block !important;width:100%;padding:0;}
     @page{ margin:14mm; }
   }
   #printSheetQR .qs-inner{text-align:center;color:#000;}
@@ -508,9 +510,12 @@
        zeci de pagini goale in spatele recomandarii. */
     .wrap, .select-bar, .controls, header.top, footer.foot{ display:none !important; }
     /* implicit ascundem ambele foi; JS afiseaza doar pe cea ceruta prin clasa pe body */
-    #printSheet, #printSheetAll{ display:none !important; }
+    #printSheet, #printSheetAll, #printSheetAlt, #printSheetQR{ display:none !important; }
     body.print-mode-selection #printSheet{ display:block !important; width:100%; padding:0; }
     body.print-mode-all #printSheetAll{ display:block !important; width:100%; padding:0; }
+    /* pe Android, containerele cu inaltime/scroll fixat produc pagini albe */
+    html, body{ height:auto !important; min-height:0 !important; overflow:visible !important; }
+    .qr-overlay{ display:none !important; }
     @page{ margin:12mm; }
   }
   #printSheet h1{font-size:20px;margin:0 0 4px;}
@@ -594,7 +599,8 @@
   footer.foot a{color:var(--accent-deep);}
 
   /* --- nimic nu depaseste latimea ecranului --- */
-  html,body{max-width:100%;overflow-x:hidden;}
+  @media screen{ html,body{max-width:100%;overflow-x:hidden;} }
+  @media print{ html,body{overflow:visible !important;height:auto !important;max-width:none !important;} }
   *,*::before,*::after{min-width:0;}
   select{max-width:100%;text-overflow:ellipsis;}
   .simple-card,.person-card{overflow-wrap:anywhere;}
@@ -692,8 +698,8 @@
   <div class="alt-bar" id="altBar">
     <span id="altBarCount"></span>
     <button class="b-all" id="altSelectAll">Selectează tot ce e afișat</button>
-    <button class="b-clear" id="altClear">Golește</button>
-    <button class="b-print" id="altPrint">🖨️ Printează selecția</button>
+    <button class="b-clear" id="altClear">Golește selecția</button>
+    <button class="b-print" id="altPrint">🖨️ Printează</button>
   </div>
 
   <footer class="foot">
@@ -1383,10 +1389,16 @@ var QRLite = (function(){
       "Cum scanezi: deschide camera foto a telefonului, îndreapt-o spre cod și atinge linkul care apare. Nu ai nevoie de nicio aplicație.";
     document.getElementById("qsFoot").textContent =
       "Listă gratuită, fără reclame, actualizată după documentele oficiale CNAS/CAS. Verificați telefonic programul înainte de deplasare.";
+    var w=document.querySelector(".wrap");
+    w.style.display="none";
     document.body.classList.add("print-mode-qr");
-    setTimeout(function(){ window.print(); },150);
+    void document.body.offsetHeight;
+    setTimeout(function(){ window.print(); },250);
   });
-  window.addEventListener("afterprint",function(){ document.body.classList.remove("print-mode-qr"); });
+  window.addEventListener("afterprint",function(){
+    document.querySelector(".wrap").style.display="";
+    document.body.classList.remove("print-mode-qr");
+  });
   document.getElementById("qrDownload").addEventListener("click",function(){
     var a=document.createElement("a");
     a.download="medici-sibiu-qr.png";
@@ -1553,8 +1565,11 @@ var QRLite = (function(){
   });
   function syncBar(){
     var n=Object.keys(PICKED).length, bar=document.getElementById("altBar");
-    document.getElementById("altBarCount").textContent=n+(n===1?" selectat":" selectate");
-    bar.classList.toggle("show", n>0);
+    document.getElementById("altBarCount").textContent = n
+      ? (n+(n===1?" selectat":" selectate")+" — se printează doar acestea")
+      : "Bifează ce vrei să printezi, sau apasă direct 🖨️ pentru toată lista afișată";
+    document.getElementById("altClear").style.display = n?"":"none";
+    bar.classList.toggle("show", SEC!=="medici");
   }
   altRes.addEventListener("click",function(e){
     var t=e.target.closest("[data-pick]"); if(!t) return;
@@ -1572,6 +1587,7 @@ var QRLite = (function(){
   document.getElementById("altPrint").addEventListener("click",function(){
     var cfg=CFG[SEC];
     var rows=cfg.data().filter(function(r){return PICKED[cfg.id(r)];});
+    if(!rows.length) rows=LAST_ROWS.slice();
     if(!rows.length) return;
     document.getElementById("altPrintTitle").textContent=cfg.title;
     document.getElementById("altPrintSub").textContent=
@@ -1580,9 +1596,10 @@ var QRLite = (function(){
       rows.map(function(r){return '<div class="pa-item">'+cfg.pline(r)+'</div>';}).join("");
     document.getElementById("printSheetAlt").classList.toggle("ps-single", rows.length<=2);
     var wrap=document.querySelector(".wrap");
-    wrap.style.display="none"; document.body.classList.add("print-mode-alt");
+    wrap.style.display="none";
+    document.body.classList.add("print-mode-alt");
     void document.body.offsetHeight;
-    setTimeout(function(){ window.print(); },120);
+    setTimeout(function(){ window.print(); },250);
   });
   window.addEventListener("afterprint",function(){
     document.querySelector(".wrap").style.display="";
