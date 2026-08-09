@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Medici Sibiu CAS — director rapid</title>
+<title>Furnizori de sănătate Sibiu — CAS Sibiu &amp; OPSNAJ</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f6feb'/%3E%3Cpath d='M26 50 C26 44 38 42 38 36 C38 31 26 29 26 24 C26 19 38 17 36 13' fill='none' stroke='%23fff' stroke-width='5.5' stroke-linecap='round'/%3E%3Cline x1='32' y1='8' x2='32' y2='54' stroke='%231f6feb' stroke-width='7'/%3E%3Cline x1='32' y1='8' x2='32' y2='54' stroke='%23fff' stroke-width='3.6' stroke-linecap='round'/%3E%3Ccircle cx='36' cy='13' r='3.8' fill='%23fff'/%3E%3Ccircle cx='26' cy='50' r='3' fill='%23fff'/%3E%3C/svg%3E">
 <style>
   :root{
@@ -142,6 +142,30 @@
   .simple-card .sc-sub{font-size:13px;color:var(--ink-soft);margin:0 0 6px;}
   .simple-card .sc-line{font-size:12.5px;margin:2px 0;}
   .simple-card .sc-tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:20px;border:1px solid var(--line);margin-right:5px;}
+  .simple-card{position:relative;}
+  .simple-card.picked{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
+  .sc-check{position:absolute;top:11px;right:12px;width:24px;height:24px;border-radius:6px;border:1.5px solid var(--line);background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;color:#fff;}
+  .sc-check.checked{background:var(--accent);border-color:var(--accent);}
+  .alt-bar{position:sticky;bottom:0;z-index:60;background:#1f2a24;color:#fff;border-radius:12px;padding:10px 14px;margin:10px 0;display:none;align-items:center;gap:10px;flex-wrap:wrap;}
+  .alt-bar.show{display:flex;}
+  .alt-bar span{font-size:13px;flex:1;}
+  .alt-bar button{padding:8px 14px;font-size:13px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;}
+  .alt-bar .b-print{background:var(--accent);color:#fff;}
+  .alt-bar .b-all{background:transparent;color:#cfd6d0;text-decoration:underline;}
+  .alt-bar .b-clear{background:transparent;color:#cfd6d0;text-decoration:underline;}
+  #printSheetAlt{display:none;}
+  @media print{
+    body.print-mode-alt .wrap, body.print-mode-alt .qr-overlay{display:none !important;}
+    body.print-mode-alt #printSheetAlt{display:block !important;width:100%;padding:0;}
+  }
+  #printSheetAlt h1{font-size:14pt;margin:0 0 2px;}
+  #printSheetAlt .pa-sub{font-size:8.5pt;color:#555;margin-bottom:7px;font-family:var(--mono);}
+  #printSheetAlt .pa-list{column-count:2;column-gap:12px;font-size:8.6pt;line-height:1.28;}
+  #printSheetAlt.ps-single .pa-list{column-count:1;font-size:10pt;}
+  #printSheetAlt .pa-item{break-inside:avoid-column;padding:2.5px 0;border-bottom:1px dotted #ccc;}
+  #printSheetAlt .pa-item b{display:block;font-size:9.3pt;}
+  #printSheetAlt .pa-item span{display:block;color:#444;}
+  #printSheetAlt .pa-footer{margin-top:8px;font-size:7.5pt;color:#777;column-span:all;}
   @media print{ .section-tabs{display:none;} }
   @media print{ .theme-toggle{ display:none; } }
 
@@ -222,8 +246,10 @@
     gap:10px;
     margin-bottom:10px;
   }
-  #search{
+  #search, #altSearch{
     flex:1;
+    width:100%;
+    box-sizing:border-box;
     padding:13px 16px;
     font-size:16px;
     border:2px solid var(--ink);
@@ -232,8 +258,8 @@
     color:var(--ink);
     font-family:inherit;
   }
-  #search:focus{outline:none;border-color:var(--accent-deep);box-shadow:0 0 0 3px var(--accent-soft);}
-  #search::placeholder{color:#9b9588;}
+  #search:focus, #altSearch:focus{outline:none;border-color:var(--accent-deep);box-shadow:0 0 0 3px var(--accent-soft);}
+  #search::placeholder, #altSearch::placeholder{color:#9b9588;}
 
   .filter-row{
     display:flex;
@@ -475,15 +501,27 @@
   }
   #printSheet h1{font-size:20px;margin:0 0 4px;}
   #printSheet .print-sub{font-size:12px;color:#555;margin-bottom:18px;font-family:var(--mono);}
-  #printSheet .print-item{
-    border-bottom:1px solid #ccc;
-    padding:12px 0;
+  #printSheet h1{font-size:14pt;}
+  #printSheet .print-sub{font-size:8.5pt;margin-bottom:7px;}
+  #printSheet #printList{
+    column-count:2;
+    column-gap:12px;
+    font-size:9pt;
+    line-height:1.28;
   }
-  #printSheet .print-item .pname{font-size:15px;font-weight:700;margin:0 0 3px;}
-  #printSheet .print-item .pspec{font-size:13px;color:#333;margin:0 0 3px;}
-  #printSheet .print-item .pclinic{font-size:13px;margin:0 0 2px;}
-  #printSheet .print-item .paddr{font-size:12px;color:#444;}
-  #printSheet .print-footer{margin-top:24px;font-size:11px;color:#777;}
+  #printSheet.ps-single #printList{ column-count:1; font-size:10pt; }
+  #printSheet .print-item{
+    break-inside:avoid-column;
+    border-bottom:1px dotted #ccc;
+    padding:2.5px 0;
+    margin:0;
+  }
+  #printSheet .print-item p{margin:0;}
+  #printSheet .print-item .pname{font-size:9.5pt;font-weight:700;}
+  #printSheet .print-item .pspec{color:#333;}
+  #printSheet .print-item .pclinic{color:#000;}
+  #printSheet .print-item .paddr{color:#444;font-size:8pt;}
+  #printSheet .print-footer{margin-top:8px;font-size:7.5pt;color:#777;column-span:all;}
 
   /* --- Buton "Printeaza lista completa" --- */
   .print-all-btn{
@@ -554,7 +592,7 @@
 <div class="wrap">
   <header class="top">
     <div class="top-row">
-      <h1>Medici Sibiu &mdash; în contract CAS</h1>
+      <h1>Furnizori de sănătate în contract cu CAS Sibiu și CAS OPSNAJ</h1>
       <div class="top-actions">
         <button class="theme-toggle" id="qrBtn" title="Generează cod QR pentru acest director" aria-label="Generează cod QR">
           <span>🔳</span>
@@ -568,7 +606,7 @@
       </div>
     </div>
     <div class="meta">
-      <span>📋 sursă: liste oficiale CNAS / CAS Sibiu</span>
+      <span>📋 sursă: liste oficiale CNAS / CAS Sibiu &middot; Spitalul Militar — CAS OPSNAJ / MApN</span>
       <span id="updatedSpan">actualizat: &mdash;</span>
       <span>📍 jud. Sibiu (Sibiu, Mediaș, Agnita, Cisnădie, Avrig, Săliște)</span>
     </div>
@@ -576,7 +614,7 @@
   </header>
 
   <div class="section-tabs" id="sectionTabs">
-    <button class="sec-btn active" data-sec="medici">🩺 Medici specialiști</button>
+    <button class="sec-btn active" data-sec="medici">🩺 Medici, Ambulatorii, Spitale</button>
     <button class="sec-btn" data-sec="dentisti">🦷 Stomatologi</button>
     <button class="sec-btn" data-sec="laboratoare">🔬 Laboratoare &amp; imagistică</button>
     <button class="sec-btn" data-sec="farmacii">💊 Farmacii</button>
@@ -620,6 +658,12 @@
   </div>
   <div class="stats-bar" id="altStats" style="display:none"></div>
   <div id="altResults"></div>
+  <div class="alt-bar" id="altBar">
+    <span id="altBarCount"></span>
+    <button class="b-all" id="altSelectAll">Selectează tot ce e afișat</button>
+    <button class="b-clear" id="altClear">Golește</button>
+    <button class="b-print" id="altPrint">🖨️ Printează selecția</button>
+  </div>
 
   <footer class="foot">
     Date: <strong id="updatedSpan2"></strong> &middot; Sursă: documente oficiale CNAS/CAS Sibiu — ambulatoriu specialități clinice + servicii conexe (13.07.2026), stomatologie (01.07.2026), investigații paraclinice (01.06.2026), farmacii — încărcate manual.<br>
@@ -643,8 +687,15 @@
   <div class="print-footer">Generat din directorul medici Sibiu (nerryremus.github.io/medici-sibiu) — verificați telefonic programarea.</div>
 </div>
 
+<div id="printSheetAlt">
+  <h1 id="altPrintTitle"></h1>
+  <div class="pa-sub" id="altPrintSub"></div>
+  <div class="pa-list" id="altPrintList"></div>
+  <div class="pa-footer">Generat din lista furnizorilor de sănătate în contract cu CAS Sibiu și CAS OPSNAJ (nerryremus.github.io/medici-sibiu) — verificați telefonic înainte de programare.</div>
+</div>
+
 <div id="printSheetAll">
-  <h1>Medici Sibiu — listă completă în contract CAS (pe specialități)</h1>
+  <h1>Furnizori de sănătate în contract cu CAS Sibiu și CAS OPSNAJ — listă completă (pe specialități)</h1>
   <div class="pa-sub" id="printAllSub"></div>
   <div class="pa-list" id="printAllList"></div>
   <div class="pa-footer">Generat din directorul medici Sibiu (nerryremus.github.io/medici-sibiu) — listele CAS se schimbă periodic, verificați telefonic înainte de programare.</div>
@@ -877,6 +928,7 @@
         </div>
       `;
     }).join("");
+    document.getElementById('printSheet').classList.toggle('ps-single', chosen.length<=2);
     enterPrintMode('print-mode-selection');
     setTimeout(()=>{ window.print(); }, 120);
   }
@@ -1267,7 +1319,7 @@ var QRLite = (function(){
 </script>
 <script>
 (function(){
-  var SEC="medici";
+  var SEC="medici", PICKED={}, LAST_ROWS=[];
   var mainCtl=document.querySelector(".controls"),
       mainStats=document.getElementById("statsBar"),
       mainRes=document.getElementById("results"),
@@ -1290,6 +1342,9 @@ var QRLite = (function(){
     dentisti:{
       data:function(){return (typeof DENTISTS!=="undefined")?DENTISTS:[];},
       label:"medici stomatologi",
+      title:"Stomatologi în contract CAS Sibiu",
+      id:function(r){return "d|"+r.n+"|"+r.f;},
+      pline:function(r){return "<b>"+esc(r.n)+"</b><span>"+esc(r.f)+"</span><span>"+esc(r.a||"—")+" · "+esc(r.tel)+"</span>";},
       facet:function(r){
         var LOC=["Sibiu","Medias","Cisnadie","Selimbar","Avrig","Saliste","Talmaciu","Agnita","Cristian","Sura Mare","Sura Mica","Rasinari","Orlat","Vurpar","Seica Mare","Seica Mica","Arpasu de Jos","Carta","Marpod","Tilisca","Racovita","Boita","Nocrich","Rau Sadului","Micasasa","Poplaca","Gura Raului","Turnu Rosu","Daia","Apoldu de Jos","Dumbraveni","Porumbacu de Sus","Rosia","Merghindeal","Sadu","Bazna","Copsa Mica","Ocna Sibiului","Laslea","Mosna","Pauca","Slimnic","Sacel","Jina","Poiana Sibiului","Bradeni","Alma","Atel","Axente Sever","Darlos","Blajel","Chirpar","Loamnes","Birghis","Iacobeni","Mirsa","Cartisoara","Vestem","Nou","Brateiu","Miercurea Sibiului","Rusi"];
         var a=(r.a||"").toLowerCase().replace(/ă/g,"a").replace(/â/g,"a").replace(/î/g,"i").replace(/ș/g,"s").replace(/ț/g,"t");
@@ -1313,6 +1368,9 @@ var QRLite = (function(){
     laboratoare:{
       data:function(){return (typeof LABS!=="undefined")?LABS:[];},
       label:"furnizori de investigații",
+      title:"Laboratoare și investigații paraclinice — CAS Sibiu",
+      id:function(r){return "l|"+r.f+"|"+r.a;},
+      pline:function(r){return "<b>"+esc(r.f)+"</b><span>"+esc(r.a)+" · "+esc(r.tel)+"</span><span>"+esc(r.inv)+"</span>";},
       facet:function(r){
         var s=(r.inv||"").toLowerCase(), out=[];
         if(s.indexOf("analize")>=0) out.push("Analize de laborator");
@@ -1338,6 +1396,9 @@ var QRLite = (function(){
     farmacii:{
       data:function(){return (typeof PHARMACIES!=="undefined")?PHARMACIES:[];},
       label:"farmacii",
+      title:"Farmacii în contract CAS Sibiu",
+      id:function(r){return "f|"+r.f+"|"+r.loc+"|"+r.sef;},
+      pline:function(r){return "<b>"+esc(r.f)+"</b><span>"+esc(r.loc)+" · "+esc(r.tel)+"</span><span>farmacist șef: "+esc(r.sef||"—")+"</span>";},
       facet:function(r){return (r.loc||"—").replace(/ Oficina$/i,"").trim()||"—";},
       facetLabel:"Toate localitățile",
       search:function(r){return [r.f,r.loc,r.sef].join(" ");},
@@ -1375,7 +1436,13 @@ var QRLite = (function(){
       return true;
     });
     altStats.textContent=rows.length+" din "+cfg.data().length+" "+cfg.label;
-    altRes.innerHTML=rows.length?rows.map(cfg.card).join(""):
+    LAST_ROWS=rows;
+    altRes.innerHTML=rows.length?rows.map(function(r){
+      var id=cfg.id(r), on=!!PICKED[id];
+      var head='<div class="simple-card'+(on?' picked':'')+'" data-id="'+esc(id)+'">'+
+               '<div class="sc-check'+(on?' checked':'')+'" data-pick="'+esc(id)+'">'+(on?'\u2713':'')+'</div>';
+      return head+cfg.card(r).replace('<div class="simple-card">','');
+      }).join(""):
       '<div class="simple-card"><p class="sc-sub">Niciun rezultat. Încearcă alt termen sau resetează filtrele.</p></div>';
   }
 
@@ -1389,7 +1456,9 @@ var QRLite = (function(){
     altCtl.style.display=isMain?"none":"";
     altStats.style.display=isMain?"none":"";
     altRes.style.display=isMain?"none":"";
-    if(!isMain){ altSearch.value=""; fillFacets(CFG[sec]); renderAlt(); }
+    document.getElementById("altBar").style.display=isMain?"none":"";
+    if(!isMain){ altSearch.value=""; PICKED={}; fillFacets(CFG[sec]); renderAlt(); syncBar(); }
+    else { document.getElementById("altBar").classList.remove("show"); }
   }
 
   document.querySelectorAll("#sectionTabs .sec-btn").forEach(function(b){
@@ -1398,6 +1467,43 @@ var QRLite = (function(){
       b.classList.add("active");
       show(b.dataset.sec);
     });
+  });
+  function syncBar(){
+    var n=Object.keys(PICKED).length, bar=document.getElementById("altBar");
+    document.getElementById("altBarCount").textContent=n+(n===1?" selectat":" selectate");
+    bar.classList.toggle("show", n>0);
+  }
+  altRes.addEventListener("click",function(e){
+    var t=e.target.closest("[data-pick]"); if(!t) return;
+    var id=t.getAttribute("data-pick");
+    if(PICKED[id]) delete PICKED[id]; else PICKED[id]=1;
+    renderAlt(); syncBar();
+  });
+  document.getElementById("altSelectAll").addEventListener("click",function(){
+    var cfg=CFG[SEC]; LAST_ROWS.forEach(function(r){ PICKED[cfg.id(r)]=1; });
+    renderAlt(); syncBar();
+  });
+  document.getElementById("altClear").addEventListener("click",function(){
+    PICKED={}; renderAlt(); syncBar();
+  });
+  document.getElementById("altPrint").addEventListener("click",function(){
+    var cfg=CFG[SEC];
+    var rows=cfg.data().filter(function(r){return PICKED[cfg.id(r)];});
+    if(!rows.length) return;
+    document.getElementById("altPrintTitle").textContent=cfg.title;
+    document.getElementById("altPrintSub").textContent=
+      "Generat la "+new Date().toLocaleDateString("ro-RO")+" · "+rows.length+" "+cfg.label;
+    document.getElementById("altPrintList").innerHTML=
+      rows.map(function(r){return '<div class="pa-item">'+cfg.pline(r)+'</div>';}).join("");
+    document.getElementById("printSheetAlt").classList.toggle("ps-single", rows.length<=2);
+    var wrap=document.querySelector(".wrap");
+    wrap.style.display="none"; document.body.classList.add("print-mode-alt");
+    void document.body.offsetHeight;
+    setTimeout(function(){ window.print(); },120);
+  });
+  window.addEventListener("afterprint",function(){
+    document.querySelector(".wrap").style.display="";
+    document.body.classList.remove("print-mode-alt");
   });
   altSearch.addEventListener("input",renderAlt);
   altFilter.addEventListener("change",renderAlt);
