@@ -170,6 +170,25 @@
   #printSheetAlt .pa-item span{display:block;color:#444;}
   #printSheetAlt .pa-footer{margin-top:8px;font-size:7.5pt;color:#777;column-span:all;}
   #printSheetQR{display:none;}
+  /* Android ia snapshot-ul de print din randarea de ecran; de aceea foile trebuie
+     sa fie vizibile pe ecran cat timp e activ print-mode, nu doar in @media print. */
+  body.print-mode-selection .wrap,
+  body.print-mode-all .wrap,
+  body.print-mode-alt .wrap,
+  body.print-mode-qr .wrap,
+  body.print-mode-selection .select-bar,
+  body.print-mode-all .select-bar,
+  body.print-mode-alt .alt-bar,
+  body.print-mode-qr .qr-overlay{ display:none !important; }
+  body.print-mode-selection #printSheet,
+  body.print-mode-all #printSheetAll,
+  body.print-mode-alt #printSheetAlt,
+  body.print-mode-qr #printSheetQR{
+    display:block !important; width:100%; padding:0; background:#fff; color:#000;
+  }
+  body.print-mode-selection, body.print-mode-all,
+  body.print-mode-alt, body.print-mode-qr{ background:#fff !important; color:#000 !important; }
+
   @media print{
     body.print-mode-qr .wrap, body.print-mode-qr .qr-overlay{display:none !important;}
     body.print-mode-qr #printSheetQR{display:block !important;width:100%;padding:0;}
@@ -1551,6 +1570,8 @@ var QRLite = (function(){
     altStats.style.display=isMain?"none":"";
     altRes.style.display=isMain?"none":"";
     document.getElementById("altBar").style.display=isMain?"none":"";
+    var mainBar=document.getElementById("selectBar");
+    if(mainBar) mainBar.style.display = isMain ? "" : "none";
     if(isMain){ var nn=document.getElementById("altNote"); if(nn) nn.style.display="none"; }
     if(!isMain){ altSearch.value=""; PICKED={}; fillFacets(CFG[sec]); renderAlt(); syncBar(); }
     else { document.getElementById("altBar").classList.remove("show"); }
