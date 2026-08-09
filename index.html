@@ -1088,32 +1088,21 @@
   window.addEventListener("focus", exitPrintMode);
 
   // --- Contor de vizitatori ---
-  // Un site static nu poate vedea adresa IP a vizitatorului, deci nu putem contoriza
-  // "IP-uri distincte". Aproximam altfel: incrementam o singura data pe zi pe browser
-  // (marcaj local), iar la revenirile din aceeasi zi doar citim valoarea.
-  // Rezultatul e apropiat de "vizitatori unici/zi", nu de "afisari de pagina".
+  // CounterAPI v1 (folosit inainte) a fost oprit definitiv pe 7 august 2026, de aceea
+  // contorul aparea gol. Trecem pe hits.sh: badge SVG, fara cont, fara chei API,
+  // fara cookie-uri. Daca nici acesta nu raspunde, ascundem elementul (nu lasam text rupt).
   (function(){
-    var BASE = "https://api.counterapi.dev/v1/medici-sibiu-nerry/vizite";
     var el = document.getElementById("visitCounter");
     if(!el) return;
-
-    var azi = new Date().toISOString().slice(0,10);
-    var deja = false;
-    try { deja = (localStorage.getItem("mv-ultima-vizita") === azi); } catch(e){ /* mod privat */ }
-
-    function afiseaza(n){
-      if(n == null) return;
-      el.textContent = "👁️ " + n.toLocaleString("ro-RO") + (n === 1 ? " vizitator" : " vizitatori");
-    }
-
-    fetch(BASE + (deja ? "" : "/up"))
-      .then(function(r){ return r.json(); })
-      .then(function(d){
-        var n = d && (d.count != null ? d.count : d.value);
-        afiseaza(n);
-        if(!deja){ try { localStorage.setItem("mv-ultima-vizita", azi); } catch(e){} }
-      })
-      .catch(function(){ /* contorul e optional; daca serviciul extern nu raspunde, pagina merge normal */ });
+    var src = "https://hits.sh/nerryremus.github.io/medici-sibiu.svg"
+            + "?view=today-total&label=vizite&color=2f6f4e&labelColor=444444&style=flat";
+    var img = new Image();
+    img.alt = "Număr de vizite";
+    img.style.verticalAlign = "middle";
+    img.style.height = "20px";
+    img.onload = function(){ el.innerHTML = ""; el.appendChild(img); };
+    img.onerror = function(){ el.style.display = "none"; };
+    img.src = src;
   })();
 
   populateSelects();
