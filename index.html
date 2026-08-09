@@ -880,7 +880,7 @@
         <div class="badge-row">
           ${gradBadge}
           ${typeBadge}
-          <span class="badge cas">CAS</span>
+          <span class="badge cas">${escapeHtml(clinic.casa || "CAS")}</span>
         </div>
         <div class="clinic-detail">
           <div class="addr-line">📍 ${escapeHtml(clinic.address)}</div>
