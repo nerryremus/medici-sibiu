@@ -166,6 +166,19 @@
   #printSheetAlt .pa-item b{display:block;font-size:9.3pt;}
   #printSheetAlt .pa-item span{display:block;color:#444;}
   #printSheetAlt .pa-footer{margin-top:8px;font-size:7.5pt;color:#777;column-span:all;}
+  #printSheetQR{display:none;}
+  @media print{
+    body.print-mode-qr .wrap, body.print-mode-qr .qr-overlay{display:none !important;}
+    body.print-mode-qr #printSheetQR{display:block !important;}
+    @page{ margin:14mm; }
+  }
+  #printSheetQR .qs-inner{text-align:center;color:#000;}
+  #printSheetQR h1{font-size:17pt;line-height:1.3;margin:0 0 5mm;font-weight:800;text-align:left;}
+  #printSheetQR .qs-lead{font-size:12pt;margin:0 0 7mm;color:#222;}
+  #printSheetQR #qsImg{width:118mm;height:118mm;display:block;margin:0 auto 5mm;}
+  #printSheetQR .qs-url{font-family:var(--mono);font-size:11pt;margin:0 0 7mm;word-break:break-all;}
+  #printSheetQR .qs-how{font-size:12pt;margin:0 0 6mm;color:#222;}
+  #printSheetQR .qs-foot{font-size:9pt;color:#555;margin:0;}
   @media print{ .section-tabs{display:none;} }
   @media print{ .theme-toggle{ display:none; } }
 
@@ -668,7 +681,7 @@
   <footer class="foot">
     Date: <strong id="updatedSpan2"></strong> &middot; Sursă: documente oficiale CNAS/CAS Sibiu — ambulatoriu specialități clinice + servicii conexe (13.07.2026), stomatologie (01.07.2026), investigații paraclinice (01.06.2026), farmacii — încărcate manual.<br>
     Listele CAS se schimbă periodic — verificați telefonic înainte de a trimite un pacient pentru o programare urgentă.<br>
-    Pagină statică, fără server, fără tracking. Funcționează offline după prima încărcare.<br>
+    Pagină statică, fără server. Statistici anonime de trafic (GoatCounter), fără cookie-uri și fără date personale. Funcționează offline după prima încărcare.<br>
     <span id="visitCounter"></span>
   </footer>
 </div>
@@ -685,6 +698,18 @@
   <div class="print-sub" id="printSubtitle"></div>
   <div id="printList"></div>
   <div class="print-footer">Generat din directorul medici Sibiu (nerryremus.github.io/medici-sibiu) — verificați telefonic programarea.</div>
+</div>
+
+
+<div id="printSheetQR">
+  <div class="qs-inner">
+    <h1 id="qsTitle"></h1>
+    <p class="qs-lead" id="qsLead"></p>
+    <img id="qsImg" alt="Cod QR">
+    <p class="qs-url" id="qsUrl"></p>
+    <p class="qs-how" id="qsHow"></p>
+    <p class="qs-foot" id="qsFoot"></p>
+  </div>
 </div>
 
 <div id="printSheetAlt">
@@ -1088,21 +1113,32 @@
   window.addEventListener("focus", exitPrintMode);
 
   // --- Contor de vizitatori ---
-  // CounterAPI v1 (folosit inainte) a fost oprit definitiv pe 7 august 2026, de aceea
-  // contorul aparea gol. Trecem pe hits.sh: badge SVG, fara cont, fara chei API,
-  // fara cookie-uri. Daca nici acesta nu raspunde, ascundem elementul (nu lasam text rupt).
+  // Sursa principala: GoatCounter (numara vizitatori unici, fara cookie-uri).
+  // Necesita bifat in setarile GoatCounter: "Allow adding visitor counts on your website".
+  // Daca endpoint-ul nu raspunde (optiunea nebifata / serviciu picat), cadem pe badge-ul
+  // hits.sh, care numara afisari si nu cere niciun cont.
   (function(){
     var el = document.getElementById("visitCounter");
     if(!el) return;
-    var src = "https://hits.sh/nerryremus.github.io/medici-sibiu.svg"
-            + "?view=today-total&label=vizite&color=2f6f4e&labelColor=444444&style=flat";
-    var img = new Image();
-    img.alt = "Număr de vizite";
-    img.style.verticalAlign = "middle";
-    img.style.height = "20px";
-    img.onload = function(){ el.innerHTML = ""; el.appendChild(img); };
-    img.onerror = function(){ el.style.display = "none"; };
-    img.src = src;
+
+    function fallbackHits(){
+      var img = new Image();
+      img.alt = "Număr de vizite";
+      img.style.verticalAlign = "middle";
+      img.style.height = "20px";
+      img.onload  = function(){ el.innerHTML = ""; el.appendChild(img); };
+      img.onerror = function(){ el.style.display = "none"; };
+      img.src = "https://hits.sh/nerryremus.github.io/medici-sibiu.svg"
+              + "?view=today-total&label=vizite&color=2f6f4e&labelColor=444444&style=flat";
+    }
+
+    fetch("https://nerry.goatcounter.com/counter/TOTAL.json")
+      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(d){
+        if(!d || d.count == null) throw 0;
+        el.textContent = "👁️ " + d.count + " vizitatori";
+      })
+      .catch(fallbackHits);
   })();
 
   populateSelects();
@@ -1120,6 +1156,7 @@
     <div class="qr-actions">
       <button class="primary" id="qrRegen">Regenerează</button>
       <button id="qrDownload">Descarcă PNG</button>
+      <button id="qrPrint">🖨️ Printează afiș A4</button>
       <button id="qrClose">Închide</button>
     </div>
   </div>
@@ -1316,6 +1353,22 @@ var QRLite = (function(){
   document.getElementById("qrClose").addEventListener("click",function(){ overlay.classList.remove("open"); });
   overlay.addEventListener("click",function(e){ if(e.target===overlay) overlay.classList.remove("open"); });
   document.addEventListener("keydown",function(e){ if(e.key==="Escape") overlay.classList.remove("open"); });
+  document.getElementById("qrPrint").addEventListener("click",function(){
+    var url=inp.value;
+    document.getElementById("qsTitle").textContent =
+      "Medici, ambulatorii, laboratoare și farmacii care sunt în contract cu Casa de Asigurări și pot fi accesate cu bilet de trimitere de la medicul de familie:";
+    document.getElementById("qsLead").textContent =
+      "Județul Sibiu — CAS Sibiu și OPSNAJ. Scanează codul cu camera telefonului.";
+    document.getElementById("qsImg").src = cv.toDataURL("image/png");
+    document.getElementById("qsUrl").textContent = url;
+    document.getElementById("qsHow").textContent =
+      "Cum scanezi: deschide camera foto a telefonului, îndreapt-o spre cod și atinge linkul care apare. Nu ai nevoie de nicio aplicație.";
+    document.getElementById("qsFoot").textContent =
+      "Listă gratuită, fără reclame, actualizată după documentele oficiale CNAS/CAS. Verificați telefonic programul înainte de deplasare.";
+    document.body.classList.add("print-mode-qr");
+    setTimeout(function(){ window.print(); },150);
+  });
+  window.addEventListener("afterprint",function(){ document.body.classList.remove("print-mode-qr"); });
   document.getElementById("qrDownload").addEventListener("click",function(){
     var a=document.createElement("a");
     a.download="medici-sibiu-qr.png";
@@ -1519,5 +1572,8 @@ var QRLite = (function(){
   });
 })();
 </script>
+<!-- GoatCounter: statistici de trafic, fara cookie-uri. Panoul: https://nerry.goatcounter.com -->
+<script data-goatcounter="https://nerry.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
