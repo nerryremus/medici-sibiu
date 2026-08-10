@@ -44,11 +44,11 @@ const CLINICS = {
   // 18
   "stejari": { name: "CENTRUL MEDICAL STEJARI SRL", address: "SIBIU - STR.GORĂSLAU, NR.1, AP.5-6 / TĂLMACIU - STR.N.BĂLCESCU, NR.20", phone: "0369-444189 / 0746524937" },
   // 19
-  "sanogyn": { name: "CENTRUL MEDICAL SANOGYN SRL", address: "SIBIU - STR.N.IORGA NR.50A", phone: "0766669065" },
+  "sanogyn": { name: "IMED", address: "SIBIU - STR.N.IORGA NR.50A", phone: "0766669065" },
   // 20
-  "unirea": { name: "CENTRUL MEDICAL UNIREA SRL", address: "SIBIU - STR.EMIL CIORAN, NR.6", phone: "0722182487" },
+  "unirea": { name: "REGINA MARIA", address: "SIBIU - STR.EMIL CIORAN, NR.6", phone: "0722182487" },
   // 30
-  "gensan": { name: "GENSAN SRL", address: "SIBIU - STR.P-TA PRAHOVEI, NR.16, PARTER, AP.17A", phone: "0269-206204" },
+  "gensan": { name: "POLICLINICA ASTRA", address: "SIBIU - STR.P-TA PRAHOVEI, NR.16, PARTER, AP.17A", phone: "0269-206204" },
   // 31
   "gyndia": { name: "GYNDIA NOVA SRL", address: "SIBIU - B-DUL C. COPOSU, NR.10", phone: "0770157807" },
   // 32
@@ -79,6 +79,8 @@ const CLINICS = {
   "naturapeutica": { name: "NATURAPEUTICA MED SRL", address: "CISNĂDIE - STR.CINDRELU, NR.47, CORP C1, ET.I, AP.16", phone: "0722692050" },
   // 51
   "platin": { name: "PLATIN HEALTHMED SRL - CLINICA OMNIS", address: "SIBIU - ALEEA ROSIORILOR, NR.12", phone: "0269-212146" },
+  // 52
+  "mihail": { name: "POLICLINICA MIHAIL SI GAVRIL", address: "STR.MIHAIL KOGALNICEANU, NR.1", phone: "0773380486/0369883886" },
   // 53
   "prosana": { name: "PROSANA SRL", address: "SIBIU - STR.MARASTI, NR.6", phone: "078781043 / 0269233293" },
   // 54
@@ -415,6 +417,31 @@ const PEOPLE = [
   { n: "ZAICA SVETLANA", s: "Neurologie", g: "Specialist", c: "platin", t: "medic" },
   { n: "LUPEAN LAURA MARIA", s: "Endocrinologie", g: "Specialist", c: "platin", t: "medic" },
   { n: "TICHINDELEANU NORA LUMINIȚA", s: "Endocrinologie", g: "Specialist", c: "platin", t: "medic" },
+
+// --- POLICLINICA SF. MIHAIL SRL ---
+{ n: "NEGREA MIHAI OCTAVIAN", s: "Cardiologie", g: "Specialist", c: "mihail", t: "medic" },
+{ n: "VULCU RAUL LIVIU", s: "Cardiologie", g: "Primar", c: "mihail", t: "medic" },
+{ n: "DRAGULESCU STEFANIA LARISA", s: "Endocrinologie", g: "Specialist", c: "mihail", t: "medic" },
+{ n: "ALBU MARIA MIHAELA", s: "Interne", g: "Specialist", c: "mihail", t: "medic" },
+{ n: "PUMNEA PIA MANUELA", s: "Interne", g: "Specialist", c: "mihail", t: "medic" },
+{ n: "BATIR CRESTIN ANISOARA", s: "Obstetrică-Ginecologie", g: "Specialist", c: "mihail", t: "medic" },
+{ n: "NEAGU ANDREI DORIN", s: "Obstetrică-Ginecologie", g: "Specialist", c: "mihail", t: "medic" },
+{ n: "GHISA ANDREEA", s: "Pediatrie", g: "Primar", c: "mihail", t: "medic" },
+{ n: "PREDICA ANDREEA ROXANA", s: "Pediatrie", g: "Specialist", c: "mihail", t: "medic" },
+{ n: "VASIU CRISTINA FLORINA", s: "Psihiatrie", g: "Specialist", c: "mihail", t: "medic" },
+{ n: "COMAN VASILE LIVIU", s: "Psihiatrie Pediatrică", g: "Specialist", c: "mihail", t: "medic" },
+{ n: "AL KADDAH ELENA", s: "Psihiatrie Pediatrică", g: "Specialist", c: "mihail", t: "medic" },
+{ n: "RUS GABRIELA SABINA", s: "Medicină Fizică și Reabilitare", g: "Specialist", c: "mihail", t: "medic" },
+{ n: "COSTINESCU ANCA", s: "Medicină Fizică și Reabilitare", g: "Specialist", c: "mihail", t: "medic" },
+{ n: "MOGA DANIELA", s: "Psiholog", g: "", c: "mihail", t: "psiholog" },
+{ n: "PARVU DENISA ANDRADA", s: "Psiholog", g: "", c: "mihail", t: "psiholog" },
+{ n: "TRANTOR ANDRA MARIA", s: "Psiholog", g: "", c: "mihail", t: "psiholog" },
+{ n: "SONCHERECHE SIMINA ELENA", s: "Psiholog", g: "", c: "mihail", t: "psiholog" },
+{ n: "GUTA MIRELA", s: "Fizioterapeut", g: "", c: "mihail", t: "fizioterapeut" },
+{ n: "DOBROTA DIANA", s: "Fizioterapeut", g: "", c: "mihail", t: "fizioterapeut" },
+{ n: "HONDOR STEFANIA", s: "Fizioterapeut", g: "", c: "mihail", t: "fizioterapeut" },
+{ n: "COSTEA PATRICK ILIE", s: "Fizioterapeut", g: "", c: "mihail", t: "fizioterapeut" },
+{ n: "MILCIOIU IONUT RADU", s: "Fizioterapeut", g: "", c: "mihail", t: "fizioterapeut" },
 
   // --- 53. PROSANA SRL ---
   { n: "SOLOMON RADU CRINA CRISTINA", s: "Diabet, Nutriție și Boli Metabolice", g: "Specialist", c: "prosana", t: "medic" },
