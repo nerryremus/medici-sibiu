@@ -36,7 +36,7 @@ const CLINICS = {
   // 14
   "cardiolab1": { name: "CARDIOLAB SRL", address: "SIBIU - STR.ION AGÂRBICEANU, NR.1", phone: "0749662220" },
   // 15
-  "cardiowellness": { name: "CARDIOLAB SRL", address: "SIBIU - STR.SĂLAJULUI, NR.7", phone: "0722885560" },
+  "cardiowellness": { name: "CARDIOWELLNESS", address: "SIBIU - STR.SĂLAJULUI, NR.7", phone: "0722885560" },
   // 16
   "praxismed": { name: "CENTRUL MEDICAL PRAXISMED SRL", address: "SIBIU - STR.ȘTEFAN CEL MARE, NR.47, ap.4 / SĂLIȘTE - STR.SPITALULUI, NR.29", phone: "0747060994" },
   // 17
