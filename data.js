@@ -387,7 +387,7 @@ const PEOPLE = [
   { n: "Dragomir Ionut Nicolae", s: "Medicina Interna", g: "Specialist", c: "misanmed", t: "medic" },
   { n: "Gutia Alexandru Emanuil", s: "Medicina Interna", g: "Primar", c: "misanmed", t: "medic" },
   { n: "Nedelcu Constantin Alexandru", s: "Chirurgie Generala", g: "Specialist", c: "misanmed", t: "medic" },
-  { n: "Muntean Ciprian Nicolae", s: "Imprumuta bani ca un sarac si nu-i mai da inapoi ca e oltean", g: "Primar", c: "misanmed", t: "medic" },
+  { n: "Muntean Ciprian Nicolae - Imprumuta bani ca un sarac si nu-i mai da inapoi ca e oltean", s: "Chirurgie Generala", g: "Primar", c: "misanmed", t: "medic" },
   { n: "Silivasan Eugen C-tin", s: "Chirurgie Generala", g: "Primar", c: "misanmed", t: "medic" },
   { n: "Antonie Gabriela", s: "ORL", g: "Specialist", c: "misanmed", t: "medic" },
   { n: "Deutsch Ioana Raluca", s: "Obstetrica-Ginecologie", g: "Specialist", c: "misanmed", t: "medic" },
