@@ -47,6 +47,7 @@ const CLINICS = {
   "marginean-orl": { name: "Cabinet Marginean I. Ghe. - ORL Sanomed", address: "Str. Dr. Ioan Ratiu, nr. 4, Sibiu", phone: "0722735272" },
   "marinache-ped": { name: "Cabinet Marinache Luminita (Pediatrie)", address: "Str. Closca, nr. 2, Medias", phone: "0369-449550" },
   "medica": { name: "Medica SRL", address: "Calea Dumbravii, nr. 107, Sibiu", phone: "0269-212079" },
+  "mind-suport": { name: "Mind Suport Medical SRL", address: "Str. Maramuresului, nr. 17, sc. C, ap. 22, Sibiu", phone: "0735225915" },
   "misanmed": { name: "Misan Med SRL", address: "Str. Hipodromului, nr. 3B, Sibiu", phone: "0269-212146" },
   "moisin-npi": { name: "Cabinet Moisin Lucia Elena (Neurologie/Psihiatrie Pediatrica)", address: "Str. Rahovei, nr. 29, ap. 46, Sibiu", phone: "0269-447548" },
   "naturapeutica": { name: "Naturapeutica Med SRL", address: "Str. Cindrelu, nr. 47, corp C1, et. I, ap. 16, Cisnadie", phone: "0722692050" },
@@ -354,9 +355,11 @@ const PEOPLE = [
   { n: "Florescu Mihaela", s: "Oftalmologie", g: "Primar", c: "lucas", t: "medic" },
   { n: "Sirbu Cornelia", s: "Oftalmologie", g: "Specialist", c: "lucas", t: "medic" },
 
+  // --- MIND SUPORT MEDICAL SRL ---
+  { n: "Matusa Ion Catalin", s: "Psihiatrie", g: "Primar", c: "mind-suport", t: "medic" },
+  { n: "Popa Veronica", s: "Psihiatrie", g: "Specialist", c: "mind-suport", t: "medic" },
+
   // --- MEDICA SRL ---
-  { n: "Matusa Ion Catalin", s: "Psihiatrie", g: "Specialist", c: "medica", t: "medic" },
-  { n: "Popa Veronica", s: "Psihiatrie", g: "Specialist", c: "medica", t: "medic" },
   { n: "Zugravu Catalina Laura", s: "Endocrinologie", g: "Specialist", c: "medica", t: "medic" },
   { n: "Batar Florina Gabriela", s: "Cardiologie", g: "Primar", c: "medica", t: "medic" },
   { n: "Dobra Maria Castilia", s: "Chirurgie Generala", g: "Specialist", c: "medica", t: "medic" },
@@ -415,10 +418,6 @@ const PEOPLE = [
   { n: "Acaru Alexandra", s: "Psiholog", g: "-", c: "neurobrain", t: "psiholog" },
   { n: "Hirlea Camelia", s: "Psiholog", g: "-", c: "neurobrain", t: "psiholog" },
 
-  // --- NOEMI MED ---
-  { n: "Haus Laura", s: "Hematologie", g: "Specialist", c: "noemi", t: "medic" },
-  { n: "Mihulecea Gheorghe", s: "Oncologie", g: "Primar", c: "noemi", t: "medic" },
-
   // --- OANCEA PNEUMOLOGIE ---
   { n: "Oancea Maria", s: "Pneumologie", g: "Primar", c: "oancea-pneumo", t: "medic" },
 
@@ -447,6 +446,8 @@ const PEOPLE = [
   { n: "Zaica Svetlana", s: "Neurologie", g: "Specialist", c: "platin", t: "medic" },
   { n: "Lupean Laura Maria", s: "Endocrinologie", g: "Specialist", c: "platin", t: "medic" },
   { n: "Tichindeleanu Nora Luminita", s: "Endocrinologie", g: "Specialist", c: "platin", t: "medic" },
+  { n: "Haus Laura", s: "Hematologie", g: "Specialist", c: "platin", t: "medic" },
+  { n: "Mihulecea Gheorghe", s: "Oncologie", g: "Primar", c: "platin", t: "medic" },
   { n: "Negrea Mihai Octavian", s: "Cardiologie", g: "Specialist", c: "sfmihail", t: "medic" },
   { n: "Vulcu Raul Liviu", s: "Cardiologie", g: "Primar", c: "sfmihail", t: "medic" },
   { n: "Dragulescu Stefania Larisa", s: "Endocrinologie", g: "Specialist", c: "sfmihail", t: "medic" },
@@ -459,7 +460,6 @@ const PEOPLE = [
   { n: "Vasiu Cristina Florina", s: "Psihiatrie", g: "Specialist", c: "sfmihail", t: "medic" },
   { n: "Coman Vasile Liviu", s: "Psihiatrie Pediatrica", g: "Specialist", c: "sfmihail", t: "medic" },
   { n: "Al Kaddah Elena", s: "Psihiatrie Pediatrica", g: "Specialist", c: "sfmihail", t: "medic" },
-  { n: "Stroia Alexandra", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "platin", t: "medic" },
   { n: "Costinescu Anca", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "sfmihail", t: "medic" },
   { n: "Moga Daniela", s: "Psiholog", g: "-", c: "sfmihail", t: "psiholog" },
   { n: "Parvu Denisa Andrada", s: "Psiholog", g: "-", c: "sfmihail", t: "psiholog" },
