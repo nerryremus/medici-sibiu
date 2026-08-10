@@ -66,7 +66,7 @@ const CLINICS = {
   // 38
   "microfit": { name: "MICROFIT SRL", address: "SIBIU - STR.ȘERBOTA, NR.8", phone: "0740205405 / 0737172193" },
   // 39 (adăugată)
-  "mimd": { name: "MIMD SUPORT MEDICAL SRL", address: "SIBIU - STR.MARAMUREȘULUI, NR.17, SC.C, AP.22", phone: "0735225915" },
+  "mind": { name: "MIND SUPORT MEDICAL SRL", address: "SIBIU - STR.MARAMUREȘULUI, NR.17, SC.C, AP.22", phone: "0735225915" },
   // 40
   "medica": { name: "MEDICA SRL", address: "SIBIU - STR.CALEA DUMBRAVII, NR.107", phone: "0269-212079, 0728235234" },
   // 41
@@ -346,9 +346,9 @@ const PEOPLE = [
   // --- 38. MICROFIT SRL ---
   { n: "FLORESCU MIHAELA", s: "Oftalmologie", g: "Primar", c: "microfit", t: "medic" },
 
-  // --- 39. MIMD SUPORT MEDICAL SRL (adăugată) ---
-  { n: "MATUȘA ION CĂTĂLIN", s: "Psihiatrie", g: "Primar", c: "mimd", t: "medic" },
-  { n: "POPA VERONICA", s: "Psihiatrie", g: "Specialist", c: "mimd", t: "medic" },
+  // --- 39. MIND SUPORT MEDICAL SRL (adăugată) ---
+  { n: "MATUȘA ION CĂTĂLIN", s: "Psihiatrie", g: "Primar", c: "mind", t: "medic" },
+  { n: "POPA VERONICA", s: "Psihiatrie", g: "Specialist", c: "mind", t: "medic" },
 
   // --- 40. MEDICA SRL ---
   { n: "SÎRBU CORNELIA", s: "Oftalmologie", g: "Specialist", c: "medica", t: "medic" },
