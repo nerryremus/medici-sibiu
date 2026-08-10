@@ -386,7 +386,7 @@ const PEOPLE = [
   { n: "Coman Daniela", s: "Gastroenterologie", g: "Specialist", c: "misanmed", t: "medic" },
   { n: "Dragomir Ionut Nicolae", s: "Medicina Interna", g: "Specialist", c: "misanmed", t: "medic" },
   { n: "Gutia Alexandru Emanuil", s: "Medicina Interna", g: "Primar", c: "misanmed", t: "medic" },
-  { n: "Nedelcu Constantin Alexandru (zis si Olteanu' care imprumuta bani ca la crajma)", s: "Chirurgie Generala", g: "Specialist", c: "misanmed", t: "medic" },
+  { n: "Nedelcu Constantin Alexandru", s: "Chirurgie Generala", g: "Specialist", c: "misanmed", t: "medic" },
   { n: "Muntean Ciprian Nicolae", s: "Chirurgie Generala", g: "Primar", c: "misanmed", t: "medic" },
   { n: "Silivasan Eugen C-tin", s: "Chirurgie Generala", g: "Primar", c: "misanmed", t: "medic" },
   { n: "Antonie Gabriela", s: "ORL", g: "Specialist", c: "misanmed", t: "medic" },
@@ -1292,6 +1292,14 @@ const DENTISTS = [
   { n: "Sitea Mihai", f: "Miraexperience SRL", a: "Sibiu, Calea Dumbravii, Nr 15, Ap. 22", tel: "0744709794", m: "urban" },
   { n: "Szatmari Alex-Matei", f: "Dr. Szatmari Alex- Matei - Cabinet Medical Stomatologie", a: "Medias, Sos. Sibiului Nr. 21, Ap. 3", tel: "0737982982", m: "urban" },
   { n: "Buta Malvina", f: "Dr. Szatmari Alex- Matei - Cabinet Medical Stomatologie", a: "Medias, Sos. Sibiului Nr. 21, Ap. 3", tel: "0737982982", m: "urban" },
+
+  // --- SPITALUL CLINIC MILITAR DE URGENTA "DR. ALEXANDRU AUGUSTIN" SIBIU (Ambulatoriu integrat, OPSNAJ) ---
+  { n: "Conf. dr. Anca Fratila", f: "Spitalul Clinic Militar de Urgenta \"Dr. Alexandru Augustin\" (OPSNAJ)", a: "Sibiu, B-dul Victoriei, Nr. 46", tel: "0790070310", m: "urban" },
+  { n: "Prof. dr. Vasile Nicolae", f: "Spitalul Clinic Militar de Urgenta \"Dr. Alexandru Augustin\" (OPSNAJ)", a: "Sibiu, B-dul Victoriei, Nr. 46", tel: "0790070310", m: "urban" },
+  { n: "Conf. dr. Andreea Angela Stetiu", f: "Spitalul Clinic Militar de Urgenta \"Dr. Alexandru Augustin\" (OPSNAJ)", a: "Sibiu, B-dul Victoriei, Nr. 46", tel: "0790070310", m: "urban" },
+  { n: "Sef lucrari dr. Adriana Saceleanu", f: "Spitalul Clinic Militar de Urgenta \"Dr. Alexandru Augustin\" (OPSNAJ)", a: "Sibiu, B-dul Victoriei, Nr. 46", tel: "0790070310", m: "urban" },
+  { n: "Lt. dr. Simionescu Carmen-Dana", f: "Spitalul Clinic Militar de Urgenta \"Dr. Alexandru Augustin\" (OPSNAJ)", a: "Sibiu, B-dul Victoriei, Nr. 46", tel: "0790070310", m: "urban" },
+  { n: "Lt. dr. Matei Surdu", f: "Spitalul Clinic Militar de Urgenta \"Dr. Alexandru Augustin\" (OPSNAJ)", a: "Sibiu, B-dul Victoriei, Nr. 46", tel: "0790070310", m: "urban" },
 ];
 
 // === FARMACII (CAS Sibiu) ===
