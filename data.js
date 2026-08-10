@@ -397,7 +397,7 @@ const PEOPLE = [
   // --- 44. NATURAPEUTICA MED SRL ---
   { n: "BURCEA ROXANA", s: "Psihiatrie", g: "Specialist", c: "naturapeutica", t: "medic" },
 
-  // --- 51. PLATIN HEALTHMED SRL (CLINICA OMNIS) - corectată ---
+  // --- 51. PLATIN HEALTHMED SRL (CLINICA OMNIS) ---
   { n: "HAUS LAURA", s: "Hematologie", g: "Specialist", c: "platin", t: "medic" },
   { n: "MIHULECEA GHEORGHE", s: "Oncologie", g: "Primar", c: "platin", t: "medic" },
   { n: "STANIMIR NATALIA ELENA", s: "Dermato-venerologie", g: "Specialist", c: "platin", t: "medic" },
