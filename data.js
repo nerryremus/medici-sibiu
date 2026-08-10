@@ -320,6 +320,7 @@ const PEOPLE = [
   { n: "PALCU CLORINA", s: "Dermato-venerologie", g: "Primar", c: "gensan", t: "medic" },
   { n: "BARBU ALEXANDRA", s: "Dermato-venerologie", g: "Specialist", c: "gensan", t: "medic" },
   { n: "ȘTEFĂNESCU ANIȘOARA", s: "Recuperare, Medicină Fizică și Balneologie", g: "Primar", c: "gensan", t: "medic" },
+  { n: "MARA ALINA ELENA", s: "Alergologie", g: "Primar", c: "gensan", t: "medic" },
 
   // --- 31. GYNDIA NOVA SRL ---
   { n: "NICOLESCU GEORGIANA", s: "Diabet, Nutriție și Boli Metabolice", g: "Primar", c: "gyndia", t: "medic" },
