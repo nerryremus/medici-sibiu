@@ -146,6 +146,7 @@ const PEOPLE = [
   { n: "PICU ALEXANDRU CRISTIAN", s: "Dermato-venerologie", g: "Specialist", c: "aria", t: "medic" },
   { n: "IANCU BIANCA MARIA", s: "Recuperare, Medicină Fizică și Balneologie", g: "Specialist", c: "aria", t: "medic" },
   { n: "BÎRSAN ALEXANDRU", s: "Recuperare, Medicină Fizică și Balneologie", g: "Specialist", c: "aria", t: "medic" },
+  { n: "BOBOIA ANA ALINA", s: "Pediatrie", g: "Specialist", c: "aria", t: "medic", note: "Consultant in alaptare" },
 
   // --- 5. BAN COSMINA ---
   { n: "BAN COSMINA", s: "Psihiatrie", g: "Primar", c: "ban-psih", t: "medic" },
@@ -183,6 +184,7 @@ const PEOPLE = [
 
   // --- 15. CARDIOLAB SRL (Str. Sălajului) ---
   { n: "BATAR SERGIU CONSTANTIN", s: "Cardiologie", g: "Specialist", c: "cardiowellness", t: "medic" },
+  { n: "SFÎNTU ANA", s: "Neurologie", g: "Specialist", c: "cardiowellness", t: "medic" },
 
   // --- 16. CENTRUL MEDICAL PRAXISMED SRL ---
   { n: "SFÎNTU ANA", s: "Neurologie", g: "Specialist", c: "praxismed", t: "medic" },
