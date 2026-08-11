@@ -101,7 +101,7 @@ const PEOPLE = [
   { n: "Picu Alexandru Cristian", s: "Dermato-venerologie", g: "Specialist", c: "aria", t: "medic" },
   { n: "Iancu Bianca Maria", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "aria", t: "medic" },
   { n: "Birsan Alexandru", s: "Recuperare, Medicina Fizica si Balneologie", g: "Specialist", c: "aria", t: "medic" },
-  { n: "Boboia Ana Alina", s: "Pediatrie (+ Consultanta in alaptare)", g: "Specialist", c: "aria", t: "medic" },
+  { n: "Boboia Ana Alina", s: "Pediatrie", note: "+ Consultanta alaptare", g: "Specialist", c: "aria", t: "medic" },
 
   // --- BAN COSMINA ---
   { n: "Ban Cosmina", s: "Psihiatrie", g: "Primar", c: "ban-psih", t: "medic" },
