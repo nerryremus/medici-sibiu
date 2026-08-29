@@ -703,6 +703,7 @@
     <button class="sec-btn" data-sec="dentisti">🦷 Stomatologi</button>
     <button class="sec-btn" data-sec="laboratoare">🔬 Laboratoare &amp; imagistică</button>
     <button class="sec-btn" data-sec="farmacii">💊 Farmacii</button>
+    <button class="sec-btn" data-sec="ingrijiri">🏠 Îngrijiri la domiciliu</button>
   </div>
 
   <div class="controls">
@@ -753,7 +754,7 @@
   </div>
 
   <footer class="foot">
-    Date: <strong id="updatedSpan2"></strong> &middot; Sursă: documente oficiale CNAS/CAS Sibiu — ambulatoriu specialități clinice + servicii conexe (13.07.2026), stomatologie (01.07.2026), investigații paraclinice (01.06.2026), farmacii — încărcate manual.<br>
+    Date: <strong id="updatedSpan2"></strong> &middot; Sursă: documente oficiale CNAS/CAS Sibiu — ambulatoriu specialități clinice + servicii conexe (13.07.2026), stomatologie (01.07.2026), investigații paraclinice (01.06.2026), farmacii, îngrijiri medicale la domiciliu (01.08.2025) — încărcate manual.<br>
     Listele CAS se schimbă periodic — verificați telefonic înainte de a trimite un pacient pentru o programare urgentă.<br>
     <span id="printHint" style="display:none">📱 Pe telefon, butoanele de printare deschid o filă nouă, pregătită pentru tipar — apăsați acolo „Printează / Salvează PDF”. Dacă nu se deschide nimic, permiteți ferestrele pop-up pentru acest site.</span><br>
     Pagină statică, fără server, fără cookie-uri și fără date personale. Funcționează offline după prima încărcare.<br>
@@ -1560,6 +1561,23 @@ var QRLite = (function(){
           '<div class="sc-line">📞 '+tel(r.tel)+'</div>'+
           (of?'<div class="sc-line" style="margin-top:6px"><span class="sc-tag">oficină</span></div>':"")+
           '</div>';
+      }
+    },
+    ingrijiri:{
+      data:function(){return (typeof HOMECARE!=="undefined")?HOMECARE:[];},
+      label:"furnizori de îngrijiri la domiciliu",
+      note:"Recomandarea (Anexa 31C) poate fi emisă de medicul de familie sau de medicul specialist (în ambulatoriu sau la externarea din spital) și trebuie depusă la CAS în maximum 5 zile calendaristice de la data emiterii.",
+      title:"Furnizori de îngrijiri medicale la domiciliu — CAS Sibiu",
+      id:function(r){return "i|"+r.f+"|"+r.ctr;},
+      pline:function(r){return "<b>"+esc(r.f)+"</b><span>contract "+esc(r.ctr)+" · "+esc(r.loc)+"</span><span>"+esc(r.a)+" · "+esc(r.tel)+"</span>";},
+      facet:function(r){return r.loc||"—";},
+      facetLabel:"Toate localitățile",
+      search:function(r){return [r.f,r.loc,r.a,r.ctr].join(" ");},
+      card:function(r){
+        return '<div class="simple-card"><p class="sc-name">'+esc(r.f)+'</p>'+
+          '<p class="sc-sub">contract '+esc(r.ctr)+'</p>'+
+          '<div class="sc-line">📍 '+esc(r.loc)+' · '+esc(r.a)+'</div>'+
+          '<div class="sc-line">📞 '+tel(r.tel)+'</div></div>';
       }
     }
   };

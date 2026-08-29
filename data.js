@@ -1470,3 +1470,12 @@ const LABS = [
   { f: "S.C. RMN Diagnostic si Tratament SRL", a: "Sibiu, str. Somesului, nr. 19", tel: "0269/243121", inv: "Mamografie" },
   { f: "Spitalul Orasenesc Cisnadie", a: "Cisnadie, str. Bailor nr. 27", tel: "0369/105102", inv: "Radiologie-imagistica medicala, Computer Tomograf" },
 ];
+
+// === INGRIJIRI MEDICALE LA DOMICILIU (CAS Sibiu, lista la 01.08.2025) ===
+const HOMECARE = [
+  { f: "Asociatia Philadelphia", ctr: "SID 8", loc: "Cisnadie", a: "Str. Visinilor, nr. 17", tel: "0728-092760 / 0269-579567" },
+  { f: "Asociatia Medical Care", ctr: "SID 13", loc: "Sibiu", a: "Ale. Fratii Buzesti, nr. 9", tel: "0756-100118" },
+  { f: "S.C. Helpcare Ingrijiri Medicale S.R.L.", ctr: "SID 19", loc: "Sibiu", a: "Str. Plugarilor, nr. 4", tel: "0770-290830" },
+  { f: "Asociatia Transilvania Vitalis", ctr: "SID 20", loc: "Sibiu", a: "Str. Masinistilor, nr. 13", tel: "0757-603262" },
+  { f: "S.C. Elpida Kai Igeya S.R.L.", ctr: "SID 22", loc: "Medias", a: "Str. Carpati, nr. 8", tel: "0735-623332" },
+];
