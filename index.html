@@ -1131,17 +1131,25 @@
 
   // --- Tema luminoasa / intunecata ---
   const themeToggle = document.getElementById("themeToggle");
+  const THEME_KEY = "medici-sibiu-theme";
   function applyTheme(dark){
     document.body.classList.toggle("dark", dark);
     themeToggle.querySelector(".theme-icon").textContent = dark ? "☀️" : "🌙";
     themeToggle.setAttribute("title", dark ? "Comută pe temă luminoasă" : "Comută pe temă întunecată");
   }
-  // la incarcare: respecta preferinta sistemului de operare al utilizatorului
+  // la incarcare: foloseste alegerea salvata anterior de utilizator; daca nu exista niciuna,
+  // respecta preferinta sistemului de operare al utilizatorului
   let prefersDark = false;
-  try { prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches; } catch(e){}
+  let savedTheme = null;
+  try { savedTheme = localStorage.getItem(THEME_KEY); } catch(e){}
+  if(savedTheme === "dark") prefersDark = true;
+  else if(savedTheme === "light") prefersDark = false;
+  else { try { prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches; } catch(e){} }
   applyTheme(prefersDark);
   themeToggle.addEventListener("click", ()=>{
-    applyTheme(!document.body.classList.contains("dark"));
+    const next = !document.body.classList.contains("dark");
+    applyTheme(next);
+    try { localStorage.setItem(THEME_KEY, next ? "dark" : "light"); } catch(e){}
   });
 
   // --- Buton "Adauga pe telefon" cu instructiuni dupa platforma ---
