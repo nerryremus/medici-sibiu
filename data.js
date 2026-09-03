@@ -364,7 +364,7 @@ const PEOPLE = [
   { n: "Zugravu Catalina Laura", s: "Endocrinologie", g: "Specialist", c: "medica", t: "medic" },
   { n: "Batar Florina Gabriela", s: "Cardiologie", g: "Primar", c: "medica", t: "medic" },
   { n: "Dobra Maria Castilia", s: "Chirurgie Generala", g: "Specialist", c: "medica", t: "medic" },
-  { n: "Solomon Radu Crina Cristina", s: "Diabet, nutritie si boli metabolice", g: "Specialist", c: "prosana", t: "medic" },
+  { n: "Solomon Radu Crina Cristina", s: "Diabet, nutritie si boli metabolice", g: "Specialist", c: "unirea", t: "medic" },
   { n: "Gafton Ana Alina", s: "Dermato-venerologie", g: "Specialist", c: "medica", t: "medic" },
   { n: "Baldovin Ioana", s: "Dermato-venerologie", g: "Primar", c: "medica", t: "medic" },
   { n: "Moldovan Elena", s: "Psihiatrie", g: "Specialist", c: "medica", t: "medic" },
