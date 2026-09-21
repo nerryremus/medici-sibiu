@@ -54,7 +54,7 @@ const CLINICS = {
   "neurobrain": { name: "Neurobrain Cliniq SRL", address: "Str. Cristian, nr. 15, Sibiu", phone: "0726576161" },
   "noemi": { name: "Noemi Med SRL", address: "Str. Horea, nr. 21, Medias", phone: "0773895117" },
   "oancea-pneumo": { name: "Cabinet Oancea Maria (Pneumologie)", address: "Str. Closca, nr. 2, Medias", phone: "0751244600" },
-  "octasan": { name: "Octasan-Med SRL", address: "Sos. Alba Iulia, nr. 50A, et. I, ap. 2, Sibiu", phone: "0751211282" },
+  "octasan": { name: "Octasan-Med SRL", address: "Sos. Alba Iulia, nr. 50A, et. I, ap. 2, Sibiu", phone: "0753879775" },
   "ophta": { name: "Ophta Consult SRL", address: "Str. N. Iorga, nr. 50A, Sibiu", phone: "0369-435803" },
   "popa-vlad-oft": { name: "Cabinet Popa Paul Vlad (Oftalmologie)", address: "Str. Iacob Bologa, nr. 8, sc. B, parter, ap. SP4, Sibiu", phone: "0773706118" },
   "orastean": { name: "Cabinet Orastean Ovidiu Ioan (Psihiatrie)", address: "Str. N. Iorga, nr. 50, et. 2, ap. 18, Sibiu", phone: "0756596950" },
