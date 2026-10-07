@@ -80,6 +80,7 @@ const CLINICS = {
   "prosana": { name: "Clinica Prosana", address: "Str. Marasti, nr. 6, Sibiu", phone: "0269-233293 / 0787810043" },
   "costache-barb": { name: "Cabinet Dr. Costache-Barb Cristina (Diabet)", address: "Str. Ludus, nr. 5, ap. II, parter, Sibiu", phone: "0727036018" },
   "mester-ped": { name: "Cabinet Dr. Mester Elena Lavinia (Pediatrie)", address: "Str. Cindrelu, nr. 47, sc. B, ap. 9-10, Cisnadie", phone: "0745591366" },
+  "memormed": { name: "Memormed Sibiu", address: "Str. Luptei, nr. 7, Sibiu", phone: "031-9443 / 0728.837.896", casa: "OPSNAJ" },
 };
 
 // type: "medic" | "psiholog" | "kinetoterapeut" | "fizioterapeut"
@@ -985,6 +986,21 @@ const PEOPLE = [
   { n: "Hulpus Andreea Gabriela", s: "Pneumologie", g: "Primar", c: "spital-medias", t: "medic" },
   { n: "Calin Elena", s: "Pediatrie", g: "Specialist", c: "spital-cisnadie", t: "medic" },
   { n: "Taroi Paula", s: "Obstetrica-Ginecologie", g: "Specialist", c: "taroi", t: "medic" },
+  { n: "Gligor Vasile", s: "Gastroenterologie", g: "-", c: "memormed", t: "medic", note: "consultatii + EDS + colonoscopie" },
+  { n: "Baluta Teodora", s: "Gastroenterologie", g: "-", c: "memormed", t: "medic", note: "consultatii + EDS + colonoscopie" },
+  { n: "Geangu Balasoiu Diana", s: "Medicina Interna", g: "-", c: "memormed", t: "medic", note: "se deconteaza consultatia, EKG si ecografie abdominala cu BT catre Interne" },
+  { n: "Ghita Nicolae", s: "Medicina Interna", g: "-", c: "memormed", t: "medic", note: "se deconteaza consultatia, EKG si ecografie abdominala cu BT catre Interne" },
+  { n: "Butica Delia", s: "Endocrinologie", g: "Specialist", c: "memormed", t: "medic", note: "consultatie gratuita" },
+  { n: "Istrate Victor", s: "Ortopedie", g: "-", c: "memormed", t: "medic" },
+  { n: "Zaharia Carmen Elena", s: "Psihiatrie", g: "Primar", c: "memormed", t: "medic" },
+  { n: "Cornila Svet Tatiana", s: "Neurologie", g: "Specialist", c: "memormed", t: "medic" },
+  { n: "Marcu Adrian", s: "Urologie", g: "-", c: "memormed", t: "medic" },
+  { n: "Gheorghe Catalin Gabriel", s: "ORL", g: "Specialist", c: "memormed", t: "medic" },
+  { n: "Coseriu Frijan Georgeta Lucia", s: "ORL", g: "Primar", c: "memormed", t: "medic" },
+  { n: "Taroi Paula", s: "Obstetrica-Ginecologie", g: "Specialist", c: "memormed", t: "medic" },
+  { n: "Iridon Elena Lacramioara", s: "Obstetrica-Ginecologie", g: "-", c: "memormed", t: "medic" },
+  { n: "Tuvic Anca", s: "Dermato-venerologie", g: "-", c: "memormed", t: "medic" },
+  { n: "Ghita Ela Tania", s: "Dermato-venerologie", g: "-", c: "memormed", t: "medic" },
 ];
 
 // === STOMATOLOGI (CAS Sibiu, lista la 01.07.2026) ===
@@ -1301,6 +1317,17 @@ const DENTISTS = [
   { n: "Sef lucrari dr. Adriana Saceleanu", f: "Spitalul Clinic Militar de Urgenta \"Dr. Alexandru Augustin\" (OPSNAJ)", a: "Sibiu, B-dul Victoriei, Nr. 46", tel: "0790070310", m: "urban" },
   { n: "Lt. dr. Simionescu Carmen-Dana", f: "Spitalul Clinic Militar de Urgenta \"Dr. Alexandru Augustin\" (OPSNAJ)", a: "Sibiu, B-dul Victoriei, Nr. 46", tel: "0790070310", m: "urban" },
   { n: "Lt. dr. Matei Surdu", f: "Spitalul Clinic Militar de Urgenta \"Dr. Alexandru Augustin\" (OPSNAJ)", a: "Sibiu, B-dul Victoriei, Nr. 46", tel: "0790070310", m: "urban" },
+  // --- Adaugari din reinnoirea CAS Sibiu 01.10.2026 ---
+  { n: "Cioban Iulia Timeea", f: "SC Barnu Dent SRL", a: "Sibiu, Str.Garlei Nr.12", tel: "0745/661055", m: "urban" },
+  { n: "Basca Laura", f: "Cabinet Medical Medicina Dentara Dr. Basca Laura", a: "Jud. Sibiu, Loc. Merghindeal, Nr. 75", tel: "0745/687856", m: "rural" },
+  { n: "Basca Gheorghe Nicolae", f: "Cabinet Medical Medicina Dentara Dr. Basca Laura", a: "Jud. Sibiu, Loc. Merghindeal, Nr. 75", tel: "0745/687856", m: "rural" },
+  { n: "Andronie Ioana Virginia", f: "Beldean Med SRL", a: "Sibiu, Str. Ion Neculce Nr. 15", tel: "0742043050", m: "urban" },
+  { n: "Petri Diana Cristina", f: "SC Confort Dental SRL", a: "Sibiu, Str. Stefan Cel Mare Nr. 6", tel: "0741/072715; 0269/252609", m: "urban" },
+  { n: "Safaya Raul", f: "SC Confort Dental SRL", a: "Sibiu, Str. Stefan Cel Mare Nr. 6", tel: "0741/072715; 0269/252609", m: "urban" },
+  { n: "Iamandi Paula Maria", f: "New Dental House Dr.Chisalom SRL", a: "Cisnadie, Str, Ioan Virgil Ispas,Nr.11,Parter,Ap,2", tel: "0754304642", m: "urban" },
+  { n: "Tantar Maria-Olivia", f: "SC Zahnarzt Hermannstadt SRL", a: "Jud.Sibiu, Loc. Or Avram Iancu, Nr.6", tel: "0269/252243; 0749/214341", m: "rural" },
+  { n: "Tatar Georgiana", f: "Leah Dental-Klinik SRL", a: "Sibiu, Str. Deventer Nr. 25, Bl. 5, Sp. Birouri 2", tel: "0269/217073; 0723/964971", m: "urban" },
+  { n: "Panait Gabriela Maria", f: "SC Light Smile SRL", a: "Jud. Sibiu,Loc Sur Mica,Str. Intre Ro Nr.43", tel: "0749/861948; 0269/577007", m: "rural" },
 ];
 
 // === FARMACII (CAS Sibiu) ===
@@ -1469,6 +1496,8 @@ const LABS = [
   { f: "S.C. Visa Medica SRL", a: "Sibiu, str. G-ral Magheru nr. 28", tel: "0269/210219", inv: "Ecografie" },
   { f: "S.C. RMN Diagnostic si Tratament SRL", a: "Sibiu, str. Somesului, nr. 19", tel: "0269/243121", inv: "Mamografie" },
   { f: "Spitalul Orasenesc Cisnadie", a: "Cisnadie, str. Bailor nr. 27", tel: "0369/105102", inv: "Radiologie-imagistica medicala, Computer Tomograf" },
+  // --- Adaugari din reinnoirea CAS Sibiu 01.10.2026 ---
+  { f: "Aria Clinic SRL", a: "Sibiu, Soseaua Alba Iulia nr. 100", tel: "0269/227773", inv: "RMN, Radiologie-imagistica medicala, Computer Tomograf" },
 ];
 
 // === INGRIJIRI MEDICALE LA DOMICILIU (CAS Sibiu, lista la 01.08.2025) ===
@@ -1478,4 +1507,21 @@ const HOMECARE = [
   { f: "S.C. Helpcare Ingrijiri Medicale S.R.L.", ctr: "SID 19", loc: "Sibiu", a: "Str. Plugarilor, nr. 4", tel: "0770-290830" },
   { f: "Asociatia Transilvania Vitalis", ctr: "SID 20", loc: "Sibiu", a: "Str. Masinistilor, nr. 13", tel: "0757-603262" },
   { f: "S.C. Elpida Kai Igeya S.R.L.", ctr: "SID 22", loc: "Medias", a: "Str. Carpati, nr. 8", tel: "0735-623332" },
+];
+
+// === DISPOZITIVE MEDICALE (CAS Sibiu, lista la 01-09-2026) — doar furnizori cu punct de lucru in judetul Sibiu ===
+const DISPOZITIVE = [
+  { f: "S.C. Audio Nova S.R.L.", loc: "Sibiu", a: "Str. Constitutiei, nr. 24, ap. Spatiu comercial 3 si 4", tel: "0269/244500", categ: "Proteze auditive", program: "8:00-17:00" },
+  { f: "S.C. Audiolux S.R.L.", loc: "Sibiu", a: "Str. Andrei Saguna, nr. 3", tel: "0742-478790", categ: "Proteze auditive", program: "8:00-16:30" },
+  { f: "S.C. Clarfon S.R.L.", loc: "Sibiu", a: "Str. Constitutiei, bl. 24", tel: "0369/445304", categ: "Proteze auditive, Proteze fonatorii, Proteze traheale (filtru umidificator), Lentile intraoculare", program: "8:00-16:30" },
+  { f: "S.C. Clarfon S.R.L.", loc: "Sibiu", a: "B-dul Mihai Viteazu, parter, subap. 2, bl. P14", tel: "0773.329.266", categ: "Proteze auditive, Proteze fonatorii, Proteze traheale (filtru umidificator), Lentile intraoculare", program: "8:00-16:30" },
+  { f: "S.C. Clarfon S.R.L.", loc: "Medias", a: "Str. I. Gh. Duca, nr. 30", tel: "0772.257355", categ: "Proteze auditive, Proteze fonatorii, Proteze traheale (filtru umidificator), Lentile intraoculare", program: "8:00-16:30" },
+  { f: "S.C. Helpcare Ingrijiri Medicale S.R.L.", loc: "Sibiu", a: "Str. Plugarilor, nr. 4, ap. 15 (si punct de lucru Piata 1 Decembrie 1918, bl. 28, ap. 3)", tel: "0748464775", categ: "Catetere urinare", program: "9:00-17:00" },
+  { f: "SC Lugia New Serv S.R.L.", loc: "Sibiu", a: "Str. G-ral Gheorghe Magheru, nr. 41, subap. 1", tel: "0374510447", categ: "Proteze auditive", program: "8:30-17:00" },
+  { f: "Medical Air Care SRL", loc: "Sibiu", a: "Str. Cristian, nr. 3 (punct de lucru nr. 7)", tel: "0722277707", categ: "Concentrator de oxigen", program: "9:00-17:00" },
+  { f: "S.C. Miadi S.R.L.", loc: "Sibiu", a: "Str. Stefan cel Mare, nr. 25 (si punct de lucru Str. Mitropoliei, nr. 31)", tel: "0744-551390", categ: "Dispozitive protezare ORL, Dispozitive protezare stomii, Dispozitive incontinenta urinara, Dispozitive de mers, Proteza externa de san", program: "9:00-16:00" },
+  { f: "S.C. Ortopedica S.R.L.", loc: "Sibiu", a: "Str. Pompeiu Onofrei, nr. 1 (colt cu str. Gh. Lazar)", tel: "0269-231158", categ: "Dispozitive protezare stomii, Dispozitive incontinenta urinara, Proteze membre, Dispozitive de mers, Orteze, Incaltaminte ortopedica, Concentrator de oxigen, Manson compresiv, Proteza externa de san si accesorii (sutien)", program: "L-V 8:00-17:00, S 9:00-13:00" },
+  { f: "SC Ortoprofil Prod Romania SRL", loc: "Sibiu", a: "Str. Tipografilor, nr. 19", tel: "0269-230273", categ: "Dispozitive protezare stomii, Dispozitive incontinenta urinara, Proteze membre, Dispozitive de mers, Orteze, Incaltaminte ortopedica, Lentile intraoculare, Echipamente oxigenoterapie si ventilatie noninvaziva (CPAP/BPAP), Dispozitive pentru terapia cu aerosoli, Manson compresiv, Proteza externa de san si accesorii", program: "L,Ma,Mi 8:00-16:30; J,V 9:00-15:00" },
+  { f: "Scridon Horia-Marius PFA", loc: "Sibiu", a: "Str. Record, nr. 11", tel: "0745-668441", categ: "Concentrator de oxigen", program: "L,Mi,V 15:00-20:00; Ma,J 7:00-12:00" },
+  { f: "S.C. Sonosib Audiologie SRL", loc: "Sibiu", a: "Str. Russo Aleco, nr. 30 (si punct de lucru Str. George Enescu, nr. 1)", tel: "0723553564", categ: "Proteze auditive", program: "9:00-17:00" },
 ];

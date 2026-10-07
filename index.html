@@ -704,6 +704,7 @@
     <button class="sec-btn" data-sec="laboratoare">🔬 Laboratoare &amp; imagistică</button>
     <button class="sec-btn" data-sec="farmacii">💊 Farmacii</button>
     <button class="sec-btn" data-sec="ingrijiri">🏠 Îngrijiri la domiciliu</button>
+    <button class="sec-btn" data-sec="dispozitive">🦽 Dispozitive medicale</button>
   </div>
 
   <div class="controls">
@@ -1586,6 +1587,45 @@ var QRLite = (function(){
           '<p class="sc-sub">contract '+esc(r.ctr)+'</p>'+
           '<div class="sc-line">📍 '+esc(r.loc)+' · '+esc(r.a)+'</div>'+
           '<div class="sc-line">📞 '+tel(r.tel)+'</div></div>';
+      }
+    },
+    dispozitive:{
+      data:function(){return (typeof DISPOZITIVE!=="undefined")?DISPOZITIVE:[];},
+      label:"furnizori de dispozitive medicale",
+      note:"Lista cuprinde furnizorii de dispozitive medicale aflați în relație contractuală cu CAS Sibiu care au punct de lucru în județul Sibiu. Decontarea se face pe baza unei recomandări medicale, conform tipului de dispozitiv.",
+      title:"Furnizori de dispozitive medicale — CAS Sibiu",
+      id:function(r){return "d|"+r.f+"|"+r.a;},
+      pline:function(r){return "<b>"+esc(r.f)+"</b><span>"+esc(r.categ)+"</span><span>"+esc(r.loc)+" · "+esc(r.a)+" · "+esc(r.tel)+"</span>";},
+      facet:function(r){
+        var s=(r.categ||"").toLowerCase(), out=[];
+        if(s.indexOf("proteze auditive")>=0) out.push("Proteze auditive");
+        if(s.indexOf("proteze fonatorii")>=0) out.push("Proteze fonatorii");
+        if(s.indexOf("traheale")>=0) out.push("Proteze traheale");
+        if(s.indexOf("lentile")>=0) out.push("Lentile intraoculare");
+        if(s.indexOf("catetere")>=0) out.push("Catetere urinare");
+        if(s.indexOf("oxigen")>=0) out.push("Concentrator de oxigen");
+        if(s.indexOf("protezare orl")>=0) out.push("Protezare ORL");
+        if(s.indexOf("protezare stomii")>=0) out.push("Protezare stomii");
+        if(s.indexOf("incontinenta")>=0) out.push("Incontinență urinară");
+        if(s.indexOf("dispozitive de mers")>=0) out.push("Dispozitive de mers");
+        if(s.indexOf("san")>=0) out.push("Proteză de sân");
+        if(s.indexOf("proteze membre")>=0) out.push("Proteze membre");
+        if(s.indexOf("orteze")>=0) out.push("Orteze");
+        if(s.indexOf("incaltaminte")>=0) out.push("Încălțăminte ortopedică");
+        if(s.indexOf("manson")>=0) out.push("Manșon compresiv");
+        if(s.indexOf("cpap")>=0||s.indexOf("ventilatie noninvaziva")>=0) out.push("Ventilație noninvazivă (CPAP/BPAP)");
+        if(s.indexOf("aerosoli")>=0) out.push("Terapie cu aerosoli");
+        return out.length?out:["—"];
+      },
+      facetLabel:"Toate categoriile de dispozitive",
+      search:function(r){return [r.f,r.loc,r.a,r.categ].join(" ");},
+      card:function(r){
+        return '<div class="simple-card"><p class="sc-name">'+esc(r.f)+'</p>'+
+          '<p class="sc-sub">'+esc(r.categ)+'</p>'+
+          '<div class="sc-line">📍 '+esc(r.loc)+' · '+esc(r.a)+'</div>'+
+          '<div class="sc-line">📞 '+tel(r.tel)+'</div>'+
+          (r.program?'<div class="sc-line">🕒 program: '+esc(r.program)+'</div>':'')+
+          '</div>';
       }
     }
   };
