@@ -5,16 +5,8 @@
 const DATA_UPDATED = "01.07.2026";
 const DATA_SOURCE = "Casa de Asigurari de Sanatate Sibiu (CNAS) - documente oficiale incarcate manual";
 
-// Data (zz.ll.aaaa) la care a fost reactualizata manual, din sursa CNAS/CAS, fiecare sectiune a site-ului.
-// Se editeaza doar aici la fiecare reinnoire a listelor oficiale; etichetele afisate sunt in index.html.
-const SECTION_UPDATES = {
-  medici: "01.07.2026",
-  dentisti: "01.10.2026",
-  laboratoare: "01.10.2026",
-  farmacii: "01.10.2026",
-  ingrijiri: "01.08.2026",
-  dispozitive: "01.09.2026",
-};
+// Datele "actualizat la" per sectiune (dispozitive, laboratoare, stomatologi etc.) sunt acum scrise
+// direct in index.html, in blocul <div class="update-dates"> din footer - se editeaza acolo, nu aici.
 
 const CLINICS = {
   "taroi": { name: "Taroi Serv Med SRL", address: "Str. Prof. Victor Lazar, nr. 11A, Sibiu", phone: "0790505075" },

@@ -725,6 +725,13 @@
     background:var(--paper-card);
     color:var(--ink-soft);
     white-space:nowrap;
+    cursor:pointer;
+    transition:border-color .15s ease, background-color .15s ease;
+  }
+  footer.foot .ud-item:hover{
+    border-color:var(--accent);
+    background:var(--accent-soft);
+    color:var(--ink);
   }
   footer.foot .ud-item strong{
     color:var(--accent-deep);
@@ -848,12 +855,13 @@
     <span id="visitCounter"></span>
     <div class="update-dates">
       <span class="ud-title">Actualizat la:</span>
-      <span class="ud-item">Medici, Ambulatorii, Spitale <strong data-upd="medici"></strong></span>
-      <span class="ud-item">Stomatologi <strong data-upd="dentisti"></strong></span>
-      <span class="ud-item">Laboratoare &amp; imagistică <strong data-upd="laboratoare"></strong></span>
-      <span class="ud-item">Farmacii <strong data-upd="farmacii"></strong></span>
-      <span class="ud-item">Îngrijiri la domiciliu <strong data-upd="ingrijiri"></strong></span>
-      <span class="ud-item">Dispozitive medicale <strong data-upd="dispozitive"></strong></span>
+      <!-- Actualizează manual datele de mai jos la fiecare reînnoire a listelor CAS (nu depinde de data.js) -->
+      <span class="ud-item" data-sec="medici" title="Mergi la secțiunea Medici, Ambulatorii, Spitale">Medici, Ambulatorii, Spitale <strong>01.07.2026</strong></span>
+      <span class="ud-item" data-sec="dentisti" title="Mergi la secțiunea Stomatologi">Stomatologi <strong>01.10.2026</strong></span>
+      <span class="ud-item" data-sec="laboratoare" title="Mergi la secțiunea Laboratoare &amp; imagistică">Laboratoare &amp; imagistică <strong>01.10.2026</strong></span>
+      <span class="ud-item" data-sec="farmacii" title="Mergi la secțiunea Farmacii">Farmacii <strong>01.10.2026</strong></span>
+      <span class="ud-item" data-sec="ingrijiri" title="Mergi la secțiunea Îngrijiri la domiciliu">Îngrijiri la domiciliu <strong>01.08.2026</strong></span>
+      <span class="ud-item" data-sec="dispozitive" title="Mergi la secțiunea Dispozitive medicale">Dispozitive medicale <strong>01.09.2026</strong></span>
     </div>
   </footer>
 </div>
@@ -914,12 +922,6 @@
   const TYPE_LABELS = { medic:"Medici", psiholog:"Psihologi", kinetoterapeut:"Kinetoterapeuți", fizioterapeut:"Fizioterapeuți" };
   let activeTypes = new Set(["medic","psiholog","kinetoterapeut","fizioterapeut"]);
   const selectedIds = new Set();
-
-  if (typeof SECTION_UPDATES !== "undefined") {
-    document.querySelectorAll("[data-upd]").forEach(function(el){
-      el.textContent = SECTION_UPDATES[el.dataset.upd] || "—";
-    });
-  }
 
   PEOPLE.forEach((p, idx) => { p._id = idx; });
 
@@ -1788,6 +1790,14 @@ var QRLite = (function(){
       show(b.dataset.sec);
     });
   });
+
+  document.querySelectorAll(".update-dates .ud-item[data-sec]").forEach(function(chip){
+    chip.addEventListener("click",function(){
+      var btn=document.querySelector('#sectionTabs .sec-btn[data-sec="'+chip.dataset.sec+'"]');
+      if(btn){ btn.click(); window.scrollTo({top:0,behavior:"smooth"}); }
+    });
+  });
+
   function syncBar(){
     var n=Object.keys(PICKED).length, bar=document.getElementById("altBar");
     document.getElementById("altBarCount").textContent =
