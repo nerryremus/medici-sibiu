@@ -2,8 +2,19 @@
 // Lista furnizorilor de servicii medicale de specialitate din ambulatoriul
 // pentru specialitati clinice in contract cu CAS Sibiu, la 01.05.2026
 // + servicii conexe (psihologi, kinetoterapeuti) din lista-servicii-conexe-01-07-2025
-const DATA_UPDATED = "13.07.2026 (medici) / 13.07.2026 (servicii conexe)";
+const DATA_UPDATED = "01.07.2026";
 const DATA_SOURCE = "Casa de Asigurari de Sanatate Sibiu (CNAS) - documente oficiale incarcate manual";
+
+// Data (zz.ll.aaaa) la care a fost reactualizata manual, din sursa CNAS/CAS, fiecare sectiune a site-ului.
+// Se editeaza doar aici la fiecare reinnoire a listelor oficiale; etichetele afisate sunt in index.html.
+const SECTION_UPDATES = {
+  medici: "01.07.2026",
+  dentisti: "01.10.2026",
+  laboratoare: "01.10.2026",
+  farmacii: "01.10.2026",
+  ingrijiri: "01.08.2026",
+  dispozitive: "01.09.2026",
+};
 
 const CLINICS = {
   "taroi": { name: "Taroi Serv Med SRL", address: "Str. Prof. Victor Lazar, nr. 11A, Sibiu", phone: "0790505075" },

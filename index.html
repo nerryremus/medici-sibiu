@@ -696,6 +696,40 @@
     line-height:1.7;
   }
   footer.foot a{color:var(--accent-deep);}
+  footer.foot .update-dates{
+    margin-top:14px;
+    padding-top:14px;
+    border-top:1px dashed var(--line);
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    align-items:center;
+  }
+  footer.foot .ud-title{
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--ink-soft);
+    margin-right:3px;
+  }
+  footer.foot .ud-item{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-size:11.5px;
+    padding:4px 10px;
+    border-radius:20px;
+    border:1px solid var(--line);
+    background:var(--paper-card);
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  footer.foot .ud-item strong{
+    color:var(--accent-deep);
+    font-weight:700;
+  }
 
   /* --- nimic nu depaseste latimea ecranului --- */
   @media screen{ html,body{max-width:100%;overflow-x:hidden;} }
@@ -744,7 +778,6 @@
       </div>
       <div class="meta">
         <span>📋 sursă: liste oficiale CNAS / CAS Sibiu &middot; Spitalul Militar — CAS OPSNAJ / MApN</span>
-        <span id="updatedSpan">actualizat: &mdash;</span>
         <span>📍 jud. Sibiu (Sibiu, Mediaș, Agnita, Cisnădie, Avrig, Săliște)</span>
       </div>
       <div class="credit">proiect realizat voluntar de <strong>Dr. Nerișanu Remus-Octavian</strong> — medic de familie</div>
@@ -808,11 +841,20 @@
   </div>
 
   <footer class="foot">
-    Date: <strong id="updatedSpan2"></strong> &middot; Sursă: documente oficiale CNAS/CAS Sibiu — ambulatoriu specialități clinice + servicii conexe (13.07.2026), stomatologie (01.07.2026), investigații paraclinice (01.06.2026), farmacii, îngrijiri medicale la domiciliu (01.08.2025) — încărcate manual.<br>
+    Sursă: documente oficiale CNAS / CAS Sibiu — Spitalul Militar (CAS OPSNAJ / MApN) — încărcate manual.<br>
     Listele CAS se schimbă periodic — verificați telefonic înainte de a trimite un pacient pentru o programare urgentă.<br>
     <span id="printHint" style="display:none">📱 Pe telefon, butoanele de printare deschid o filă nouă, pregătită pentru tipar — apăsați acolo „Printează / Salvează PDF”. Dacă nu se deschide nimic, permiteți ferestrele pop-up pentru acest site.</span><br>
     Pagină statică, fără server, fără cookie-uri și fără date personale. Funcționează offline după prima încărcare.<br>
     <span id="visitCounter"></span>
+    <div class="update-dates">
+      <span class="ud-title">Actualizat la:</span>
+      <span class="ud-item">Medici, Ambulatorii, Spitale <strong data-upd="medici"></strong></span>
+      <span class="ud-item">Stomatologi <strong data-upd="dentisti"></strong></span>
+      <span class="ud-item">Laboratoare &amp; imagistică <strong data-upd="laboratoare"></strong></span>
+      <span class="ud-item">Farmacii <strong data-upd="farmacii"></strong></span>
+      <span class="ud-item">Îngrijiri la domiciliu <strong data-upd="ingrijiri"></strong></span>
+      <span class="ud-item">Dispozitive medicale <strong data-upd="dispozitive"></strong></span>
+    </div>
   </footer>
 </div>
 
@@ -873,8 +915,11 @@
   let activeTypes = new Set(["medic","psiholog","kinetoterapeut","fizioterapeut"]);
   const selectedIds = new Set();
 
-  document.getElementById("updatedSpan").textContent = "actualizat: " + DATA_UPDATED;
-  document.getElementById("updatedSpan2").textContent = DATA_UPDATED;
+  if (typeof SECTION_UPDATES !== "undefined") {
+    document.querySelectorAll("[data-upd]").forEach(function(el){
+      el.textContent = SECTION_UPDATES[el.dataset.upd] || "—";
+    });
+  }
 
   PEOPLE.forEach((p, idx) => { p._id = idx; });
 
