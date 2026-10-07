@@ -47,6 +47,10 @@
     --kineto-bg:#e3edf2;
     --radius:10px;
     --mono: "SF Mono", "Roboto Mono", Consolas, monospace;
+    --hero-1:#163d2c;
+    --hero-2:#2f6b4f;
+    --hero-3:#4fae81;
+    --hero-text:#f3f9f5;
   }
 
   body.dark{
@@ -66,6 +70,10 @@
     --psiholog-bg:#2a2540;
     --kineto:#7bafce;
     --kineto-bg:#1f2c34;
+    --hero-1:#0b1c14;
+    --hero-2:#163d2c;
+    --hero-3:#1f5a41;
+    --hero-text:#eaf4ee;
   }
 
   html{ transition:none; }
@@ -75,7 +83,12 @@
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background:var(--paper);
+    background-color:var(--paper);
+    background-image:
+      radial-gradient(900px circle at 12% 0%, var(--accent-soft) 0%, transparent 55%),
+      radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 1.6px);
+    background-size: auto, 26px 26px;
+    background-repeat: no-repeat, repeat;
     color:var(--ink);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
     line-height:1.5;
@@ -85,20 +98,50 @@
   .wrap{max-width:1100px;margin:0 auto;padding:0 20px 60px;}
 
   header.top{
-    border-bottom:2px solid var(--ink);
-    padding:28px 0 18px;
-    margin-bottom:24px;
+    position:relative;
+    left:50%;
+    right:50%;
+    margin-left:-50vw;
+    margin-right:-50vw;
+    width:100vw;
+    background:
+      linear-gradient(135deg, var(--hero-1) 0%, var(--hero-2) 55%, var(--hero-3) 100%);
+    border-bottom:none;
+    border-radius:0 0 20px 20px;
+    box-shadow:0 10px 30px -12px rgba(0,0,0,.4);
+    padding:0;
+    margin-bottom:28px;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:0;
+    height:46px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='46' viewBox='0 0 140 46'%3E%3Cpath d='M0 23 H38 L46 7 L56 39 L64 23 H102 L110 7 L120 39 L128 23 H140' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat:repeat-x;
+    background-size:140px 46px;
+    opacity:.1;
+    pointer-events:none;
+  }
+  header.top .top-inner{
+    position:relative;
+    z-index:1;
+    max-width:1100px;
+    margin:0 auto;
+    padding:26px 20px 20px;
   }
   header.top h1{
     font-size:26px;
     margin:0 0 4px;
     letter-spacing:-0.01em;
     font-weight:700;
+    color:var(--hero-text);
   }
   header.top .meta{
     font-family:var(--mono);
     font-size:12px;
-    color:var(--ink-soft);
+    color:rgba(255,255,255,.82);
     display:flex;
     gap:18px;
     flex-wrap:wrap;
@@ -130,19 +173,26 @@
   .theme-toggle:hover{ border-color:var(--accent); }
   .theme-toggle:active{ transform:scale(0.94); }
 
+  header.top .theme-toggle{
+    border-color:rgba(255,255,255,.4);
+    background:rgba(255,255,255,.14);
+    color:#fff;
+  }
+  header.top .theme-toggle:hover{ border-color:rgba(255,255,255,.75); background:rgba(255,255,255,.22); }
+
   header.top .credit{
     margin-top:12px;
     font-size:12.5px;
     font-style:italic;
-    color:var(--ink-soft);
+    color:rgba(255,255,255,.78);
     padding-top:10px;
-    border-top:1px solid var(--line);
+    border-top:1px solid rgba(255,255,255,.25);
     max-width:640px;
   }
   header.top .credit strong{
     font-style:normal;
     font-weight:700;
-    color:var(--ink);
+    color:var(--hero-text);
   }
   .qr-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:900;padding:18px;}
   .qr-overlay.open{display:flex;}
@@ -655,7 +705,8 @@
   .simple-card,.person-card{overflow-wrap:anywhere;}
 
   @media (max-width:600px){
-    header.top h1{font-size:21px;}
+    header.top h1{font-size:19px;}
+    header.top .top-inner{padding:22px 18px 16px;}
     .person-grid{grid-template-columns:1fr;}
     .filter-row{gap:6px;flex-direction:column;align-items:stretch;}
     .filter-row > select,
@@ -676,26 +727,28 @@
 
 <div class="wrap">
   <header class="top">
-    <div class="top-row">
-      <h1>Furnizori de sănătate în contract cu CAS Sibiu și CAS OPSNAJ</h1>
-      <div class="top-actions">
-        <button class="theme-toggle" id="qrBtn" title="Generează cod QR pentru acest director" aria-label="Generează cod QR">
-          <span>🔳</span>
-        </button>
-        <button class="theme-toggle" id="installBtn" title="Adaugă directorul pe ecranul telefonului" aria-label="Adaugă pe telefon">
-          <span>📲</span>
-        </button>
-        <button class="theme-toggle" id="themeToggle" title="Comută între temă luminoasă și întunecată" aria-label="Comută tema">
-          <span class="theme-icon">🌙</span>
-        </button>
+    <div class="top-inner">
+      <div class="top-row">
+        <h1>Furnizori de sănătate în contract cu CAS Sibiu și CAS OPSNAJ</h1>
+        <div class="top-actions">
+          <button class="theme-toggle" id="qrBtn" title="Generează cod QR pentru acest director" aria-label="Generează cod QR">
+            <span>🔳</span>
+          </button>
+          <button class="theme-toggle" id="installBtn" title="Adaugă directorul pe ecranul telefonului" aria-label="Adaugă pe telefon">
+            <span>📲</span>
+          </button>
+          <button class="theme-toggle" id="themeToggle" title="Comută între temă luminoasă și întunecată" aria-label="Comută tema">
+            <span class="theme-icon">🌙</span>
+          </button>
+        </div>
       </div>
+      <div class="meta">
+        <span>📋 sursă: liste oficiale CNAS / CAS Sibiu &middot; Spitalul Militar — CAS OPSNAJ / MApN</span>
+        <span id="updatedSpan">actualizat: &mdash;</span>
+        <span>📍 jud. Sibiu (Sibiu, Mediaș, Agnita, Cisnădie, Avrig, Săliște)</span>
+      </div>
+      <div class="credit">proiect realizat voluntar de <strong>Dr. Nerișanu Remus-Octavian</strong> — medic de familie</div>
     </div>
-    <div class="meta">
-      <span>📋 sursă: liste oficiale CNAS / CAS Sibiu &middot; Spitalul Militar — CAS OPSNAJ / MApN</span>
-      <span id="updatedSpan">actualizat: &mdash;</span>
-      <span>📍 jud. Sibiu (Sibiu, Mediaș, Agnita, Cisnădie, Avrig, Săliște)</span>
-    </div>
-    <div class="credit">proiect realizat voluntar de <strong>Dr. Nerișanu Remus-Octavian</strong> — medic de familie</div>
   </header>
 
   <div class="section-tabs" id="sectionTabs">
