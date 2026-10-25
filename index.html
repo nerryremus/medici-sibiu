@@ -556,6 +556,38 @@
     flex-shrink:0;
   }
   .person-card{position:relative;padding-right:44px;}
+  .fav-star{
+    position:absolute;
+    top:38px;
+    right:10px;
+    width:22px;
+    height:22px;
+    border:none;
+    background:transparent;
+    padding:0;
+    cursor:pointer;
+    font-size:20px;
+    line-height:22px;
+    text-align:center;
+    color:var(--ink-soft);
+    opacity:.55;
+  }
+  .fav-star:hover{opacity:1;color:#d99a1e;}
+  .fav-star.on{opacity:1;color:#e0a420;}
+  .person-card.is-fav{border-color:#e0a420;box-shadow:inset 3px 0 0 #e0a420;}
+  .fav-filter-btn{
+    font-family:inherit;
+    font-size:13px;
+    font-weight:600;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1.5px solid var(--line);
+    background:var(--paper-card);
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .fav-filter-btn.active{background:#fbf0d3;border-color:#e0a420;color:#8a5b00;}
+  body.dark .fav-filter-btn.active{background:#3a2e12;color:#f0c46a;}
   .select-check.checked{
     background:var(--accent-deep);
     border-color:var(--accent-deep);
@@ -818,6 +850,7 @@
         <button class="toggle-btn active" data-type="kinetoterapeut">Kinetoterapeuți</button>
         <button class="toggle-btn active" data-type="fizioterapeut">Fizioterapeuți</button>
       </div>
+      <button class="fav-filter-btn" id="favFilterBtn" title="Arată doar medicii marcați cu stea (favoriți)">☆ Doar favoriți</button>
       <button class="print-all-btn" id="printAllBtn" title="Printează lista curentă (respectă filtrele active), compact, grupată pe specialități">🖨️ Printează lista completă</button>
       <button class="reset-link" id="resetBtn">Resetează filtrele</button>
     </div>
@@ -923,6 +956,28 @@
   let activeTypes = new Set(["medic","psiholog","kinetoterapeut","fizioterapeut"]);
   const selectedIds = new Set();
 
+  // --- Favoriți: salvați local în browser (localStorage), apar primii în specialitatea lor ---
+  const FAV_KEY = "medici-sibiu-fav";
+  let favs = [];
+  try { const r = JSON.parse(localStorage.getItem(FAV_KEY) || "[]"); if(Array.isArray(r)) favs = r; } catch(e){}
+  let onlyFavs = false;
+  function favKey(p){ return p.n + "|" + p.c; }
+  function favRank(p){ return favs.indexOf(favKey(p)); }
+  function saveFavs(){ try { localStorage.setItem(FAV_KEY, JSON.stringify(favs)); } catch(e){} }
+  function toggleFav(p){
+    const k = favKey(p), i = favs.indexOf(k);
+    if(i >= 0) favs.splice(i,1); else favs.push(k);
+    saveFavs();
+  }
+  // favoriții primii (în ordinea în care i-ai marcat), restul alfabetic
+  function cmpPeople(a,b){
+    const ra = favRank(a), rb = favRank(b);
+    if(ra >= 0 && rb >= 0) return ra - rb;
+    if(ra >= 0) return -1;
+    if(rb >= 0) return 1;
+    return a.n.localeCompare(b.n,'ro');
+  }
+
   PEOPLE.forEach((p, idx) => { p._id = idx; });
 
   function populateSelects(){
@@ -971,6 +1026,7 @@
       if(clinicF && p.c !== clinicF) return false;
       if(gradF && p.g !== gradF) return false;
       if(!matchesSearch(p, q)) return false;
+      if(onlyFavs && favRank(p) < 0) return false;
       return true;
     });
 
@@ -992,7 +1048,7 @@
     }
 
     resultsEl.innerHTML = specs.map(spec=>{
-      const people = grouped[spec].sort((a,b)=>a.n.localeCompare(b.n,'ro'));
+      const people = grouped[spec].sort(cmpPeople);
       return `
         <div class="spec-group">
           <div class="spec-header">
@@ -1031,6 +1087,13 @@
 
     document.querySelectorAll(".person-card").forEach(card=>{
       card.addEventListener("click", (e)=>{
+        const star = e.target.closest(".fav-star");
+        if(star){
+          e.stopPropagation();
+          toggleFav(PEOPLE[parseInt(star.dataset.fav,10)]);
+          render();
+          return;
+        }
         if(e.target.closest(".select-check")){
           e.stopPropagation();
           const idx = parseInt(e.target.closest(".select-check").dataset.select, 10);
@@ -1099,6 +1162,7 @@
       if(clinicF && p.c !== clinicF) return false;
       if(gradF && p.g !== gradF) return false;
       if(!matchesSearch(p, q)) return false;
+      if(onlyFavs && favRank(p) < 0) return false;
       return true;
     });
   }
@@ -1144,7 +1208,7 @@
       '<div class="sub">Generat la '+new Date().toLocaleDateString('ro-RO')+' · actualizat: '+
         escapeHtml(DATA_UPDATED)+' · '+filtered.length+' persoane · '+specs.length+' specialități</div>'+
       specs.map(spec=>{
-        const people = grouped[spec].sort((a,b)=>a.n.localeCompare(b.n,'ro'));
+        const people = grouped[spec].sort(cmpPeople);
         return '<div class="grp"><h3>'+escapeHtml(spec)+' · '+people.length+'</h3>'+
           people.map(p=>{
             const clinic = CLINICS[p.c] || { name:"-", phone:"-" };
@@ -1162,9 +1226,11 @@
     const typeBadge = p.t !== "medic" ? `<span class="badge ${p.t}">${TYPE_LABELS[p.t]}</span>` : "";
     const gradBadge = (p.g && p.g !== "-") ? `<span class="badge ${p.g.toLowerCase()==='primar'?'primar':'specialist'}">${p.g}</span>` : "";
     const isChecked = selectedIds.has(p._id);
+    const isFav = favRank(p) >= 0;
     return `
-      <div class="person-card" data-idx="${p._id}">
+      <div class="person-card${isFav?' is-fav':''}" data-idx="${p._id}">
         <div class="select-check ${isChecked?'checked':''}" data-select="${p._id}">${isChecked?'✓':''}</div>
+        <button class="fav-star${isFav?' on':''}" data-fav="${p._id}" title="${isFav?'Scoate din favoriți':'Adaugă la favoriți (apare primul în specialitate)'}" aria-label="Favorit">${isFav?'★':'☆'}</button>
         <p class="person-name">${escapeHtml(p.n)}</p>
         <p class="person-clinic">${escapeHtml(clinic.name)}</p>
         ${p.note ? `<p class="person-note">${escapeHtml(p.note)}</p>` : ""}
@@ -1194,6 +1260,9 @@
     document.getElementById("filterGrad").value = "";
     activeTypes = new Set(["medic","psiholog","kinetoterapeut","fizioterapeut"]);
     document.querySelectorAll(".toggle-btn").forEach(b=>b.classList.add("active"));
+    onlyFavs = false;
+    const fb = document.getElementById("favFilterBtn");
+    if(fb){ fb.classList.remove("active"); fb.textContent = "☆ Doar favoriți"; }
     render();
   }
 
@@ -1202,6 +1271,12 @@
   document.getElementById("filterClinic").addEventListener("change", render);
   document.getElementById("filterGrad").addEventListener("change", render);
   document.getElementById("resetBtn").addEventListener("click", resetFilters);
+  document.getElementById("favFilterBtn").addEventListener("click", function(){
+    onlyFavs = !onlyFavs;
+    this.classList.toggle("active", onlyFavs);
+    this.textContent = onlyFavs ? "★ Doar favoriți" : "☆ Doar favoriți";
+    render();
+  });
 
   document.querySelectorAll(".toggle-btn").forEach(btn=>{
     btn.addEventListener("click", ()=>{
