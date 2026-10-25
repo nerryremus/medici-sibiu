@@ -628,6 +628,14 @@
   .select-bar .btn-print{background:var(--accent);color:#fff;}
   .select-bar .btn-print:hover{background:var(--accent-deep);}
   .select-bar .btn-clear{background:transparent;color:#cfd6d0;text-decoration:underline;}
+  .select-bar .btn-fav{background:#e0a420;color:#2b1d00;}
+  .select-bar .btn-fav:hover{background:#f0b632;}
+  .marquee{position:absolute;z-index:800;pointer-events:none;border:1.5px solid var(--accent);background:rgba(47,107,79,.14);border-radius:4px;}
+  body.dark .marquee{background:rgba(95,180,136,.16);}
+  .person-card.marquee-hit{outline:2px solid var(--accent);outline-offset:1px;}
+  body.marquee-active, body.marquee-active *{user-select:none !important;-webkit-user-select:none !important;cursor:crosshair !important;}
+  .sel-hint{font-size:11.5px;color:var(--ink-soft);margin:-6px 0 10px;font-family:var(--mono);}
+  @media (hover:none){ .sel-hint{display:none;} }
   .select-bar .btn-clear:hover{color:#fff;}
 
   /* --- Foaia de printat (ascunsa normal, vizibila doar la print) --- */
@@ -857,6 +865,7 @@
   </div>
 
   <div class="stats-bar" id="statsBar"></div>
+  <div class="sel-hint" id="selHint">💡 Selecție multiplă: <b>Ctrl+click</b> pe carduri · <b>Shift+click</b> pentru interval · sau <b>trage cu mouse-ul</b> pe fundal ca să tragi un dreptunghi de selecție.</div>
 
   <div id="results"></div>
 
@@ -903,6 +912,7 @@
   <span class="count" id="selectCount">0 selectați</span>
   <span class="spacer"></span>
   <button class="btn-clear" id="clearSelection">Golește selecția</button>
+  <button class="btn-fav" id="favSelection" title="Adaugă / scoate selecția din favoriți">★ Favoriți</button>
   <button class="btn-share" id="shareSelection">📤 Trimite</button>
   <button class="btn-print" id="printSelection">🖨️ Printează recomandarea</button>
 </div>
@@ -1098,11 +1108,117 @@
           e.stopPropagation();
           const idx = parseInt(e.target.closest(".select-check").dataset.select, 10);
           toggleSelect(idx, e.target.closest(".select-check"));
+          anchorIdx = idx;
           return;
+        }
+        if(e.ctrlKey || e.metaKey){            // Ctrl/Cmd+click: adauga/scoate cardul din selectie
+          const idx = parseInt(card.dataset.idx, 10);
+          setSelected(idx, !selectedIds.has(idx));
+          anchorIdx = idx;
+          updateSelectBar();
+          return;
+        }
+        if(e.shiftKey && anchorIdx != null){   // Shift+click: selecteaza intervalul de la ultimul card atins
+          const ids = [...document.querySelectorAll("#results .person-card")].map(c=>parseInt(c.dataset.idx,10));
+          const a = ids.indexOf(anchorIdx), b = ids.indexOf(parseInt(card.dataset.idx,10));
+          if(a >= 0 && b >= 0){
+            const [lo,hi] = a < b ? [a,b] : [b,a];
+            for(let i=lo;i<=hi;i++) setSelected(ids[i], true);
+            updateSelectBar();
+            const sel = window.getSelection && window.getSelection(); if(sel) sel.removeAllRanges();
+            return;
+          }
         }
         card.classList.toggle("expanded");
       });
     });
+  }
+
+  let anchorIdx = null;
+  function setSelected(idx, on){
+    if(on) selectedIds.add(idx); else selectedIds.delete(idx);
+    const el = document.querySelector('.select-check[data-select="'+idx+'"]');
+    if(el){ el.classList.toggle("checked", on); el.textContent = on ? "✓" : ""; }
+  }
+
+  // --- Selectie cu dreptunghi (tragi cu mouse-ul pe fundal) ---
+  (function(){
+    const box = document.getElementById("results");
+    let start = null, rectEl = null, hits = [], raf = 0, last = {x:0,y:0};
+    function cardsHit(r){
+      return [...box.querySelectorAll(".person-card")].filter(c=>{
+        const b = c.getBoundingClientRect();
+        const l=b.left+scrollX, t=b.top+scrollY, rr=b.right+scrollX, bb=b.bottom+scrollY;
+        return !(rr < r.l || l > r.r || bb < r.t || t > r.b);
+      });
+    }
+    function cur(){ return { l:Math.min(start.x,last.x), t:Math.min(start.y,last.y), r:Math.max(start.x,last.x), b:Math.max(start.y,last.y) }; }
+    function paint(){
+      raf = 0;
+      if(!start || !rectEl) return;
+      const r = cur();
+      Object.assign(rectEl.style,{left:r.l+"px",top:r.t+"px",width:(r.r-r.l)+"px",height:(r.b-r.t)+"px"});
+      const next = cardsHit(r);
+      hits.forEach(c=>{ if(next.indexOf(c)<0) c.classList.remove("marquee-hit"); });
+      next.forEach(c=>c.classList.add("marquee-hit"));
+      hits = next;
+      // autoscroll aproape de marginea ferestrei
+      const vy = last.y - scrollY;
+      if(vy < 50) scrollBy(0,-18); else if(vy > innerHeight-50) scrollBy(0,18);
+      if(vy < 50 || vy > innerHeight-50){ last.y += (vy<50?-18:18); raf = requestAnimationFrame(paint); }
+    }
+    function finish(apply){
+      if(rectEl){
+        if(apply) hits.forEach(c=>setSelected(parseInt(c.dataset.idx,10), true));
+        hits.forEach(c=>c.classList.remove("marquee-hit"));
+        rectEl.remove();
+        if(apply) updateSelectBar();
+      }
+      rectEl = null; start = null; hits = [];
+      document.body.classList.remove("marquee-active");
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+      document.removeEventListener("keydown", onKey);
+    }
+    function onMove(e){
+      last = {x:e.pageX, y:e.pageY};
+      if(!rectEl){
+        if(Math.abs(e.pageX-start.x) + Math.abs(e.pageY-start.y) < 6) return;
+        rectEl = document.createElement("div"); rectEl.className = "marquee"; document.body.appendChild(rectEl);
+        document.body.classList.add("marquee-active");
+      }
+      if(!raf) raf = requestAnimationFrame(paint);
+    }
+    function onUp(){ finish(true); }
+    function onKey(e){ if(e.key === "Escape") finish(false); }
+    document.addEventListener("mousedown", function(e){
+      if(e.button !== 0 || box.offsetParent === null) return;          // doar in sectiunea Medici
+      const t = e.target;
+      if(t !== document.body && t !== document.documentElement && !t.closest(".wrap")) return;
+      if(t.closest(".person-card, button, a, input, select, label, header.top, footer.foot, .controls, .section-tabs, .stats-bar, .sel-hint, .select-bar")) return;
+      start = {x:e.pageX, y:e.pageY}; last = {x:e.pageX, y:e.pageY};
+      document.addEventListener("mousemove", onMove);
+      document.addEventListener("mouseup", onUp);
+      document.addEventListener("keydown", onKey);
+    });
+  })();
+
+  // --- Favorit / scoate din favoriti pentru toata selectia ---
+  function bulkFav(){
+    const chosen = PEOPLE.filter(p=>selectedIds.has(p._id));
+    if(!chosen.length) return;
+    const allFav = chosen.every(p=>favRank(p) >= 0);
+    if(allFav){
+      favs = favs.filter(k=>!chosen.some(p=>favKey(p)===k));
+    } else {
+      // in ordinea in care apar pe ecran (sus -> jos), ca sa pastreze aranjamentul vizual
+      const order = [...document.querySelectorAll("#results .person-card")].map(c=>parseInt(c.dataset.idx,10));
+      chosen.sort((a,b)=>order.indexOf(a._id)-order.indexOf(b._id));
+      chosen.forEach(p=>{ if(favRank(p) < 0) favs.push(favKey(p)); });
+    }
+    saveFavs();
+    clearSelection();
+    render();
   }
 
   function toggleSelect(idx, checkEl){
@@ -1140,6 +1256,11 @@
     }
     bar.classList.add("visible");
     document.getElementById("selectCount").textContent = `${n} ${n===1?'medic selectat':'medici selectați'}`;
+    const fb = document.getElementById("favSelection");
+    if(fb){
+      const allFav = PEOPLE.filter(p=>selectedIds.has(p._id)).every(p=>favRank(p) >= 0);
+      fb.textContent = allFav ? "☆ Scoate din favoriți" : "★ Adaugă la favoriți";
+    }
   }
 
   function clearSelection(){
@@ -1291,6 +1412,7 @@
   });
 
   document.getElementById("clearSelection").addEventListener("click", clearSelection);
+  document.getElementById("favSelection").addEventListener("click", bulkFav);
   document.getElementById("printSelection").addEventListener("click", printSelection);
   document.getElementById("shareSelection").addEventListener("click", function(){
     const chosen = PEOPLE.filter(p=>selectedIds.has(p._id));
@@ -1845,6 +1967,7 @@ var QRLite = (function(){
     var isMain=(sec==="medici");
     mainCtl.style.display=isMain?"":"none";
     mainStats.style.display=isMain?"":"none";
+    var selHint=document.getElementById("selHint"); if(selHint) selHint.style.display=isMain?"":"none";
     mainRes.style.display=isMain?"":"none";
     if(printAll) printAll.style.display=isMain?"":"none";
     altCtl.style.display=isMain?"none":"";
